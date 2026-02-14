@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro'
+import PortfolioCard from '../components/PortfolioCard.astro'
+import { sortedVentures } from '../data/ventures'
+---
+
+<Base
+  title="Portfolio | Venture Crane"
+  description="Products built with AI agents under human direction."
+>
+  <h1 class="mb-2">Portfolio</h1>
+  <p class="mb-8 text-lg text-vc-text-muted">
+    Products built with AI agents under human direction.
+  </p>
+
+  <div class="grid gap-4">
+    {sortedVentures.map((venture) => <PortfolioCard venture={venture} />)}
+  </div>
+
+  <p class="mt-8 text-sm text-vc-text-muted">Last updated February 2026</p>
+</Base>
