@@ -1,0 +1,40 @@
+---
+import Article from '../../layouts/Article.astro'
+import { getCollection, render } from 'astro:content'
+
+export async function getStaticPaths() {
+  const allArticles = (await getCollection('articles'))
+    .filter((a) => !a.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+
+  return allArticles.map((article, i) => ({
+    params: { slug: article.id },
+    props: {
+      article,
+      prevArticle: allArticles[i + 1]
+        ? { slug: allArticles[i + 1].id, title: allArticles[i + 1].data.title }
+        : undefined,
+      nextArticle: allArticles[i - 1]
+        ? { slug: allArticles[i - 1].id, title: allArticles[i - 1].data.title }
+        : undefined,
+    },
+  }))
+}
+
+const { article, prevArticle, nextArticle } = Astro.props
+const { Content } = await render(article)
+const readingTime = Math.ceil(article.body!.split(/\s+/).length / 225)
+---
+
+<Article
+  title={article.data.title}
+  description={article.data.description}
+  date={article.data.date}
+  readingTime={readingTime}
+  author={article.data.author}
+  updatedDate={article.data.updatedDate}
+  prevArticle={prevArticle}
+  nextArticle={nextArticle}
+>
+  <Content />
+</Article>

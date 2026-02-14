@@ -1,0 +1,18 @@
+---
+interface Props {
+  date: Date
+  readingTime: number
+  author: string
+  updatedDate?: Date
+}
+
+const { date, readingTime, author, updatedDate } = Astro.props
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+---
+
+<div class="text-sm text-vc-text-muted">
+  <span>{formatDate(date)} &middot; {readingTime} min read &middot; by {author}</span>
+  {updatedDate && <div class="mt-1">Updated: {formatDate(updatedDate)}</div>}
+</div>

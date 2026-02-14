@@ -1,0 +1,60 @@
+---
+import Base from './Base.astro'
+import ArticleMeta from '../components/ArticleMeta.astro'
+
+interface Props {
+  title: string
+  description: string
+  date: Date
+  readingTime: number
+  author: string
+  updatedDate?: Date
+  prevArticle?: { slug: string; title: string }
+  nextArticle?: { slug: string; title: string }
+}
+
+const { title, description, date, readingTime, author, updatedDate, prevArticle, nextArticle } =
+  Astro.props
+---
+
+<Base title={`${title} — Venture Crane`} description={description}>
+  <div class="rounded-lg bg-surface p-6 sm:p-8">
+    <header class="mb-8">
+      <h1 class="mb-3">{title}</h1>
+      <ArticleMeta
+        date={date}
+        readingTime={readingTime}
+        author={author}
+        updatedDate={updatedDate}
+      />
+    </header>
+
+    <div class="vc-prose">
+      <slot />
+    </div>
+
+    {
+      (prevArticle || nextArticle) && (
+        <nav
+          class="mt-12 flex justify-between border-t border-border pt-6 text-sm"
+          aria-label="Article navigation"
+        >
+          {prevArticle ? (
+            <a href={`/articles/${prevArticle.slug}/`} class="text-accent hover:text-accent-hover">
+              &larr; {prevArticle.title}
+            </a>
+          ) : (
+            <span />
+          )}
+          {nextArticle ? (
+            <a href={`/articles/${nextArticle.slug}/`} class="text-accent hover:text-accent-hover">
+              {nextArticle.title} &rarr;
+            </a>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )
+    }
+  </div>
+</Base>
