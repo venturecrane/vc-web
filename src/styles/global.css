@@ -1,5 +1,30 @@
 @import 'tailwindcss';
 
+/* Tailwind v4 theme — maps to CSS custom properties */
+@theme {
+  /* Colors */
+  --color-chrome: var(--vc-chrome);
+  --color-chrome-light: var(--vc-chrome-light);
+  --color-surface: var(--vc-surface);
+  --color-surface-raised: var(--vc-surface-raised);
+  --color-vc-text: var(--vc-text);
+  --color-vc-text-muted: var(--vc-text-muted);
+  --color-vc-text-inverse: var(--vc-text-inverse);
+  --color-accent: var(--vc-accent);
+  --color-accent-hover: var(--vc-accent-hover);
+  --color-code-bg: var(--vc-code-bg);
+  --color-border: var(--vc-border);
+
+  /* Font families */
+  --font-body: var(--vc-font-body);
+  --font-mono: var(--vc-font-mono);
+
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+}
+
 :root {
   /* Chrome — site structure (header, footer, homepage bg) */
   --vc-chrome: #1a1a2e;
@@ -110,4 +135,41 @@ pre {
   border-radius: 0.375rem;
   padding: 1rem;
   overflow-x: auto;
+}
+
+/* Links */
+a {
+  color: var(--vc-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  color: var(--vc-accent-hover);
+}
+
+/* Headings */
+h1 {
+  font-size: var(--vc-text-h1);
+  line-height: var(--vc-leading-h1);
+  font-weight: 700;
+}
+
+h2 {
+  font-size: var(--vc-text-h2);
+  line-height: var(--vc-leading-h2);
+  font-weight: 600;
+}
+
+h3 {
+  font-size: var(--vc-text-h3);
+  line-height: var(--vc-leading-h3);
+  font-weight: 600;
+}
+
+/* Small/meta text */
+small,
+.text-meta {
+  font-size: var(--vc-text-small);
+  line-height: var(--vc-leading-small);
 }
