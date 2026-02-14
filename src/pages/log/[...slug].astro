@@ -1,0 +1,20 @@
+---
+import Log from '../../layouts/Log.astro'
+import { getCollection, render } from 'astro:content'
+
+export async function getStaticPaths() {
+  const allLogs = (await getCollection('logs')).filter((l) => !l.data.draft)
+
+  return allLogs.map((log) => ({
+    params: { slug: log.id },
+    props: { log },
+  }))
+}
+
+const { log } = Astro.props
+const { Content } = await render(log)
+---
+
+<Log title={log.data.title} date={log.data.date} tags={log.data.tags}>
+  <Content />
+</Log>

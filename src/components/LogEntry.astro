@@ -1,0 +1,20 @@
+---
+interface Props {
+  title: string
+  date: Date
+  slug: string
+}
+
+const { title, date, slug } = Astro.props
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+---
+
+<a
+  href={`/log/${slug}/`}
+  class="group block rounded-lg p-4 no-underline transition-colors hover:bg-surface"
+>
+  <div class="text-sm font-medium text-vc-text-muted">{formatDate(date)}</div>
+  <h2 class="mt-1 text-base font-semibold text-vc-text group-hover:text-accent">{title}</h2>
+</a>
