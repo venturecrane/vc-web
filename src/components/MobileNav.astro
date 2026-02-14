@@ -10,20 +10,12 @@ const navLinks = [
 ---
 
 <details class="mobile-nav sm:hidden">
-  <summary class="flex h-8 w-8 cursor-pointer items-center justify-center" aria-label="Menu">
-    <svg
-      class="h-6 w-6 text-vc-text"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M4 6h16M4 12h16M4 18h16"></path>
-    </svg>
+  <summary class="flex h-11 w-11 cursor-pointer items-center justify-center" aria-label="Menu">
+    <div class="hamburger" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
   </summary>
   <nav
     class="absolute left-0 right-0 border-b border-border bg-chrome px-4 py-4"
@@ -35,7 +27,7 @@ const navLinks = [
           href={href}
           aria-current={pathname === href ? 'page' : undefined}
           class:list={[
-            'block py-2 text-sm no-underline',
+            'block py-3 text-sm no-underline',
             pathname === href
               ? 'text-accent font-semibold'
               : 'text-vc-text-muted hover:text-vc-text',
@@ -59,5 +51,42 @@ const navLinks = [
 
   .mobile-nav summary::-webkit-details-marker {
     display: none;
+  }
+
+  .mobile-nav summary::marker {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .hamburger span {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: var(--vc-text);
+    border-radius: 1px;
+    transition:
+      transform 0.2s ease,
+      opacity 0.2s ease;
+    transform-origin: center;
+  }
+
+  details[open] .hamburger span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  details[open] .hamburger span:nth-child(2) {
+    opacity: 0;
+  }
+
+  details[open] .hamburger span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
   }
 </style>
