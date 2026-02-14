@@ -173,3 +173,89 @@ small,
   font-size: var(--vc-text-small);
   line-height: var(--vc-leading-small);
 }
+
+/* Prose content styles for rendered markdown */
+.vc-prose {
+  max-width: var(--vc-content-width);
+}
+
+.vc-prose h2 {
+  font-size: var(--vc-text-h2);
+  line-height: var(--vc-leading-h2);
+  font-weight: 600;
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+}
+
+.vc-prose h3 {
+  font-size: var(--vc-text-h3);
+  line-height: var(--vc-leading-h3);
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.vc-prose p {
+  margin-bottom: 1.25em;
+}
+
+.vc-prose ul,
+.vc-prose ol {
+  margin-bottom: 1.25em;
+  padding-left: 1.5em;
+}
+
+.vc-prose li {
+  margin-bottom: 0.25em;
+}
+
+.vc-prose blockquote {
+  border-left: 3px solid var(--vc-accent);
+  padding-left: 1rem;
+  margin-left: 0;
+  color: var(--vc-text-muted);
+  font-style: italic;
+}
+
+.vc-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.25em;
+  display: block;
+  overflow-x: auto;
+}
+
+.vc-prose th,
+.vc-prose td {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--vc-border);
+  text-align: left;
+}
+
+.vc-prose th {
+  font-weight: 600;
+  background-color: var(--vc-surface-raised);
+}
+
+.vc-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.375rem;
+}
+
+.vc-prose code:not(pre code) {
+  background-color: var(--vc-surface-raised);
+  padding: 0.125em 0.25em;
+  border-radius: 0.25rem;
+}
+
+.vc-prose a {
+  color: var(--vc-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.vc-prose a:hover {
+  color: var(--vc-accent-hover);
+}

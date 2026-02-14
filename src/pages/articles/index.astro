@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro'
+import ArticleCard from '../../components/ArticleCard.astro'
+import { getCollection } from 'astro:content'
+
+const articles = (await getCollection('articles'))
+  .filter((a) => !a.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+---
+
+<Base title="Articles — Venture Crane" description="Engineering articles from Venture Crane.">
+  <h1 class="mb-8">Articles</h1>
+  {
+    articles.length > 0 ? (
+      <div class="flex flex-col gap-4">
+        {articles.map((article) => (
+          <ArticleCard
+            title={article.data.title}
+            date={article.data.date}
+            description={article.data.description}
+            readingTime={Math.ceil(article.body!.split(/\s+/).length / 225)}
+            slug={article.id}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="text-vc-text-muted">Content coming soon.</p>
+    )
+  }
+</Base>
