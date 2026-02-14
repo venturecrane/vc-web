@@ -1,28 +1,38 @@
 ---
-title: 'About Venture Crane'
+title: 'How We Work'
 updatedDate: 2026-02-14
 ---
 
-## What This Is
+Venture Crane runs on a documented, repeatable operating system. One person, AI agent teams, a shared codebase — and a set of operational patterns that make it work.
 
-Venture Crane is a solo-founder venture studio powered by multi-agent development teams. One person sets direction. AI agents — Claude Code sessions that write code, run tests, open pull requests, and deploy — handle implementation across a fleet of dev machines.
+## The Model
 
-The portfolio includes Durgan Field Guide (auction intelligence), Kid Expenses (co-parent expense tracking), Draft Crane (nonfiction writing tools), and Silicon Crane (validation services). Each product runs on shared infrastructure: Astro or Next.js frontends, Cloudflare Workers and D1 backends, GitHub Actions CI/CD.
+The human handles judgment: what to build, what to kill, what to publish, what to fix. AI agents — Claude Code sessions running across a fleet of dev machines — handle implementation: writing code, running tests, opening pull requests, deploying.
 
-## How We Work
+Every product in the portfolio runs on shared infrastructure. Same framework choices (Astro, Next.js), same backend stack (Cloudflare Workers, D1), same CI/CD pipeline (GitHub Actions). When the infrastructure improves, every product benefits. See the [portfolio](/portfolio/) for the current roster.
 
-This is not "AI writes some code for me." This is an operational system with defined roles. AI agents handle implementation. The human handles judgment: what to build, what to kill, what to publish, and what to fix.
+This shared model enforces discipline. Agent hours are finite. Products that attract users earn more of them. Products that don't — after a meaningful evaluation window with real distribution — get shut down. The portfolio stays lean because the operating model demands it: one person can't afford to maintain software nobody uses.
 
-The development process is structured around session continuity:
+## Session Lifecycle
 
-- **Context at start, handoff at end**: Every agent session begins with orientation and ends with a handoff. No session starts cold.
-- **Quality gates**: Every commit passes automated verification — TypeScript, ESLint, Prettier, and tests — before it reaches main.
-- **Kill discipline**: Products that fail to find users are shut down, not maintained indefinitely. The portfolio stays lean.
+Every agent session follows the same structure, whether it's a thirty-minute bugfix or a multi-hour feature build.
 
-## Why We Publish
+**Orientation.** Each session begins by reading a structured handoff record from the previous session. No cold starts. The agent knows what shipped, what's in progress, and what's blocked before writing a line of code.
 
-The discipline of AI-native development operations is forming right now. The vocabulary is new, the patterns are unstable, and most of what gets published is either tool vendor marketing or surface-level tutorials.
+**Issue-driven execution.** Work is organized around GitHub issues with priority labels. Agents pick up the highest-priority ready issue, work it to completion, and open a pull request. No free-form exploration.
 
-Venture Crane sits at a different intersection: we build the operational tooling, use it to ship real products across a portfolio, and document what we learn — including the parts that don't work. This site publishes field notes from that practice: operational methodology, real costs, honest failures.
+**Automated quality gates.** Every push runs through pre-push hooks — TypeScript compilation, ESLint, Prettier formatting, and the test suite. CI runs the same checks independently. QA grades on each issue match the verification method to the type of work: a data migration gets different scrutiny than a copy change.
 
-Not a tutorial. Not a pitch. Processed retrospectives from a working operation, contributed to a discipline that could use more of them.
+**Handoff.** Before ending, the agent writes a structured handoff record: what was completed, what's still open, what the next session should pick up. The cycle resets.
+
+## See It in Practice
+
+The methodology produces the work. These articles show it in action:
+
+- [Building a Dark-Theme Design System with Tailwind v4](/articles/building-dark-theme-design-system/) — A design system built through this workflow: agent implementation, human design judgment, automated quality enforcement.
+
+## Founder
+
+Scott Durgan spent 25 years building enterprise software — large-scale systems, distributed teams, the full lifecycle from architecture through production operations. Along the way, he noticed the same pattern: most of the time spent shipping software wasn't spent on the hard problems. It was spent on coordination, context-switching, and rediscovering what someone already knew. AI agents don't eliminate the hard problems, but they eliminate the coordination tax. Venture Crane is the infrastructure that makes that operational — one person setting direction, agent teams handling implementation, and a publishing practice that documents what actually works.
+
+[X](https://x.com/venturecrane) · [GitHub](https://github.com/venturecrane)

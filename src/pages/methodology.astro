@@ -11,10 +11,12 @@ const formatDate = (d: Date) =>
 ---
 
 <Base
-  title="Methodology — Venture Crane"
-  description="How Venture Crane builds products with AI agents."
+  title="How We Work — Venture Crane"
+  description="How one person runs a venture studio with AI agent teams."
 >
   <div class="rounded-lg bg-surface p-6 sm:p-8">
+    <h1 class="mb-8 text-3xl font-bold">{page.data.title}</h1>
+
     <div class="vc-prose">
       <Content />
     </div>
@@ -26,27 +28,5 @@ const formatDate = (d: Date) =>
         </div>
       )
     }
-
-    <section class="mt-12 border-t border-border pt-8">
-      <h2 class="mb-2 text-lg font-semibold">Founder</h2>
-      <p class="text-vc-text-muted">
-        Scott Durgan has spent 25 years building enterprise software. He now builds the
-        infrastructure that lets one person run a venture studio with AI agent teams.
-      </p>
-      <div class="mt-3 flex gap-4">
-        <a
-          href="https://x.com/venturecrane"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-sm text-accent hover:text-accent-hover">X</a
-        >
-        <a
-          href="https://github.com/venturecrane"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-sm text-accent hover:text-accent-hover">GitHub</a
-        >
-      </div>
-    </section>
   </div>
 </Base>
