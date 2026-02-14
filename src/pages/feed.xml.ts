@@ -23,7 +23,7 @@ export async function GET(context: APIContext) {
 
   return rss({
     title: 'Venture Crane',
-    description: 'The product factory that shows its work.',
+    description: 'A development lab building real products with AI agents.',
     site: context.site!,
     items: allItems,
   })

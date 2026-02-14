@@ -9,7 +9,11 @@ interface Props {
   ogImage?: string
 }
 
-const { title, description = 'The product factory that shows its work.', ogImage } = Astro.props
+const {
+  title,
+  description = 'A development lab building real products with AI agents.',
+  ogImage,
+} = Astro.props
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 const pageTitle = title === 'Venture Crane' ? title : `${title} | Venture Crane`
 ---
