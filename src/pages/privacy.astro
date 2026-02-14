@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro'
+import { getEntry, render } from 'astro:content'
+
+const page = await getEntry('pages', 'privacy')
+if (!page) throw new Error('Missing privacy.md in pages collection')
+const { Content } = await render(page)
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+---
+
+<Base title="Privacy Policy — Venture Crane">
+  <div class="rounded-lg bg-surface p-6 sm:p-8">
+    <div class="vc-prose">
+      <Content />
+    </div>
+
+    {
+      page.data.updatedDate && (
+        <div class="mt-8 text-sm text-vc-text-muted">
+          Last updated: {formatDate(page.data.updatedDate)}
+        </div>
+      )
+    }
+  </div>
+</Base>
