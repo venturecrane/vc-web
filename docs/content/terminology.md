@@ -55,11 +55,11 @@ These are not absolute bans (build logs can use some), but they trigger a re-rea
 
 ### Good Examples
 
-> Venture Crane runs five ventures on shared infrastructure. The registry in `config/ventures.json` maps venture codes to capabilities, and the MCP server reads this at startup to determine which documentation and context to load.
+> The registry in `config/ventures.json` maps venture codes to capabilities, and the MCP server reads this at startup to determine which documentation and context to load.
 
 > The conventional path for a solo technical founder is to pick one product and go deep. The development lab model works differently - and it requires a specific kind of infrastructure to justify the overhead.
 
-> This approach has a non-obvious advantage: when the shared tooling improves, every venture benefits simultaneously. A CI pipeline fix is a CI pipeline fix for all five codebases.
+> This approach has a non-obvious advantage: when the shared tooling improves, every venture benefits simultaneously. A CI pipeline fix is a CI pipeline fix for all codebases in the portfolio.
 
 ### Bad Examples
 
@@ -84,7 +84,7 @@ Problems: "Having spent months" manufactures timeline. "we felt confident" attri
 | crane-classifier | "the new classifier", "classifier worker"           | The GitHub webhook processor. Use the worker name.                                                                            |
 | crane-context    | "the context worker"                                | The session/handoff API worker. "crane-context" is the worker name; "context API" is acceptable in explanatory prose.         |
 | crane-mcp        | "the MCP server", "MCP package"                     | The MCP server package. Use the package name.                                                                                 |
-| 5 ventures       | "4 products", "4 ventures"                          | There are 5 ventures (vc, ke, sc, dfg, dc). Some are pre-launch but all are ventures.                                         |
+| ventures         | "products", "projects" alone                        | Use "ventures" for portfolio companies. Never cite a specific count in articles - it changes.                                 |
 | development lab  | "product factory"                                   | "Product factory" is deprecated framing. Always use "development lab."                                                        |
 | D1               | "SQLite" alone                                      | It's Cloudflare D1 (SQLite at the edge). Say "D1" or "D1/SQLite" on first reference.                                          |
 | Infisical        | "secrets manager" alone                             | Name the tool. "Infisical" on first reference, "secrets manager" acceptable in subsequent references within the same article. |
@@ -96,19 +96,41 @@ Problems: "Having spent months" manufactures timeline. "we felt confident" attri
 - **Build logs**: First-person plural ("We shipped...") is default. "I" is acceptable only when the founder writes a log personally and wants to be specific about individual decisions.
 - **No throat-clearing**: Start with the point, not with meta-commentary about the article itself.
 
-## Venture Codes
+## Anonymization (mandatory)
 
-| Code | Venture            | Status     |
-| ---- | ------------------ | ---------- |
-| vc   | Venture Crane      | Active     |
-| ke   | Kid Expenses       | Active     |
-| sc   | Silicon Crane      | Active     |
-| dfg  | Durgan Field Guide | Active     |
-| dc   | Design Crane       | Pre-launch |
+All published articles anonymize portfolio-specific details. This is not optional.
+
+**Anonymize:**
+
+- Venture names - use "Project Alpha", "Project Beta", etc.
+- Organization names - use "example-org"
+- Venture codes - use "alpha", "beta", "gamma"
+- Exact venture counts - say "multiple ventures" or "a portfolio of ventures", not a specific number that becomes stale
+- Legal entity names - never reference the parent LLC by name
+
+**Keep real:**
+
+- Third-party tool and platform names (Cloudflare, D1, Infisical, Tailscale, Claude Code, GitHub Actions)
+- Venture Crane as the lab name
+- Infrastructure component names that are in public repos (crane-context, crane-mcp, crane-classifier)
+- Technical details, architecture, code patterns
+
+**Why:** Specific venture names, counts, and legal entities change. Anonymized articles don't go stale when a venture launches, shuts down, or rebrands. The agent-context-management article is the reference implementation of this pattern.
+
+**In code examples:** Use anonymized values in JSON/config snippets too:
+
+```json
+{
+  "code": "alpha",
+  "name": "Project Alpha",
+  "org": "example-org",
+  "capabilities": ["has_api", "has_database"]
+}
+```
 
 ## Style Rules
 
 - Never use em dashes. Use hyphens in prose, pipes in page title separators.
-- Real numbers, real tool names, real configs. No anonymization.
-- Code snippets come from the actual codebase, not made-up examples.
+- Real tool names, real configs, real technical details. Anonymize portfolio specifics (see above).
+- Code snippets come from the actual codebase but with anonymized names.
 - No marketing language. Write like you're explaining to a peer.
