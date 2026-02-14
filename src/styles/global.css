@@ -39,9 +39,9 @@
   --vc-text-muted: #a0a0b8;
   --vc-text-inverse: #1a1a2e;
 
-  /* Accent — teal per design brief */
-  --vc-accent: #5eead4;
-  --vc-accent-hover: #99f6e4;
+  /* Accent — indigo per design brief (DA-01, 2026-02-14) */
+  --vc-accent: #818cf8;
+  --vc-accent-hover: #a5b4fc;
 
   /* Code blocks */
   --vc-code-bg: #14142a;
