@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro'
+import { getEntry, render } from 'astro:content'
+
+const page = await getEntry('pages', 'about')
+if (!page) throw new Error('Missing about.md in pages collection')
+const { Content } = await render(page)
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+---
+
+<Base
+  title="Methodology — Venture Crane"
+  description="How Venture Crane builds products with AI agents."
+>
+  <div class="rounded-lg bg-surface p-6 sm:p-8">
+    <div class="vc-prose">
+      <Content />
+    </div>
+
+    {
+      page.data.updatedDate && (
+        <div class="mt-8 text-sm text-vc-text-muted">
+          Last updated: {formatDate(page.data.updatedDate)}
+        </div>
+      )
+    }
+
+    <section class="mt-12 border-t border-border pt-8">
+      <h2 class="mb-2 text-lg font-semibold">Founder</h2>
+      <p class="text-vc-text-muted">
+        Sean Durgan builds and operates Venture Crane. Background in software engineering and
+        product development.
+      </p>
+      <div class="mt-3 flex gap-4">
+        <a
+          href="https://x.com/venturecrane"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm text-accent hover:text-accent-hover">X</a
+        >
+        <a
+          href="https://github.com/venturecrane"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm text-accent hover:text-accent-hover">GitHub</a
+        >
+      </div>
+    </section>
+  </div>
+</Base>
