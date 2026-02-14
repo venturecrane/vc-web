@@ -7,15 +7,15 @@ tags: ['agent-context', 'mcp', 'infrastructure']
 draft: true
 ---
 
-When running AI coding agents across multiple machines and sessions, context is the bottleneck. Each session starts cold. The agent doesn't know what happened yesterday, what another agent is working on right now, or what the project's business context is. Existing approaches — committing markdown handoff files to git, setting environment variables, pasting context manually — are fragile and don't scale past a single developer on a single machine.
+When running AI coding agents across multiple machines and sessions, context is the bottleneck. Each session starts cold. The agent doesn't know what happened yesterday, what another agent is working on right now, or what the project's business context is. Existing approaches - committing markdown handoff files to git, setting environment variables, pasting context manually - are fragile and don't scale past a single developer on a single machine.
 
 We built a centralized context management system to solve this. It gives every agent session, on any machine, immediate access to:
 
-- **Session continuity** — what happened last time, where things were left off
-- **Parallel awareness** — who else is working, on what, right now
-- **Enterprise knowledge** — business context, product requirements, strategy docs
-- **Operational documentation** — team workflows, API specs, coding standards
-- **Work queue visibility** — GitHub issues by priority and status
+- **Session continuity** - what happened last time, where things were left off
+- **Parallel awareness** - who else is working, on what, right now
+- **Enterprise knowledge** - business context, product requirements, strategy docs
+- **Operational documentation** - team workflows, API specs, coding standards
+- **Work queue visibility** - GitHub issues by priority and status
 
 The system is designed for a small team (1-5 humans) running multiple AI agent sessions in parallel across a fleet of development machines.
 
@@ -71,7 +71,7 @@ The system is designed for a small team (1-5 humans) running multiple AI agent s
 
 - **Separation of concerns**: GitHub owns work artifacts (issues, PRs, code). The context system owns operational state (sessions, handoffs, knowledge). Neither duplicates the other.
 - **Edge-first**: Cloudflare Workers + D1 means the API is globally distributed with ~20ms latency. No servers to manage.
-- **Claude Code-native, multi-CLI aspirational**: The system is deeply integrated with Claude Code (`.claude/commands/` slash commands, `CLAUDE.md` project instructions, Claude Code memory files). The launcher supports Gemini CLI and Codex CLI as alternate agents, but Claude Code is the primary and most complete integration. The context API itself is plain HTTP + MCP — genuinely CLI-agnostic at the protocol layer.
+- **Claude Code-native, multi-CLI aspirational**: The system is deeply integrated with Claude Code (`.claude/commands/` slash commands, `CLAUDE.md` project instructions, Claude Code memory files). The launcher supports Gemini CLI and Codex CLI as alternate agents, but Claude Code is the primary and most complete integration. The context API itself is plain HTTP + MCP - genuinely CLI-agnostic at the protocol layer.
 - **Retry-safe**: All mutating endpoints are idempotent. Calling SOD twice returns the same session. Calling EOD twice is a no-op on an ended session.
 
 ---
@@ -91,14 +91,14 @@ launcher --list           # Show all ventures with install status
 
 **What `launcher <project>` does internally:**
 
-1. **Resolves the agent** — checks `--claude | --gemini | --codex` flags, falls back to `DEFAULT_AGENT` env var, defaults to `claude`
-2. **Validates the agent binary** — confirms `claude`/`gemini`/`codex` is on `PATH`; prints install hint if missing
-3. **Loads venture configuration** — reads `config/ventures.json` for project metadata and capabilities
-4. **Discovers the local repo** — scans `~/dev/` for git repos matching the venture's org, matches by naming convention
-5. **Fetches secrets** — calls `infisical export --format=json --path /<project-code> --env dev` to get project-specific secrets (API keys, tokens). Secrets are fetched once and frozen for the session lifetime
-6. **Ensures MCP registration** — copies `.mcp.json` into the venture repo (for Claude Code), or writes to `~/.gemini/settings.json` (Gemini) or `~/.codex/config.toml` (Codex)
-7. **Self-heals MCP binary** — if the MCP server binary isn't found on `PATH`, auto-rebuilds and re-links it
-8. **Spawns the agent** — `cd` to the repo directory, spawns the CLI binary with all secrets injected as environment variables, `stdio: 'inherit'`
+1. **Resolves the agent** - checks `--claude | --gemini | --codex` flags, falls back to `DEFAULT_AGENT` env var, defaults to `claude`
+2. **Validates the agent binary** - confirms `claude`/`gemini`/`codex` is on `PATH`; prints install hint if missing
+3. **Loads venture configuration** - reads `config/ventures.json` for project metadata and capabilities
+4. **Discovers the local repo** - scans `~/dev/` for git repos matching the venture's org, matches by naming convention
+5. **Fetches secrets** - calls `infisical export --format=json --path /<project-code> --env dev` to get project-specific secrets (API keys, tokens). Secrets are fetched once and frozen for the session lifetime
+6. **Ensures MCP registration** - copies `.mcp.json` into the venture repo (for Claude Code), or writes to `~/.gemini/settings.json` (Gemini) or `~/.codex/config.toml` (Codex)
+7. **Self-heals MCP binary** - if the MCP server binary isn't found on `PATH`, auto-rebuilds and re-links it
+8. **Spawns the agent** - `cd` to the repo directory, spawns the CLI binary with all secrets injected as environment variables, `stdio: 'inherit'`
 
 This eliminates the need to manually set environment variables, navigate to repos, or configure MCP servers. One command, fully configured session.
 
@@ -141,7 +141,7 @@ $ ./scripts/bootstrap-machine.sh
 ✓ MCP connected
 ```
 
-**What this replaced**: Previously, setup required configuring 3+ environment variables, installing skill scripts, debugging OAuth conflicts, and manual troubleshooting — often taking 2+ hours per machine.
+**What this replaced**: Previously, setup required configuring 3+ environment variables, installing skill scripts, debugging OAuth conflicts, and manual troubleshooting - often taking 2+ hours per machine.
 
 ### Fleet Management
 
@@ -162,15 +162,15 @@ A fleet health script checks all registered machines in parallel, verifying SSH 
 
 Every agent session begins with SOD. In Claude Code, the `/sod` slash command orchestrates a multi-step initialization:
 
-1. **Cache docs** — runs a cache script in the background, pre-fetching documentation from the context API to a local temp directory
-2. **Preflight** — calls `preflight` MCP tool to validate: `CONTEXT_API_KEY` is set, `gh` CLI is authenticated, git repo detected, API connectivity OK
-3. **Create/resume session** — calls `sod` MCP tool. If an active session exists for this agent+project+repo tuple, it resumes it; otherwise creates new
-4. **Load last handoff** — retrieves the structured summary from the previous session
-5. **Show P0 issues** — queries GitHub for critical priority issues
-6. **Show active sessions** — lists other agents currently working on the same project
-7. **Two-stage doc delivery** — documentation metadata is returned by default (titles, versions, freshness). Full content is fetched on request. This prevents bloating the initial context load
-8. **Check documentation health** — audits for missing or stale docs and self-heals where possible
-9. **Check weekly plan** — reads `docs/planning/WEEKLY_PLAN.md`, shows current priority, alerts if the plan is stale
+1. **Cache docs** - runs a cache script in the background, pre-fetching documentation from the context API to a local temp directory
+2. **Preflight** - calls `preflight` MCP tool to validate: `CONTEXT_API_KEY` is set, `gh` CLI is authenticated, git repo detected, API connectivity OK
+3. **Create/resume session** - calls `sod` MCP tool. If an active session exists for this agent+project+repo tuple, it resumes it; otherwise creates new
+4. **Load last handoff** - retrieves the structured summary from the previous session
+5. **Show P0 issues** - queries GitHub for critical priority issues
+6. **Show active sessions** - lists other agents currently working on the same project
+7. **Two-stage doc delivery** - documentation metadata is returned by default (titles, versions, freshness). Full content is fetched on request. This prevents bloating the initial context load
+8. **Check documentation health** - audits for missing or stale docs and self-heals where possible
+9. **Check weekly plan** - reads `docs/planning/WEEKLY_PLAN.md`, shows current priority, alerts if the plan is stale
 
 **Output example:**
 
@@ -214,7 +214,7 @@ During work, the session can be updated with:
 
 Heartbeats use server-side jitter (10min base ± 2min) to prevent thundering herd across many agents.
 
-### End of Day (EOD) — Dual-Write
+### End of Day (EOD) - Dual-Write
 
 The system has two complementary EOD mechanisms that write to different stores:
 
@@ -236,16 +236,16 @@ The `/eod` Claude Code slash command writes a markdown handoff to `docs/handoffs
 - User confirms with a single yes/no before committing
 - `git add docs/handoffs/DEV.md && git commit && git push`
 
-**Why both?** D1 handoffs provide structured, queryable continuity across agents and machines. Git handoffs provide human-readable history in the repo, visible in PRs and code review. The two aren't duplicates — they serve different audiences.
+**Why both?** D1 handoffs provide structured, queryable continuity across agents and machines. Git handoffs provide human-readable history in the repo, visible in PRs and code review. The two aren't duplicates - they serve different audiences.
 
-**Critical principle**: The agent summarizes. The human confirms. The human never writes the handoff — the agent has full session context and synthesizes it.
+**Critical principle**: The agent summarizes. The human confirms. The human never writes the handoff - the agent has full session context and synthesizes it.
 
 ### Session Staleness
 
 Sessions have a 45-minute idle timeout. If no heartbeat is received:
 
 - Session is filtered out of "active" queries (Phase 1: soft filter)
-- Session is marked `abandoned` (Phase 2: scheduled cleanup — designed, not yet deployed)
+- Session is marked `abandoned` (Phase 2: scheduled cleanup - designed, not yet deployed)
 - Next SOD for the same agent creates a fresh session
 
 ---
@@ -279,7 +279,7 @@ dev/instance2/update-schema
 - Coordinate via PRs, not shared files
 - Push frequently for visibility
 
-**Track system** (designed, not actively used): The D1 schema supports a `track` field on sessions and handoffs. The design allows issues to be assigned to numbered tracks, with agents claiming a track at SOD time and only seeing issues for their track. The schema, indexes, and query patterns are all in place — this feature is ready to activate when parallel agent operations become routine.
+**Track system** (designed, not actively used): The D1 schema supports a `track` field on sessions and handoffs. The design allows issues to be assigned to numbered tracks, with agents claiming a track at SOD time and only seeing issues for their track. The schema, indexes, and query patterns are all in place - this feature is ready to activate when parallel agent operations become routine.
 
 ```
 Agent 1: SOD project track-1  → works on track 1 issues
@@ -310,7 +310,7 @@ Target agent:
 
 ### Purpose
 
-Agents need business context to make good decisions. "What does this company do?" "What's the product strategy?" "Who's the target customer?" This knowledge is durable — it doesn't change session to session — but agents need it injected at session start.
+Agents need business context to make good decisions. "What does this company do?" "What's the product strategy?" "Who's the target customer?" This knowledge is durable - it doesn't change session to session - but agents need it injected at session start.
 
 ### Implementation
 
@@ -410,12 +410,12 @@ Documentation self-healing is implemented as three cooperating components:
 
 The worker's `/docs/audit` endpoint queries `doc_requirements` against `context_docs`. Each requirement specifies:
 
-- `doc_name_pattern` — e.g., `{venture}-project-instructions.md`
-- `scope_type` — global, all ventures, or specific venture
-- `condition` — capability gate (e.g., only for ventures with `has_api`)
-- `staleness_days` — freshness threshold (default 90 days)
-- `auto_generate` — whether the doc can be machine-generated
-- `generation_sources` — hints for the generator (e.g., `["routes", "migrations", "readme"]`)
+- `doc_name_pattern` - e.g., `{venture}-project-instructions.md`
+- `scope_type` - global, all ventures, or specific venture
+- `condition` - capability gate (e.g., only for ventures with `has_api`)
+- `staleness_days` - freshness threshold (default 90 days)
+- `auto_generate` - whether the doc can be machine-generated
+- `generation_sources` - hints for the generator (e.g., `["routes", "migrations", "readme"]`)
 
 **Part 2: Doc Generator (MCP)**
 
@@ -454,7 +454,7 @@ When docs are updated in git (process docs, ADRs merged to main):
 4. Version is incremented, content hash updated
 5. Next SOD call returns the latest version
 
-Manual trigger (`workflow_dispatch`) syncs all docs at once — useful for recovery.
+Manual trigger (`workflow_dispatch`) syncs all docs at once - useful for recovery.
 
 ### Doc Cache Script
 
@@ -494,8 +494,8 @@ Claude Code uses per-repo `.mcp.json` files (the launcher copies a template). Ge
 
 For remote sessions (SSH into fleet machines), the launcher handles two additional concerns:
 
-- **Infisical Universal Auth** — reads machine credentials from `~/.infisical-ua` and passes `INFISICAL_TOKEN` + `--projectId` to the export command
-- **macOS Keychain Unlock** — ensures Claude Code's OAuth tokens are accessible in the remote session
+- **Infisical Universal Auth** - reads machine credentials from `~/.infisical-ua` and passes `INFISICAL_TOKEN` + `--projectId` to the export command
+- **macOS Keychain Unlock** - ensures Claude Code's OAuth tokens are accessible in the remote session
 
 ---
 
@@ -562,7 +562,7 @@ The context API enforces per-actor rate limits:
 
 ### GitHub as Source of Truth
 
-All work items live in GitHub Issues. The context system does not duplicate this — it provides a lens into GitHub state at session start time.
+All work items live in GitHub Issues. The context system does not duplicate this - it provides a lens into GitHub state at session start time.
 
 ### Label-Driven Routing
 
@@ -606,7 +606,7 @@ Hard-won from post-mortems where agents churned for 10+ hours without escalating
 
 ### Core Tables
 
-**Sessions** — tracks active agent sessions with heartbeat-based liveness:
+**Sessions** - tracks active agent sessions with heartbeat-based liveness:
 
 ```
 id (sess_<ULID>), agent, venture, repo, track, issue_number,
@@ -615,7 +615,7 @@ created_at, last_heartbeat_at, ended_at, end_reason,
 actor_key_id, creation_correlation_id, meta_json
 ```
 
-**Handoffs** — structured session summaries persisted for cross-session continuity:
+**Handoffs** - structured session summaries persisted for cross-session continuity:
 
 ```
 id (ho_<ULID>), session_id, venture, repo, track, issue_number,
@@ -625,7 +625,7 @@ payload_hash, payload_size_bytes, schema_version,
 actor_key_id, creation_correlation_id
 ```
 
-**Notes** — enterprise knowledge entries with tag-based taxonomy:
+**Notes** - enterprise knowledge entries with tag-based taxonomy:
 
 ```
 id (note_<ULID>), title, content, tags (JSON array),
@@ -633,7 +633,7 @@ venture (scope), archived, created_at, updated_at,
 actor_key_id, meta_json
 ```
 
-**Context Docs** — operational documentation with version tracking:
+**Context Docs** - operational documentation with version tracking:
 
 ```
 (scope, doc_name) PRIMARY KEY, content, content_hash (SHA-256),
@@ -641,7 +641,7 @@ content_size_bytes, doc_type, title, version, created_at,
 updated_at, uploaded_by, source_repo, source_path
 ```
 
-**Doc Requirements** — defines what docs should exist per venture:
+**Doc Requirements** - defines what docs should exist per venture:
 
 ```
 id, doc_name_pattern, scope_type, scope_venture,
@@ -649,21 +649,21 @@ required, condition (capability gate), staleness_days,
 auto_generate, generation_sources (JSON array)
 ```
 
-**Rate Limits** — per-actor, per-minute request counters:
+**Rate Limits** - per-actor, per-minute request counters:
 
 ```
 key (rl:<actor_key_id>:<minute>) PRIMARY KEY,
 count, expires_at
 ```
 
-**Idempotency Keys** — ensures retry safety on all mutations:
+**Idempotency Keys** - ensures retry safety on all mutations:
 
 ```
 (endpoint, key) → response_status, response_hash, response_body,
 response_size_bytes, response_truncated, expires_at (1 hour TTL)
 ```
 
-**Request Log** — full audit trail with correlation IDs:
+**Request Log** - full audit trail with correlation IDs:
 
 ```
 id, timestamp, correlation_id, endpoint, method,
@@ -672,13 +672,13 @@ status_code, duration_ms, error_message,
 idempotency_key, idempotency_hit
 ```
 
-**Machines** — fleet registration and SSH mesh state.
+**Machines** - fleet registration and SSH mesh state.
 
 ### Design Choices
 
 - **ULID** for all IDs (sortable, timestamp-embedded). Prefixed by type: `sess_`, `ho_`, `cp_`, `note_`, `mach_`
-- **Canonical JSON** (RFC 8785) for handoff payloads — stable hashing
-- **Actor key ID** derived from SHA-256 of API key (first 16 hex chars) — attribution without storing keys
+- **Canonical JSON** (RFC 8785) for handoff payloads - stable hashing
+- **Actor key ID** derived from SHA-256 of API key (first 16 hex chars) - attribution without storing keys
 - **Two-tier correlation**: `corr_<UUID>` per-request header ID for debugging, stored creation ID for audit trail
 - **800KB payload limit** on handoffs (D1 has 1MB row limit, leaving headroom)
 - **Hybrid idempotency storage**: full response body if <64KB, hash-only otherwise
@@ -701,11 +701,11 @@ Both keys are 64-character hex strings generated via `openssl rand -hex 32`.
 
 ### Actor Attribution
 
-Every mutating request records an `actor_key_id` — the first 16 hex characters of `SHA-256(api_key)`. This provides:
+Every mutating request records an `actor_key_id` - the first 16 hex characters of `SHA-256(api_key)`. This provides:
 
 - **Attribution** without storing raw keys
 - **Audit trail** across all tables (sessions, handoffs, notes, request log)
-- **Key rotation safety** — changing a key changes the actor ID, making old actions still traceable
+- **Key rotation safety** - changing a key changes the actor ID, making old actions still traceable
 
 ### Correlation IDs
 
@@ -722,16 +722,16 @@ Every API request gets a `corr_<UUID>` correlation ID (generated server-side if 
 
 ### Secret Injection
 
-Infisical stores all secrets organized by venture path (`/alpha`, `/beta`, etc.). The launcher fetches secrets once at session start and injects them as environment variables. Secrets never touch disk in plaintext — they flow `Infisical → env vars → process memory`.
+Infisical stores all secrets organized by venture path (`/alpha`, `/beta`, etc.). The launcher fetches secrets once at session start and injects them as environment variables. Secrets never touch disk in plaintext - they flow `Infisical → env vars → process memory`.
 
 ### CI Security Checks
 
 GitHub Actions runs on every push and PR:
 
-- **NPM Audit** — `npm audit --audit-level=high` on all workers
-- **Gitleaks** — secret detection scanning the full repo
-- **TypeScript** — `tsc --noEmit` across all packages
-- **Daily schedule** — security checks run at 6am UTC even without code changes
+- **NPM Audit** - `npm audit --audit-level=high` on all workers
+- **Gitleaks** - secret detection scanning the full repo
+- **TypeScript** - `tsc --noEmit` across all packages
+- **Daily schedule** - security checks run at 6am UTC even without code changes
 
 ---
 
@@ -759,7 +759,7 @@ GitHub Actions runs on every push and PR:
 ### Pre-commit/Pre-push Hooks
 
 - **Pre-commit**: Prettier formatting + ESLint fixes on staged files (via lint-staged)
-- **Pre-push**: Full `npm run verify` — blocks push if typecheck, format, lint, or tests fail
+- **Pre-push**: Full `npm run verify` - blocks push if typecheck, format, lint, or tests fail
 
 ---
 
@@ -767,29 +767,29 @@ GitHub Actions runs on every push and PR:
 
 ### Things That Work Well
 
-1. **SOD/EOD discipline** — Agents that start with full context produce dramatically better work. The 30-second overhead of SOD pays for itself within minutes.
+1. **SOD/EOD discipline** - Agents that start with full context produce dramatically better work. The 30-second overhead of SOD pays for itself within minutes.
 
-2. **Structured handoffs > free-text notes** — Forcing handoffs into `accomplished / in_progress / blocked / next_steps` makes them actually useful to the receiving agent.
+2. **Structured handoffs > free-text notes** - Forcing handoffs into `accomplished / in_progress / blocked / next_steps` makes them actually useful to the receiving agent.
 
-3. **Self-healing docs** — Documentation that auto-regenerates means it never silently goes stale. New projects get baseline docs without anyone remembering to create them.
+3. **Self-healing docs** - Documentation that auto-regenerates means it never silently goes stale. New projects get baseline docs without anyone remembering to create them.
 
-4. **Enterprise context injection** — Giving agents business context (executive summaries, product strategy) at session start produces more aligned technical decisions.
+4. **Enterprise context injection** - Giving agents business context (executive summaries, product strategy) at session start produces more aligned technical decisions.
 
-5. **Parallel session awareness** — Simply showing "Agent X is working on Issue #87" prevents duplicate work.
+5. **Parallel session awareness** - Simply showing "Agent X is working on Issue #87" prevents duplicate work.
 
-6. **The launcher** — Reducing session setup from "navigate to repo, set env vars, configure MCP, launch CLI" to `launch alpha` eliminated an entire class of setup errors and made it practical to run sessions on any machine in the fleet.
+6. **The launcher** - Reducing session setup from "navigate to repo, set env vars, configure MCP, launch CLI" to `launch alpha` eliminated an entire class of setup errors and made it practical to run sessions on any machine in the fleet.
 
 ### Things That Were Hard
 
-1. **MCP process lifecycle** — MCP servers run as subprocesses of the CLI. A "session restart" (context compaction) does NOT restart the MCP process. Only a full CLI exit/relaunch loads new code. This caused a multi-hour debugging session.
+1. **MCP process lifecycle** - MCP servers run as subprocesses of the CLI. A "session restart" (context compaction) does NOT restart the MCP process. Only a full CLI exit/relaunch loads new code. This caused a multi-hour debugging session.
 
-2. **Auth evolution** — We went through three auth approaches (environment variables → skill-injected scripts → MCP config). Each migration touched every machine in the fleet.
+2. **Auth evolution** - We went through three auth approaches (environment variables → skill-injected scripts → MCP config). Each migration touched every machine in the fleet.
 
-3. **Knowledge store scope creep** — Early versions auto-saved all kinds of content. The system became noisy. Restricting to "content that makes agents smarter" and requiring explicit human approval dramatically improved signal-to-noise.
+3. **Knowledge store scope creep** - Early versions auto-saved all kinds of content. The system became noisy. Restricting to "content that makes agents smarter" and requiring explicit human approval dramatically improved signal-to-noise.
 
-4. **Stale process state** — Node.js caches modules at process start. If you rebuild the MCP server but don't restart the CLI, the old code runs. This is not obvious and has bitten us multiple times.
+4. **Stale process state** - Node.js caches modules at process start. If you rebuild the MCP server but don't restart the CLI, the old code runs. This is not obvious and has bitten us multiple times.
 
-5. **Context window budget** — SOD output hit 298K characters in one measured session. There is currently no truncation or budget management — the full output is injected into the agent's context. This is an acknowledged open problem. Long SOD output competes for space with the actual work the agent needs to do. Solutions under consideration include: metadata-only doc delivery (partially implemented), progressive loading, and hard character budgets per section.
+5. **Context window budget** - SOD output hit 298K characters in one measured session. There is currently no truncation or budget management - the full output is injected into the agent's context. This is an acknowledged open problem. Long SOD output competes for space with the actual work the agent needs to do. Solutions under consideration include: metadata-only doc delivery (partially implemented), progressive loading, and hard character budgets per section.
 
 ---
 
@@ -813,9 +813,9 @@ GitHub Actions runs on every push and PR:
 
 Architectural Decision Records are tracked in `docs/adr/` and synced to D1 via the doc sync GitHub Actions workflow. ADRs capture:
 
-- **Context** — why a decision was needed
-- **Decision** — what was chosen and why
-- **Consequences** — tradeoffs and follow-up work
+- **Context** - why a decision was needed
+- **Decision** - what was chosen and why
+- **Consequences** - tradeoffs and follow-up work
 
 Key ADRs include the context worker implementation specification (schema design, idempotency patterns, session lifecycle) and the staging/production environment strategy (phased rollout of environment separation for Workers and D1).
 
@@ -848,7 +848,7 @@ Phase 2: Collect Public Keys
 Phase 3: Distribute authorized_keys
   - For each reachable machine, ensure every other machine's
     pubkey is in its authorized_keys
-  - Idempotent — checks before adding, never duplicates
+  - Idempotent - checks before adding, never duplicates
 
 Phase 4: Deploy SSH Config Fragments
   - Writes ~/.ssh/config.d/fleet-mesh on each machine
@@ -902,7 +902,7 @@ Tailscale replaces the need for port forwarding, dynamic DNS, or VPN servers. SS
 
 AI coding sessions can run for hours. If the SSH connection drops (network change, laptop sleep, timeout), the session is lost. tmux solves this:
 
-- **Session persistence**: The tmux session lives on the server. Disconnect and reconnect — the session is exactly where you left it.
+- **Session persistence**: The tmux session lives on the server. Disconnect and reconnect - the session is exactly where you left it.
 - **Transport agnostic**: Works identically over SSH and Mosh. The agent session inside tmux doesn't know or care how you're connected.
 - **Multi-window**: Run the agent in one pane, a build watcher in another, logs in a third.
 
@@ -939,10 +939,10 @@ set -g history-limit 50000
 # Hostname in status bar (critical when SSH'd into multiple machines)
 set -g status-left "[#h] "
 
-# Faster escape (no lag when pressing Esc — important for vim users)
+# Faster escape (no lag when pressing Esc - important for vim users)
 set -s escape-time 10
 
-# OSC 52 clipboard — lets tmux copy reach the local clipboard
+# OSC 52 clipboard - lets tmux copy reach the local clipboard
 # through SSH/Mosh. This is the magic that makes copy/paste work
 # from a remote tmux session back to your local machine.
 set -g set-clipboard on
@@ -965,7 +965,7 @@ dev-session alpha
 This means:
 
 - `ssh server1` + `dev-session alpha` = resume exactly where you left off
-- Disconnect (intentionally or not) and reconnect later — session is intact
+- Disconnect (intentionally or not) and reconnect later - session is intact
 - Works identically whether you connected via SSH or Mosh
 
 ---
@@ -1005,7 +1005,7 @@ Mosh (Mobile Shell) is purpose-built for unreliable networks:
 | Latency           | Waits for server echo | Local echo (instant keystrokes) |
 | Cellular gaps     | Timeout → reconnect   | Resumes transparently           |
 
-Mosh is especially valuable on mobile: switch from WiFi to cellular, walk between rooms, lock the phone for 30 minutes — the session is still there when you come back.
+Mosh is especially valuable on mobile: switch from WiFi to cellular, walk between rooms, lock the phone for 30 minutes - the session is still there when you come back.
 
 **Setup is one command per server:**
 
@@ -1078,7 +1078,7 @@ A portable laptop serves as the primary development machine when traveling. An i
 
 ### How Hotspot LAN Access Works
 
-When the phone creates a hotspot, the laptop and phone are on the same local network (172.20.10.x). The phone can SSH/Mosh to the laptop using **mDNS/Bonjour** (`laptop.local`) — no Tailscale needed, sub-millisecond latency.
+When the phone creates a hotspot, the laptop and phone are on the same local network (172.20.10.x). The phone can SSH/Mosh to the laptop using **mDNS/Bonjour** (`laptop.local`) - no Tailscale needed, sub-millisecond latency.
 
 But: hotspot IPs change between connections. Using `.local` hostname resolution (Bonjour) means it always resolves correctly regardless of the current IP assignment.
 
@@ -1131,31 +1131,31 @@ This setup means you're never more than a Blink Shell session away from a full d
 
 These features are designed and in some cases partially implemented, but not yet deployed:
 
-**Per-agent tokens** — Currently using a shared API key with actor attribution via key ID derivation. Moving to per-agent tokens would enable fine-grained revocation, per-agent rate limits, and cleaner audit trails.
+**Per-agent tokens** - Currently using a shared API key with actor attribution via key ID derivation. Moving to per-agent tokens would enable fine-grained revocation, per-agent rate limits, and cleaner audit trails.
 
-**Scheduled cleanup** — Stale sessions are currently soft-filtered in queries. A Cloudflare Cron Trigger to mark sessions `abandoned` after 45 minutes, purge expired idempotency keys, and rotate the request log (7-day retention) is designed in the ADR but not yet deployed.
+**Scheduled cleanup** - Stale sessions are currently soft-filtered in queries. A Cloudflare Cron Trigger to mark sessions `abandoned` after 45 minutes, purge expired idempotency keys, and rotate the request log (7-day retention) is designed in the ADR but not yet deployed.
 
-**Staging/production environments** — Currently single-environment. ADR 026 proposes: `[env.production]` blocks in `wrangler.toml`, staging as default deployment, manual promotion to production. This protects live agent sessions from deployment-time breakage.
+**Staging/production environments** - Currently single-environment. ADR 026 proposes: `[env.production]` blocks in `wrangler.toml`, staging as default deployment, manual promotion to production. This protects live agent sessions from deployment-time breakage.
 
-**Context window budget management** — SOD output measured at 298K characters in one session. No truncation or budget management exists today. Planned approach: hard character budgets per section, metadata-only doc delivery by default (partially implemented), progressive loading where the agent requests full doc content when needed.
+**Context window budget management** - SOD output measured at 298K characters in one session. No truncation or budget management exists today. Planned approach: hard character budgets per section, metadata-only doc delivery by default (partially implemented), progressive loading where the agent requests full doc content when needed.
 
 ### Phase 3 (Aspirational)
 
 These are features we'd build if the system scales beyond its current operational scope:
 
-**Cross-project visibility / global dashboard** — Currently scoped per-project. A global view showing all active sessions across all ventures would help the human operator spot conflicts and allocate work.
+**Cross-project visibility / global dashboard** - Currently scoped per-project. A global view showing all active sessions across all ventures would help the human operator spot conflicts and allocate work.
 
-**Real-time push notifications** — Currently pull-based (SOD queries active sessions). Push notifications when a parallel agent creates a PR, hits a blocker, or completes a task would improve coordination latency.
+**Real-time push notifications** - Currently pull-based (SOD queries active sessions). Push notifications when a parallel agent creates a PR, hits a blocker, or completes a task would improve coordination latency.
 
-**Advanced observability** — Sentry for error tracking, Axiom or similar for structured logging. Currently relying on D1 request log and `console.log` in Workers.
+**Advanced observability** - Sentry for error tracking, Axiom or similar for structured logging. Currently relying on D1 request log and `console.log` in Workers.
 
-**Session analytics API** — Query patterns across historical sessions: average session duration, handoff frequency, escalation rates, time-to-resolution by issue type. The data is in D1 — the API and visualization layer doesn't exist yet.
+**Session analytics API** - Query patterns across historical sessions: average session duration, handoff frequency, escalation rates, time-to-resolution by issue type. The data is in D1 - the API and visualization layer doesn't exist yet.
 
-**OpenAPI/Swagger documentation** — The context API has no formal API documentation beyond the codebase. Auto-generating OpenAPI specs from the Zod schemas (MCP) and Ajv schemas (Worker) would improve onboarding.
+**OpenAPI/Swagger documentation** - The context API has no formal API documentation beyond the codebase. Auto-generating OpenAPI specs from the Zod schemas (MCP) and Ajv schemas (Worker) would improve onboarding.
 
-**Full-text search in KMS** — Currently search is tag/venture filtered with basic text matching. D1 supports FTS5 — enabling it would make the knowledge store much more useful as it grows.
+**Full-text search in KMS** - Currently search is tag/venture filtered with basic text matching. D1 supports FTS5 - enabling it would make the knowledge store much more useful as it grows.
 
-**Multi-CLI parity** — Claude Code has deep integration (slash commands, `CLAUDE.md`, memory files, per-repo MCP config). Gemini CLI and Codex CLI work at the MCP layer but lack the slash command workflows. True parity would require equivalent command systems for each CLI.
+**Multi-CLI parity** - Claude Code has deep integration (slash commands, `CLAUDE.md`, memory files, per-repo MCP config). Gemini CLI and Codex CLI work at the MCP layer but lack the slash command workflows. True parity would require equivalent command systems for each CLI.
 
 ---
 

@@ -1,3 +1,3 @@
 # vc-web
 
-Venture Crane marketing website — venturecrane.com
+Venture Crane marketing website - venturecrane.com

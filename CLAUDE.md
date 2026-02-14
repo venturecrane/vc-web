@@ -29,11 +29,11 @@ npm run verify          # Full verification (typecheck + format + lint + build)
 
 ## Design Tokens
 
-All design tokens are CSS custom properties prefixed `--vc-*` defined in `src/styles/global.css`. Tailwind is configured to reference these properties — never hardcode hex values in templates.
+All design tokens are CSS custom properties prefixed `--vc-*` defined in `src/styles/global.css`. Tailwind is configured to reference these properties - never hardcode hex values in templates.
 
 ## Code Patterns
 
-- Zero client-side JavaScript — all pages are static HTML + CSS
+- Zero client-side JavaScript - all pages are static HTML + CSS
 - Content uses Astro Content Collections with Zod schemas
 - CSS-only interactions (mobile nav uses `<details><summary>`)
 - Dark theme: chrome (`--vc-chrome`) for structure, surface (`--vc-surface`) for content

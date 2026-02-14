@@ -7,13 +7,13 @@ tags: ['design-system', 'tailwind', 'css', 'dark-theme']
 draft: false
 ---
 
-Most design system guides start with light mode and bolt dark mode on as an afterthought. We went the other direction. Venture Crane's site was designed dark-first — every color token, every contrast ratio, every surface elevation was conceived for a dark canvas. Here's what we learned building it with Tailwind CSS v4 and vanilla CSS custom properties.
+Most design system guides start with light mode and bolt dark mode on as an afterthought. We went the other direction. Venture Crane's site was designed dark-first - every color token, every contrast ratio, every surface elevation was conceived for a dark canvas. Here's what we learned building it with Tailwind CSS v4 and vanilla CSS custom properties.
 
 ## Why Dark-First
 
 The conventional approach treats dark mode as an inversion. You design for white backgrounds, then flip to dark with `prefers-color-scheme`. This works, but it produces dark themes that feel like negatives of the light version rather than intentional designs.
 
-We had a specific reason to go dark-first: Venture Crane is a development lab. Our audience is practitioners — developers and technical founders who spend most of their screen time in dark terminals and IDEs. A dark reading surface isn't an accommodation; it's the default expectation.
+We had a specific reason to go dark-first: Venture Crane is a development lab. Our audience is practitioners - developers and technical founders who spend most of their screen time in dark terminals and IDEs. A dark reading surface isn't an accommodation; it's the default expectation.
 
 There's a practical benefit too. When you design dark-first, you're forced to think about elevation through surface tones rather than shadows. Shadows barely register against dark backgrounds. This constraint produced a cleaner hierarchy system than we'd have arrived at starting with light mode.
 
@@ -23,11 +23,11 @@ There's a practical benefit too. When you design dark-first, you're forced to th
 
 Our system uses three semantic layers for background surfaces:
 
-1. **Chrome** (`#1a1a2e`) — structural elements like the header, footer, and homepage background
-2. **Surface** (`#242438`) — content reading areas where long-form text lives
-3. **Surface Raised** (`#2a2a42`) — cards, code blocks, and interactive elements that float above the surface
+1. **Chrome** (`#1a1a2e`) - structural elements like the header, footer, and homepage background
+2. **Surface** (`#242438`) - content reading areas where long-form text lives
+3. **Surface Raised** (`#2a2a42`) - cards, code blocks, and interactive elements that float above the surface
 
-The chrome-to-surface transition is deliberate. When you navigate from the homepage to an article, the reading area shifts from `#1a1a2e` to `#242438` — a subtle but noticeable increase in lightness that signals "you're in reading mode now." It's only 6 points different in lightness, but your eyes register it immediately.
+The chrome-to-surface transition is deliberate. When you navigate from the homepage to an article, the reading area shifts from `#1a1a2e` to `#242438` - a subtle but noticeable increase in lightness that signals "you're in reading mode now." It's only 6 points different in lightness, but your eyes register it immediately.
 
 ### Custom Properties Over Theme Extensions
 
@@ -35,7 +35,7 @@ Tailwind v4 introduced a `@theme` directive that maps directly to CSS custom pro
 
 ```css
 :root {
-  /* Source tokens — the actual values */
+  /* Source tokens - the actual values */
   --vc-chrome: #1a1a2e;
   --vc-surface: #242438;
   --vc-surface-raised: #2a2a42;
@@ -50,7 +50,7 @@ Tailwind v4 introduced a `@theme` directive that maps directly to CSS custom pro
 }
 
 @theme {
-  /* Tailwind mappings — reference the source tokens */
+  /* Tailwind mappings - reference the source tokens */
   --color-chrome: var(--vc-chrome);
   --color-surface: var(--vc-surface);
   --color-surface-raised: var(--vc-surface-raised);
@@ -60,7 +60,7 @@ Tailwind v4 introduced a `@theme` directive that maps directly to CSS custom pro
 }
 ```
 
-This looks like unnecessary indirection, but it serves a purpose. The `:root` tokens are plain CSS — any stylesheet, component `<style>` block, or third-party library can reference them. The `@theme` block maps these into Tailwind's utility class system so `bg-surface` and `text-accent` work in class attributes. One set of values, two consumption patterns, zero duplication.
+This looks like unnecessary indirection, but it serves a purpose. The `:root` tokens are plain CSS - any stylesheet, component `<style>` block, or third-party library can reference them. The `@theme` block maps these into Tailwind's utility class system so `bg-surface` and `text-accent` work in class attributes. One set of values, two consumption patterns, zero duplication.
 
 ### Contrast Ratios
 
@@ -75,7 +75,7 @@ Every color pairing was checked against WCAG AA (4.5:1) and AAA (7:1) thresholds
 | Code text       | `#e8e8f0`  | `#14142a`  | 14.1:1 | AAA   |
 | Muted on chrome | `#a0a0b8`  | `#1a1a2e`  | 6.2:1  | AA    |
 
-The gold accent (`#dbb05c`) was specifically tuned to clear AAA on the chrome background. An earlier candidate (`#d4a855`) only hit 6.9:1 — technically AA-compliant, but uncomfortably close to the boundary. We bumped it to `#dbb05c` for margin.
+The gold accent (`#dbb05c`) was specifically tuned to clear AAA on the chrome background. An earlier candidate (`#d4a855`) only hit 6.9:1 - technically AA-compliant, but uncomfortably close to the boundary. We bumped it to `#dbb05c` for margin.
 
 ## Typography Decisions
 
@@ -122,7 +122,7 @@ We defined a five-step scale covering everything from page titles to metadata:
 | Body       | 1.125rem (18px) | 1.7         | 400    |
 | Small/Meta | 0.875rem (14px) | 1.5         | 400    |
 
-Each step is roughly a 1.25x ratio — not a mathematically perfect scale, but one tuned for readability at each individual level. Strict modular scales often produce awkward sizes at the extremes. We preferred each level looking right on its own.
+Each step is roughly a 1.25x ratio - not a mathematically perfect scale, but one tuned for readability at each individual level. Strict modular scales often produce awkward sizes at the extremes. We preferred each level looking right on its own.
 
 ## Component Patterns
 
@@ -191,7 +191,7 @@ The clever part is the scroll shadow technique using `background-attachment: loc
 }
 ```
 
-The `local` backgrounds scroll with the content; the `scroll` backgrounds stay fixed. When you scroll right, the left `local` gradient moves away, revealing the left `scroll` shadow. It's CSS-only, performant, and degrades gracefully — if a browser doesn't support `background-attachment: local`, you just don't get shadow indicators.
+The `local` backgrounds scroll with the content; the `scroll` backgrounds stay fixed. When you scroll right, the left `local` gradient moves away, revealing the left `scroll` shadow. It's CSS-only, performant, and degrades gracefully - if a browser doesn't support `background-attachment: local`, you just don't get shadow indicators.
 
 ## Lessons Learned
 
@@ -205,6 +205,6 @@ Our reading comfort check isn't "does this look okay for 30 seconds." It's "can 
 
 ### Don't Build What Astro Gives You
 
-We started writing a custom Markdown processing pipeline before realizing Astro's built-in content collections already handled 90% of what we needed. The only custom piece is a single rehype plugin that adds `tabindex` attributes and wraps tables. Everything else — frontmatter parsing, type-safe schemas, slug generation, RSS feeds — is Astro out of the box.
+We started writing a custom Markdown processing pipeline before realizing Astro's built-in content collections already handled 90% of what we needed. The only custom piece is a single rehype plugin that adds `tabindex` attributes and wraps tables. Everything else - frontmatter parsing, type-safe schemas, slug generation, RSS feeds - is Astro out of the box.
 
 The best code is the code you delete. The second best is the code you never write.

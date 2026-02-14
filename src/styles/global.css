@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-/* Tailwind v4 theme — maps to CSS custom properties */
+/* Tailwind v4 theme - maps to CSS custom properties */
 @theme {
   /* Colors */
   --color-chrome: var(--vc-chrome);
@@ -29,11 +29,11 @@
 }
 
 :root {
-  /* Chrome — site structure (header, footer, homepage bg) */
+  /* Chrome - site structure (header, footer, homepage bg) */
   --vc-chrome: #1a1a2e;
   --vc-chrome-light: #1e1e36;
 
-  /* Surface — content reading areas */
+  /* Surface - content reading areas */
   --vc-surface: #242438;
   --vc-surface-raised: #2a2a42;
 
@@ -42,14 +42,14 @@
   --vc-text-muted: #a0a0b8;
   --vc-text-inverse: #1a1a2e;
 
-  /* Accent — indigo per design brief (DA-01, 2026-02-14) */
+  /* Accent - indigo per design brief (DA-01, 2026-02-14) */
   --vc-accent: #818cf8;
   --vc-accent-hover: #a5b4fc;
 
   /* Code blocks */
   --vc-code-bg: #14142a;
 
-  /* Gold accent — warm counterpoint to cool indigo */
+  /* Gold accent - warm counterpoint to cool indigo */
   --vc-gold: #dbb05c;
   --vc-gold-hover: #e8c474;
   --vc-gold-muted: #a08040;
@@ -105,7 +105,7 @@ body {
   min-height: 100vh;
 }
 
-/* Focus indicators — visible against dark backgrounds */
+/* Focus indicators - visible against dark backgrounds */
 :focus-visible {
   outline: 2px solid var(--vc-accent);
   outline-offset: 2px;
