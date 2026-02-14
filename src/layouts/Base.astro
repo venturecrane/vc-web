@@ -11,21 +11,33 @@ interface Props {
 
 const { title, description = 'The product factory that shows its work.', ogImage } = Astro.props
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+const pageTitle = title === 'Venture Crane' ? title : `${title} | Venture Crane`
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
+    <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
-    {ogImage && <meta property="og:image" content={ogImage} />}
+    {
+      ogImage ? (
+        <meta property="og:image" content={ogImage} />
+      ) : (
+        <meta property="og:image" content={new URL('/og-default.png', Astro.site)} />
+      )
+    }
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Venture Crane" href="/feed.xml" />
   </head>
   <body class="bg-chrome text-vc-text">
     <a href="#main-content" class="skip-link">Skip to content</a>
