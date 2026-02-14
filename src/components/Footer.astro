@@ -1,0 +1,90 @@
+---
+const ventureLinks = [
+  { href: 'https://durganfieldguide.com', label: 'Durgan Field Guide' },
+  { href: 'https://kidexpenses.com', label: 'Kid Expenses' },
+  { href: 'https://draftcrane.com', label: 'Draft Crane' },
+  { href: 'https://siliconcrane.com', label: 'Silicon Crane' },
+]
+
+const socialLinks = [
+  { href: 'https://x.com/venturecrane', label: 'X' },
+  { href: 'https://github.com/venturecrane', label: 'GitHub' },
+]
+
+const legalLinks = [
+  { href: '/privacy/', label: 'Privacy' },
+  { href: '/terms/', label: 'Terms' },
+]
+
+const currentYear = new Date().getFullYear()
+---
+
+<footer class="border-t border-border bg-chrome">
+  <div class="mx-auto max-w-[var(--vc-content-width)] px-4 py-8 sm:px-6">
+    <div class="grid gap-8 sm:grid-cols-3">
+      <div>
+        <h3 class="mb-3 text-sm font-semibold text-vc-text">Ventures</h3>
+        <ul class="list-none space-y-2 p-0">
+          {
+            ventureLinks.map(({ href, label }) => (
+              <li>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-sm text-vc-text-muted no-underline hover:text-vc-text"
+                >
+                  {label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="mb-3 text-sm font-semibold text-vc-text">Social</h3>
+        <ul class="list-none space-y-2 p-0">
+          {
+            socialLinks.map(({ href, label }) => (
+              <li>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-sm text-vc-text-muted no-underline hover:text-vc-text"
+                >
+                  {label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="mb-3 text-sm font-semibold text-vc-text">Legal</h3>
+        <ul class="list-none space-y-2 p-0">
+          {
+            legalLinks.map(({ href, label }) => (
+              <li>
+                <a href={href} class="text-sm text-vc-text-muted no-underline hover:text-vc-text">
+                  {label}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a href="/feed.xml" class="text-sm text-vc-text-muted no-underline hover:text-vc-text">
+              RSS
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-8 border-t border-border pt-4 text-center text-sm text-vc-text-muted">
+      &copy; {currentYear} Venture Crane. All rights reserved.
+    </div>
+  </div>
+</footer>

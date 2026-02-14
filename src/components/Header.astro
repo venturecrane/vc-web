@@ -1,0 +1,43 @@
+---
+import MobileNav from './MobileNav.astro'
+
+const pathname = Astro.url.pathname
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/portfolio/', label: 'Portfolio' },
+  { href: '/methodology/', label: 'Methodology' },
+  { href: '/articles/', label: 'Articles' },
+]
+---
+
+<header class="border-b border-border bg-chrome">
+  <div
+    class="mx-auto flex max-w-[var(--vc-content-width)] items-center justify-between px-4 py-4 sm:px-6"
+  >
+    <a href="/" class="text-lg font-bold text-vc-text no-underline hover:text-accent">
+      Venture Crane
+    </a>
+
+    <nav class="hidden sm:flex sm:gap-6" aria-label="Main">
+      {
+        navLinks.map(({ href, label }) => (
+          <a
+            href={href}
+            aria-current={pathname === href ? 'page' : undefined}
+            class:list={[
+              'text-sm no-underline transition-colors',
+              pathname === href
+                ? 'text-accent font-semibold'
+                : 'text-vc-text-muted hover:text-vc-text',
+            ]}
+          >
+            {label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <MobileNav />
+  </div>
+</header>
