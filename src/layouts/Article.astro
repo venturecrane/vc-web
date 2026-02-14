@@ -1,6 +1,7 @@
 ---
 import Base from './Base.astro'
 import ArticleMeta from '../components/ArticleMeta.astro'
+import AIDisclosure from '../components/AIDisclosure.astro'
 
 interface Props {
   title: string
@@ -32,6 +33,8 @@ const { title, description, date, readingTime, author, updatedDate, prevArticle,
     <div class="vc-prose">
       <slot />
     </div>
+
+    <AIDisclosure author={author} />
 
     {
       (prevArticle || nextArticle) && (
