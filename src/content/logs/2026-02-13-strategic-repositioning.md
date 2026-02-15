@@ -1,6 +1,6 @@
 ---
 title: 'Repositioning as practitioner-publisher'
-date: 2026-02-14
+date: 2026-02-13
 tags: ['strategy']
 draft: false
 ---

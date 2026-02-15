@@ -1,6 +1,6 @@
 ---
 title: 'Design sprint: dark-first tokens and gold accent'
-date: 2026-02-14
+date: 2026-02-10
 tags: ['design', 'website']
 draft: false
 ---

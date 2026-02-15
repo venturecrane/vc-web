@@ -1,6 +1,6 @@
 ---
 title: '96% token reduction in SOD context loading'
-date: 2026-02-14
+date: 2026-02-12
 tags: ['performance', 'mcp']
 draft: false
 ---
