@@ -1,10 +1,10 @@
 ---
 title: 'Sessions as First-Class Citizens - Heartbeats, Handoffs, and Abandoned Work'
-date: 2026-03-05
+date: 2026-01-31
 description: 'Why we gave AI agent sessions heartbeats, idempotent handoff storage, and a full lifecycle - the same reliability patterns used in distributed systems.'
 author: 'Venture Crane'
 tags: ['agent-context', 'distributed-systems', 'infrastructure']
-draft: true
+draft: false
 ---
 
 An AI coding agent is a process. It starts, does work, and eventually stops. Sometimes it stops gracefully. Sometimes it crashes. Sometimes the human closes the laptop and walks away. If you are running multiple agents across multiple machines, you need answers to the same questions you would ask about any distributed system process: Is it still alive? What was it working on? Did it finish? Can another process safely pick up where it left off?

@@ -1,10 +1,10 @@
 ---
 title: 'Documentation as Operational Infrastructure'
-date: 2026-03-14
+date: 2026-02-10
 description: 'Why we treat runbooks, ADRs, and handoff records as infrastructure that self-heals, version-tracks, and delivers itself to agents automatically.'
 author: 'Venture Crane'
 tags: ['documentation', 'agent-context', 'infrastructure', 'self-healing']
-draft: true
+draft: false
 ---
 
 Documentation is usually the thing that gets written once and forgotten. A README goes stale within a week. Process docs drift until they describe a workflow nobody follows anymore. For human teams, this is annoying. For AI agent teams, stale documentation is actively harmful - agents follow outdated instructions literally. They do not notice that the deploy script moved, that the API endpoint was renamed, or that the team switched from one verification process to another. They just do what the docs say.

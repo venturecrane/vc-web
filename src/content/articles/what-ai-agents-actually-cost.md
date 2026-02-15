@@ -1,10 +1,10 @@
 ---
 title: 'What Running Multiple Ventures with AI Agents Actually Costs'
-date: 2026-02-17
+date: 2026-01-15
 description: 'Every line item for running an AI-native dev lab across multiple projects. Total: about $450 a month.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'costs', 'ai-agents']
-draft: true
+draft: false
 ---
 
 Running multiple software ventures simultaneously with AI coding agents sounds expensive. It is not - at least, not in the ways you would expect. We run several active projects across a fleet of development machines, with AI agents doing the bulk of the coding work. Here is what it actually costs.

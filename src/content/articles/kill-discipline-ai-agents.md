@@ -1,10 +1,10 @@
 ---
 title: 'Kill Discipline for AI Agent Teams'
-date: 2026-02-19
+date: 2026-01-17
 description: 'How mandatory stop points prevent the most expensive failure mode in agent-assisted development - silent churn on unsolvable problems.'
 author: 'Venture Crane'
 tags: ['agent-workflow', 'process', 'team-management']
-draft: true
+draft: false
 ---
 
 An agent that makes 50 tool calls without advancing is worse than one that stops after 3 failed attempts and asks for help. The first agent looks busy. The second agent is actually useful.

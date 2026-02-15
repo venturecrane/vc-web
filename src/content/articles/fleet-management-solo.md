@@ -1,10 +1,10 @@
 ---
 title: 'Fleet Management for One Person'
-date: 2026-02-26
+date: 2026-01-24
 description: 'How a solo founder manages a distributed dev fleet with Tailscale, idempotent bootstrap scripts, SSH mesh networking, and macOS hardening.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'fleet-management', 'devops', 'tailscale']
-draft: true
+draft: false
 ---
 
 A fleet of development machines - a mix of Apple Silicon Macs and Linux boxes - runs AI agent sessions roughly 18 hours a day. One person manages all of it. No DevOps team. No IT department. Just scripts.

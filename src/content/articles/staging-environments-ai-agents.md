@@ -1,10 +1,10 @@
 ---
 title: 'Staging Environments for AI Agents'
-date: 2026-03-07
+date: 2026-02-03
 description: 'A 4-phase environment strategy for AI agent infrastructure - Cloudflare splits, automated CI/CD, scoped secrets, and agent-aware routing.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'cloudflare-workers', 'ci-cd', 'staging']
-draft: true
+draft: false
 ---
 
 An AI agent running `npx wrangler deploy` during a development session just pushed to production. There was no staging environment. No gate. No confirmation prompt. The agent did exactly what it was told to do, and that was the problem.

@@ -1,10 +1,10 @@
 ---
 title: 'Secrets Injection at Agent Launch Time'
-date: 2026-02-28
+date: 2026-01-27
 description: 'How a CLI launcher scans repos, matches them to projects, and injects the right secrets without .env files or hardcoded credentials.'
 author: 'Venture Crane'
 tags: ['secrets', 'infrastructure', 'cli', 'infisical']
-draft: true
+draft: false
 ---
 
 Secrets management gets harder the moment you have more than one project. Add multiple machines, multiple AI agent sessions, and multiple environments (dev, staging, production), and `.env` files become a liability.

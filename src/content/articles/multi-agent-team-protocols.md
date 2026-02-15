@@ -1,10 +1,10 @@
 ---
 title: 'Multi-Agent Team Protocols Without Chaos'
-date: 2026-02-21
+date: 2026-01-20
 description: 'How we coordinate dev agents, PM agents, an advisor, and a human captain using namespaced labels, QA grading, and explicit role boundaries.'
 author: 'Venture Crane'
 tags: ['agent-teams', 'process', 'github']
-draft: true
+draft: false
 ---
 
 The default state of multiple AI agents working on the same codebase is chaos.

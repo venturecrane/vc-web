@@ -1,10 +1,10 @@
 ---
 title: '96% Token Reduction - Lazy-Loading Agent Context'
-date: 2026-03-12
+date: 2026-02-07
 description: 'How we cut session startup token consumption by 96% by switching from eager document loading to an index-and-fetch pattern.'
 author: 'Venture Crane'
 tags: ['performance', 'mcp', 'agent-context']
-draft: true
+draft: false
 ---
 
 Our session startup routine was consuming 45,000 to 71,000 tokens before the agent did any useful work. On a ~200K context window, that is 22-35% of available capacity gone on initialization alone. We cut it to roughly 3,000 tokens - a 93-96% reduction - without changing the backend API.

@@ -1,10 +1,10 @@
 ---
 title: 'Building a Dark-Theme Design System with Tailwind v4'
-date: 2026-03-17
+date: 2026-02-12
 description: 'How we built a dark-first design system using CSS custom properties and Tailwind v4 theme configuration.'
 author: 'Venture Crane'
 tags: ['design-system', 'tailwind', 'css', 'dark-theme']
-draft: true
+draft: false
 ---
 
 Most design system guides start with light mode and bolt dark mode on as an afterthought. We went the other direction. Venture Crane's site was designed dark-first - every color token, every contrast ratio, every surface elevation was conceived for a dark canvas. Here's how we built it with Tailwind CSS v4 and vanilla CSS custom properties.

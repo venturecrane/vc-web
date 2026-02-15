@@ -1,10 +1,10 @@
 ---
 title: 'One Monorepo, Multiple Ventures - Registry-Driven Multi-Tenant Infrastructure'
-date: 2026-02-24
+date: 2026-01-22
 description: 'How a JSON venture registry with capability flags lets a single monorepo serve multiple products without infrastructure sprawl or cross-contamination.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'monorepo', 'multi-tenant', 'automation']
-draft: true
+draft: false
 ---
 
 Running multiple products as a solo founder creates an infrastructure dilemma. Each product needs its own secrets, databases, GitHub labels, documentation requirements, and deployment pipelines. Duplicate all of that per product and you spend more time maintaining tooling than building products. Consolidate everything into one giant repo and you get cross-contamination - secrets leaking between projects, automation running where it shouldn't, configuration changes breaking unrelated products.

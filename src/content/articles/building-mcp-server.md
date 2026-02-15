@@ -1,10 +1,10 @@
 ---
 title: 'Building an MCP Server for Workflow Orchestration'
-date: 2026-03-03
+date: 2026-01-29
 description: 'A practical walkthrough of building an MCP server that bridges an AI coding CLI to a custom backend API, with lessons on tool design and fleet deployment.'
 author: 'Venture Crane'
 tags: ['mcp', 'agent-tooling', 'infrastructure', 'typescript']
-draft: true
+draft: false
 ---
 
 Before MCP, our agent integration was a collection of bash scripts invoked through a CLI skill system. The scripts called our backend API, parsed JSON with `jq`, and rendered output for the agent to consume. It worked, but barely.

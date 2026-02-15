@@ -1,10 +1,10 @@
 ---
 title: 'Why We Built a Development Lab Instead of a Product'
-date: 2026-02-15
+date: 2026-01-13
 description: 'Most founders pick one idea and go all-in. We built shared infrastructure first. Here is why.'
 author: 'Venture Crane'
 tags: ['strategy', 'infrastructure', 'ai-agents']
-draft: true
+draft: false
 ---
 
 The conventional startup playbook says pick one idea, build it, ship it, iterate. If it works, scale. If it doesn't, pivot. Repeat until you find product-market fit or run out of runway.

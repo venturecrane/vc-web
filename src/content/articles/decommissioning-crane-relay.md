@@ -1,10 +1,10 @@
 ---
 title: 'From Monolith to Microworker - Decommissioning the Relay'
-date: 2026-03-10
+date: 2026-02-05
 description: 'We deleted a 3,234-line Cloudflare Worker, its database, and its storage bucket. Here is what we learned about scope creep in serverless architectures.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'cloudflare', 'architecture']
-draft: true
+draft: false
 ---
 
 We deleted a Cloudflare Worker last week. Along with it went a D1 database and an R2 storage bucket. Nineteen files, 6,231 lines of code, removed from the monorepo in a single session. The system had been the backbone of our GitHub integration for months, and nothing noticed it was gone.
