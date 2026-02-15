@@ -2,10 +2,10 @@
 title: 'Decommissioning crane-relay'
 date: 2026-02-14
 tags: ['infrastructure', 'cloudflare']
-draft: false
+draft: true
 ---
 
-_Retroactive log - reconstructed from commit history and session notes._
+> **Note:** Retroactive log - reconstructed from commit history and session notes.
 
 We deleted crane-relay, a 3,234-line Cloudflare Worker that had been the backbone of our GitHub integration since early builds. It's gone - the worker, the D1 database, the R2 bucket, all of it.
 
@@ -22,7 +22,5 @@ The decommission removed 19 files and 6,231 lines across the monorepo. We delete
 The GitHub App (App ID 2619905) survived - we renamed it from "crane-relay" to "venturecrane-github" since crane-classifier still uses it for unattended API auth across all four venture installations.
 
 ## What Surprised Us
-
-<!-- FOUNDER: review/rewrite this section -->
 
 The biggest surprise was that prod had been broken for an unknown period. The missing auth secrets meant any external call to crane-relay would have failed, but nobody noticed because nothing was calling it. We'd already migrated away without realizing we'd migrated away. The lesson: if you can't tell when something breaks, you can't tell if you need it.

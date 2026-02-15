@@ -2,10 +2,10 @@
 title: '96% token reduction in SOD context loading'
 date: 2026-02-14
 tags: ['performance', 'mcp']
-draft: false
+draft: true
 ---
 
-_Retroactive log - reconstructed from commit history and session notes._
+> **Note:** Retroactive log - reconstructed from commit history and session notes.
 
 We cut the start-of-day (SOD) context load from 71,000 tokens to roughly 3,000 tokens - a 96% reduction for the Venture Crane workspace and 93-94% across the other four ventures.
 
@@ -30,7 +30,5 @@ The per-venture numbers:
 The implementation touched three files: the SOD tool itself (`sod.ts`, 49 lines changed), new test fixtures for API responses (60 lines), and expanded test coverage (114 lines).
 
 ## What Surprised Us
-
-<!-- FOUNDER: review/rewrite this section -->
 
 The SOD output had grown to 298K characters in the worst case before anyone flagged it as a problem. We discovered it when a session started noticeably slow and a size guard we'd added caught a response exceeding 50KB. The fix was straightforward, but the fact that we'd been burning a third of our context window on startup for weeks - and just absorbed the cost as "normal" latency - was a reminder that performance problems that degrade gradually are the hardest to catch.

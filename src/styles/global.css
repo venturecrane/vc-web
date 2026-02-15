@@ -205,7 +205,7 @@ small,
   font-size: var(--vc-text-h2);
   line-height: var(--vc-leading-h2);
   font-weight: 600;
-  margin-top: 2em;
+  margin-top: 3em;
   margin-bottom: 0.75em;
 }
 
@@ -228,15 +228,40 @@ small,
 }
 
 .vc-prose li {
-  margin-bottom: 0.25em;
+  margin-bottom: 0.5em;
+}
+
+.vc-prose ul ul,
+.vc-prose ol ol,
+.vc-prose ul ol,
+.vc-prose ol ul {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.vc-prose li > strong:first-child {
+  color: var(--vc-text);
 }
 
 .vc-prose blockquote {
   border-left: 3px solid var(--vc-accent);
-  padding-left: 1rem;
+  padding: 0.75em 1rem;
+  margin: 1.5em 0;
   margin-left: 0;
   color: var(--vc-text-muted);
   font-style: italic;
+  background: var(--vc-surface-raised);
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+.vc-prose blockquote > p:first-child > strong:first-child {
+  color: var(--vc-accent);
+}
+
+.vc-prose hr {
+  border: none;
+  border-top: 1px solid var(--vc-border);
+  margin: 2.5em 0;
 }
 
 .table-wrapper {
@@ -264,7 +289,7 @@ small,
 
 .vc-prose th,
 .vc-prose td {
-  padding: 0.5rem 0.75rem;
+  padding: 0.625rem 0.75rem;
   border: 1px solid var(--vc-border);
   text-align: left;
 }

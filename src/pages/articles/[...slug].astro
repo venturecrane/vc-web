@@ -22,8 +22,9 @@ export async function getStaticPaths() {
 }
 
 const { article, prevArticle, nextArticle } = Astro.props
-const { Content } = await render(article)
+const { Content, headings } = await render(article)
 const readingTime = Math.ceil(article.body!.split(/\s+/).length / 225)
+const tocHeadings = readingTime > 10 ? headings.filter((h) => h.depth === 2) : []
 ---
 
 <Article
@@ -35,6 +36,7 @@ const readingTime = Math.ceil(article.body!.split(/\s+/).length / 225)
   updatedDate={article.data.updatedDate}
   prevArticle={prevArticle}
   nextArticle={nextArticle}
+  headings={tocHeadings}
 >
   <Content />
 </Article>

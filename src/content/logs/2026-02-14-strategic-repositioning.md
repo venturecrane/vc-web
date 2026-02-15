@@ -2,10 +2,10 @@
 title: 'Repositioning as practitioner-publisher'
 date: 2026-02-14
 tags: ['strategy']
-draft: false
+draft: true
 ---
 
-_Retroactive log - reconstructed from commit history and session notes._
+> **Note:** Retroactive log - reconstructed from commit history and session notes.
 
 We dropped "build in public" from all site copy and repositioned Venture Crane as a practitioner-publisher contributing field notes to AI-native development operations.
 
@@ -26,7 +26,5 @@ The reframe changed three things across the site:
 The PRD amendment documents the full rationale, synthesized from the review process. The competitive context section identifies Harper Reed, Simon Willison, and Latent Space as adjacent voices, with Venture Crane's differentiation being the organizational and multi-product perspective: fleet operations, cross-venture context management, portfolio-level kill decisions, and operational costs.
 
 ## What Surprised Us
-
-<!-- FOUNDER: review/rewrite this section -->
 
 The phrase "build in public" had only been on the site for a few days, but it had already shaped how we talked about the project internally. Killing it required updating not just site copy but also the PRD, the about page, and the RSS feed description. Positioning language propagates fast - even a short-lived framing creates references everywhere. The cleanup touched 4 files in vc-web and the full PRD in crane-console.

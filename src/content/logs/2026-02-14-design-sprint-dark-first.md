@@ -2,10 +2,10 @@
 title: 'Design sprint: dark-first tokens and gold accent'
 date: 2026-02-14
 tags: ['design', 'vc-web']
-draft: false
+draft: true
 ---
 
-_Retroactive log - reconstructed from commit history and session notes._
+> **Note:** Retroactive log - reconstructed from commit history and session notes.
 
 We shipped the visual identity for venturecrane.com in a single-day design sprint: 13 issues filed, 10 closed, covering everything from the accent color to mobile navigation to the wordmark.
 
@@ -22,7 +22,5 @@ Other P1 deliverables: a CSS-only hamburger-to-X mobile navigation (44px touch t
 All of it runs on CSS custom properties (`--vc-*` prefix) mapped through Tailwind v4's `@theme` directive. Three surface tones handle elevation: chrome (`#1a1a2e`) for structure, surface (`#242438`) for reading areas, surface-raised (`#2a2a42`) for cards and interactive elements. Zero JavaScript. Zero web fonts. System font stacks throughout.
 
 ## What Surprised Us
-
-<!-- FOUNDER: review/rewrite this section -->
 
 The Shiki code theme selection (DA-02) was more consequential than expected. We use a `#14142a` background for code blocks - darker than the content surface to create a recessed effect. Several popular dark themes had syntax colors that failed WCAG AA against this background. We landed on `github-dark`, which cleared contrast requirements and felt neutral enough not to fight the gold accent. Testing individual token colors against a non-standard background isn't something most theme galleries support, so we had to render sample blocks and spot-check manually.
