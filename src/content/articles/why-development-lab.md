@@ -11,8 +11,6 @@ The conventional startup playbook says pick one idea, build it, ship it, iterate
 
 We did something different. Instead of going all-in on a single product, we spent the first months building a development lab - shared infrastructure that supports multiple ventures simultaneously. The bet is that the lab itself is the competitive advantage, not any individual product.
 
-This is the story of why.
-
 ---
 
 ## The Coordination Tax

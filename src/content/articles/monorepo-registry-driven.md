@@ -197,9 +197,8 @@ The entire flow takes about three seconds on a warm machine. Compare that to the
 
 Adding a venture is a predictable checklist, mostly automated by a setup script:
 
-1. **Create the GitHub organization** (manual - GitHub doesn't allow automated org creation)
-2. **Install the GitHub App** on the new org (manual - one-time browser action)
-3. **Run the setup script** with the venture code, org name, and app installation ID
+1. **Install the GitHub App** on the org for the new repo (manual - one-time browser action)
+2. **Run the setup script** with the venture code, org name, and app installation ID
 
 The script then automates approximately a dozen steps:
 
@@ -215,9 +214,15 @@ The script then automates approximately a dozen steps:
 
 After the script runs, the new venture is immediately launchable: `launcher newcode` works, the MCP server recognizes it, the doc audit system starts checking its documentation, and the GitHub classifier processes its webhooks.
 
-Without the script, this setup would take an hour or more of manual configuration spread across GitHub, Cloudflare, Infisical, and multiple source files. With the script, it takes about five minutes (most of which is the two manual prerequisite steps).
+Without the script, this setup would take an hour or more of manual configuration spread across GitHub, Cloudflare, Infisical, and multiple source files. With the script, it takes about five minutes.
 
-The key insight is that the setup script reads and writes the same registry that everything else depends on. There is no separate "provisioning system" to keep in sync.
+**An evolution worth noting:** the original setup process created a separate GitHub organization per venture. Each venture got its own org, its own repo namespace, its own GitHub App installation. This felt clean in theory - full isolation between projects.
+
+In practice, it created overhead without benefit. Branch protection rules had to be configured per org. GitHub App installations multiplied. The classifier worker needed a mapping table of org-to-installation IDs. And the setup script had to handle org creation as a manual prerequisite (GitHub doesn't allow automated org creation).
+
+We consolidated all repos under a single GitHub organization. This let us apply org-wide branch protection rulesets, simplify the GitHub App to a single installation, and remove the org-creation step from the setup checklist entirely. The registry still tracks an `org` field per venture (supporting the possibility of external orgs), but every current venture points to the same one.
+
+The key insight is that the setup script reads and writes the same registry that everything else depends on. There is no separate "provisioning system" to keep in sync. When the org structure changed, we updated the registry and everything downstream followed.
 
 ---
 

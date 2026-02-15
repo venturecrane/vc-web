@@ -111,7 +111,7 @@ Notice the mix of data sources. `status` calls the `gh` CLI directly (via `execS
 
 ## Tool Design: What We Learned
 
-After building and iterating on these tools over several months, a few design principles emerged.
+After building and iterating on these tools over several weeks, a few design principles emerged.
 
 ### Task-oriented, not CRUD-oriented
 

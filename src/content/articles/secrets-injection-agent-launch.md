@@ -199,10 +199,10 @@ The launcher doesn't trust that Infisical returned useful data. It validates at 
 
 **1. Non-empty response.** If `infisical export` returns an empty array, the path probably doesn't exist or has no secrets configured. The error message tells you exactly which path was queried and which environment was used.
 
-**2. Required keys.** The context API key (`CRANE_CONTEXT_KEY`) must exist in every project's secret set. Without it, the MCP server can't authenticate to the context API, and the agent session is effectively blind - no handoffs, no session continuity, no enterprise knowledge. If it's missing, the launcher prints a remediation command:
+**2. Required keys.** The context API key (`CONTEXT_API_KEY`) must exist in every project's secret set. Without it, the MCP server can't authenticate to the context API, and the agent session is effectively blind - no handoffs, no session continuity, no enterprise knowledge. If it's missing, the launcher prints a remediation command:
 
 ```
-Secrets fetched from '/alpha' but CRANE_CONTEXT_KEY is missing.
+Secrets fetched from '/alpha' but CONTEXT_API_KEY is missing.
 Keys found: CLERK_SECRET_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
 Fix: bash scripts/sync-shared-secrets.sh --fix
 ```

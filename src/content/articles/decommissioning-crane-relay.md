@@ -47,7 +47,7 @@ We had migrated away from the relay worker without realizing we had migrated awa
 
 1. **Direct CLI access.** Once we moved from Claude Desktop to Claude Code, agents could shell out to `gh` CLI directly. The HTTP proxy pattern - agent calls worker, worker calls GitHub - became unnecessary overhead. Why proxy through a Cloudflare Worker when you can run `gh issue list` in a subprocess?
 
-2. **A purpose-built classifier.** Webhook processing and issue classification had been extracted into a dedicated worker months earlier. That worker did one thing: receive a GitHub webhook, classify the issue with Gemini, apply labels. No proxy endpoints, no evidence storage, no V2 event system.
+2. **A purpose-built classifier.** Webhook processing and issue classification had been extracted into a dedicated worker weeks earlier. That worker did one thing: receive a GitHub webhook, classify the issue with Gemini, apply labels. No proxy endpoints, no evidence storage, no V2 event system.
 
 The relay worker was already dead. We just hadn't cleaned up the body.
 

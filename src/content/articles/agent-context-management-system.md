@@ -777,7 +777,6 @@ This setup means you're never more than a Blink Shell session away from a full d
 
 - Per-agent tokens for fine-grained revocation and per-agent rate limits
 - Scheduled cleanup via Cloudflare Cron Trigger - abandon stale sessions, purge expired idempotency keys, rotate the request log
-- Staging/production environments with manual promotion to production, protecting live agent sessions from deployment-time breakage
 
 **Phase 3 (Aspirational):**
 

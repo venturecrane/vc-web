@@ -65,7 +65,7 @@ This gives each worker:
 
 The key design choice is making staging the default. A bare `npx wrangler deploy` - which is what an agent will run unless told otherwise - hits staging. Production requires the explicit `--env production` flag. This inverts the risk: forgetting to specify the environment is now safe instead of dangerous.
 
-D1 migrations use the same numbered sequence in both environments. Staging gets migrations first. If a migration breaks staging, it blocks subsequent migrations to production. This ordering is enforced by the migration numbering, not by policy. You cannot skip staging.
+D1 migrations use the same numbered sequence in both environments. Staging gets migrations first. If a migration breaks staging, it blocks subsequent migrations to production. This ordering is enforced by the CI pipeline, not by policy alone. A bare deploy hits staging; production requires an explicit flag.
 
 Creating the staging D1 databases is straightforward:
 

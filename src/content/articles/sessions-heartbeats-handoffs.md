@@ -298,7 +298,7 @@ These patterns are not novel. They are well-established techniques from distribu
 
 **Canonical serialization** is a prerequisite for content-addressed storage. Git uses SHA-1 (now SHA-256) for commit and blob identity. Docker uses content-addressable layers. RFC 8785 brings the same property to JSON - a deterministic byte representation that enables stable hashing.
 
-**Session state machines** with explicit transitions (active, ended, abandoned, superseded) are the same pattern used for database connection pools, HTTP/2 streams, and TCP connections. Making transitions explicit means edge cases are handled by design rather than discovered in production.
+**Session state machines** with explicit transitions (active, ended, abandoned) and typed end reasons (timeout, superseded, explicit close) are the same pattern used for database connection pools, HTTP/2 streams, and TCP connections. Making transitions explicit means edge cases are handled by design rather than discovered in production.
 
 The difference is scale. Distributed systems handle millions of processes. We handle a handful of agent sessions. But the reliability requirements are the same. When an agent session fails silently, the cost is not a 500 error to a user - it is hours of wasted compute and duplicated work. The patterns that prevent silent failures in distributed systems prevent them here too.
 

@@ -59,7 +59,7 @@ This pattern repeats for every tool. On macOS it uses Homebrew; on Linux, apt. N
 The entire process takes five minutes on a fresh machine. On an already-bootstrapped machine, it completes in seconds.
 
 ```
-$ CONTEXT_API_KEY=<key> bash scripts/bootstrap-machine.sh
+$ API_KEY=<key> bash scripts/bootstrap-machine.sh
 [OK]    Detected: darwin / arm64
 [OK]    Tailscale IP: 100.119.24.42
 [OK]    Homebrew already installed
