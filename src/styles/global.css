@@ -137,7 +137,6 @@ pre {
   padding: 1rem;
   overflow-x: auto;
   border: 1px solid var(--vc-border);
-  position: relative;
 }
 
 @media (max-width: 640px) {
@@ -145,18 +144,6 @@ pre {
     font-size: clamp(0.55rem, 1.8vw, var(--vc-text-code));
     line-height: 1.2;
   }
-}
-
-pre::after {
-  content: '';
-  position: sticky;
-  right: 0;
-  display: block;
-  width: 2rem;
-  height: 100%;
-  margin-top: -100%;
-  background: linear-gradient(to right, transparent, var(--vc-code-bg));
-  pointer-events: none;
 }
 
 /* Links */
@@ -219,6 +206,10 @@ small,
 
 .vc-prose p {
   margin-bottom: 1em;
+}
+
+.vc-prose pre {
+  margin: 1em 0;
 }
 
 .vc-prose ul,
