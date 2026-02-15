@@ -2,7 +2,7 @@
 title: 'Repositioning as practitioner-publisher'
 date: 2026-02-14
 tags: ['strategy']
-draft: true
+draft: false
 ---
 
 > **Note:** Retroactive log - reconstructed from commit history and session notes.
@@ -13,7 +13,7 @@ We dropped "build in public" from all site copy and repositioned Venture Crane a
 
 The original site positioning used "build in public" framing - the idea that transparency about process and costs was itself the value proposition. After a 3-round, 6-role PRD review process and founder review, we killed it.
 
-The problem with "build in public" is audience confusion. It signals a creator-economy content play - livestreams, follower counts, journey narratives. That's not what this is. Venture Crane is a development lab that happens to publish what it learns. The publishing serves two functions: contributing to the emerging discipline of AI-native development operations, and generating proof-of-work content for Silicon Crane (the content automation venture).
+The problem with "build in public" is audience confusion. It signals a creator-economy content play - livestreams, follower counts, journey narratives. That's not what this is. Venture Crane is a development lab that happens to publish what it learns. The publishing serves two functions: contributing to the emerging discipline of AI-native development operations, and generating proof-of-work content for one of the portfolio ventures focused on content automation.
 
 The reframe changed three things across the site:
 
@@ -27,4 +27,4 @@ The PRD amendment documents the full rationale, synthesized from the review proc
 
 ## What Surprised Us
 
-The phrase "build in public" had only been on the site for a few days, but it had already shaped how we talked about the project internally. Killing it required updating not just site copy but also the PRD, the about page, and the RSS feed description. Positioning language propagates fast - even a short-lived framing creates references everywhere. The cleanup touched 4 files in vc-web and the full PRD in crane-console.
+The phrase "build in public" had only been on the site for a few days, but it had already shaped how we talked about the project internally. Killing it required updating not just site copy but also the PRD, the about page, and the RSS feed description. Positioning language propagates fast - even a short-lived framing creates references everywhere. The cleanup touched 4 files in the website codebase and the full PRD in the main repository.

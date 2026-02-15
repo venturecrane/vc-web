@@ -1,8 +1,8 @@
 ---
 title: 'Design sprint: dark-first tokens and gold accent'
 date: 2026-02-14
-tags: ['design', 'vc-web']
-draft: true
+tags: ['design', 'website']
+draft: false
 ---
 
 > **Note:** Retroactive log - reconstructed from commit history and session notes.

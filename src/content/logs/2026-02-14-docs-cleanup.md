@@ -2,16 +2,16 @@
 title: 'Deleting 750KB of stale docs'
 date: 2026-02-14
 tags: ['documentation', 'cleanup']
-draft: true
+draft: false
 ---
 
 > **Note:** Retroactive log - reconstructed from commit history and session notes.
 
-We deleted 39 files and 13,155 lines from the `docs/` directory in crane-console. About 750KB of documentation that was either completed, superseded, or duplicated.
+We deleted 39 files and 13,155 lines from the `docs/` directory in the main repository. About 750KB of documentation that was either completed, superseded, or duplicated.
 
 ## What We Did
 
-The crane-console monorepo had accumulated documentation across a year of building: setup reports, migration checklists, agent review archives, and guides for infrastructure we no longer run. A doc audit showed that nearly half the files in `docs/` were no longer relevant to active work.
+The monorepo had accumulated documentation across a year of building: setup reports, migration checklists, agent review archives, and guides for infrastructure we no longer run. A doc audit showed that nearly half the files in `docs/` were no longer relevant to active work.
 
 The deletion broke into categories:
 
@@ -20,7 +20,7 @@ The deletion broke into categories:
 - **22 agent review archives** - Four design review contributions from round 1, plus 18 PRD review contributions across three rounds and six reviewer roles. These were intermediate artifacts from the multi-agent review process. The final PRD and design brief captured their conclusions; the individual contributions were noise.
 - **1 duplicate** - A copy of `machine-inventory.md` in the wrong directory.
 - **1 superseded draft** - An early PRD draft replaced by the final `prd.md`.
-- **1 blog export** - The agent-context-management article had already migrated to vc-web.
+- **1 blog export** - The agent-context-management article had already migrated to the website.
 
 Seven misplaced files were relocated to their correct directories (runbooks, infra, design) rather than deleted.
 
