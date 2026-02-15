@@ -39,7 +39,7 @@ Guidelines:
 Example:
 
 ```yaml
-sources: '[crane-console](https://github.com/venturecrane/crane-console) venture registry and MCP server source, [Issue #153](https://github.com/venturecrane/crane-console/issues/153). Some sources reference private repositories.'
+sources: 'Internal monorepo (venture registry, MCP server, CLI launcher), [vc-web](https://github.com/venturecrane/vc-web) site source. Some sources reference private repositories.'
 ```
 
 ### Mechanical Voice Check
@@ -77,18 +77,13 @@ Problems: "Having spent months" manufactures timeline. "we felt confident" attri
 
 ## Canonical Names
 
-| Canonical Term   | Do Not Use                                          | Notes                                                                                                                         |
-| ---------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| Venture Crane    | "we at Venture Crane", "our company", "VC" in prose | Use the full name or just "we"                                                                                                |
-| crane-relay      | "the old webhook worker", "legacy monolith"         | Decommissioned Feb 2026. Refer to by name when discussing history.                                                            |
-| crane-classifier | "the new classifier", "classifier worker"           | The GitHub webhook processor. Use the worker name.                                                                            |
-| crane-context    | "the context worker"                                | The session/handoff API worker. "crane-context" is the worker name; "context API" is acceptable in explanatory prose.         |
-| crane-mcp        | "the MCP server", "MCP package"                     | The MCP server package. Use the package name.                                                                                 |
-| ventures         | "products", "projects" alone                        | Use "ventures" for portfolio companies. Never cite a specific count in articles - it changes.                                 |
-| development lab  | "product factory"                                   | "Product factory" is deprecated framing. Always use "development lab."                                                        |
-| D1               | "SQLite" alone                                      | It's Cloudflare D1 (SQLite at the edge). Say "D1" or "D1/SQLite" on first reference.                                          |
-| Infisical        | "secrets manager" alone                             | Name the tool. "Infisical" on first reference, "secrets manager" acceptable in subsequent references within the same article. |
-| GitHub App       | "the bot", "the integration"                        | The venturecrane-github app (App ID 2619905).                                                                                 |
+| Canonical Term  | Do Not Use                                          | Notes                                                                                                                         |
+| --------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Venture Crane   | "we at Venture Crane", "our company", "VC" in prose | Use the full name or just "we"                                                                                                |
+| ventures        | "products", "projects" alone                        | Use "ventures" for portfolio companies. Never cite a specific count in articles - it changes.                                 |
+| development lab | "product factory"                                   | "Product factory" is deprecated framing. Always use "development lab."                                                        |
+| D1              | "SQLite" alone                                      | It's Cloudflare D1 (SQLite at the edge). Say "D1" or "D1/SQLite" on first reference.                                          |
+| Infisical       | "secrets manager" alone                             | Name the tool. "Infisical" on first reference, "secrets manager" acceptable in subsequent references within the same article. |
 
 ## Self-Reference Style
 
@@ -108,11 +103,18 @@ All published articles anonymize portfolio-specific details. This is not optiona
 - Exact venture counts - say "multiple ventures" or "a portfolio of ventures", not a specific number that becomes stale
 - Legal entity names - never reference the parent LLC by name
 
+**Anonymize infrastructure names:**
+
+- Repo names, worker names, package names - use generic descriptions instead
+- "the context API" not "crane-context"
+- "the MCP server" not "crane-mcp"
+- "the webhook processor" not "crane-classifier"
+- "the monorepo" not "crane-console"
+
 **Keep real:**
 
 - Third-party tool and platform names (Cloudflare, D1, Infisical, Tailscale, Claude Code, GitHub Actions)
 - Venture Crane as the lab name
-- Infrastructure component names that are in public repos (crane-context, crane-mcp, crane-classifier)
 - Technical details, architecture, code patterns
 
 **Why:** Specific venture names, counts, and legal entities change. Anonymized articles don't go stale when a venture launches, shuts down, or rebrands. The agent-context-management article is the reference implementation of this pattern.

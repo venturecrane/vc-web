@@ -4,7 +4,7 @@ date: 2026-02-14
 description: 'How shared infrastructure across a portfolio of ventures reduces coordination tax and makes the multi-product model viable.'
 author: 'Venture Crane'
 tags: ['methodology', 'strategy', 'operations']
-sources: '[crane-console](https://github.com/venturecrane/crane-console) monorepo (venture registry, MCP server, CLI launcher, infrastructure scripts), [vc-web](https://github.com/venturecrane/vc-web) site source. Some sources reference private repositories.'
+sources: 'Internal monorepo (venture registry, MCP server, CLI launcher), [vc-web](https://github.com/venturecrane/vc-web) site source. Some sources reference private repositories.'
 draft: true
 ---
 
@@ -18,7 +18,7 @@ Venture Crane consists of a parent LLC and a portfolio of ventures at different 
 
 All ventures share a common backend stack (Cloudflare Workers + D1), a common secrets manager (Infisical), a common CI/CD pipeline (GitHub Actions), and a common fleet of development machines connected via Tailscale.
 
-The shared infrastructure lives in a single monorepo: [crane-console](https://github.com/venturecrane/crane-console).
+The shared infrastructure lives in a single monorepo.
 
 ---
 
@@ -35,15 +35,15 @@ AI coding agents start every session cold. They don't know what happened yesterd
 
 The system consists of three components:
 
-1. **crane-context** - a Cloudflare Worker that stores sessions, handoffs, knowledge notes, and documentation in D1
-2. **crane-mcp** - a local MCP server (Node.js, TypeScript) that connects AI CLI tools to the context API, generates documentation from source files, and renders structured output
-3. **A CLI launcher** - a single command (`crane alpha`, `crane beta`, etc.) that fetches secrets from Infisical, configures the MCP server, and spawns the agent CLI in the correct repo
+1. **A context API** - a Cloudflare Worker that stores sessions, handoffs, knowledge notes, and documentation in D1
+2. **A local MCP server** (Node.js, TypeScript) that connects AI CLI tools to the context API, generates documentation from source files, and renders structured output
+3. **A CLI launcher** - a single command that fetches secrets from Infisical, configures the MCP server, and spawns the agent CLI in the correct repo
 
 One command starts a fully configured agent session for any venture. No manual environment setup, no secrets pasting, no MCP configuration.
 
 ### Webhook Processing
 
-crane-classifier processes incoming GitHub webhooks for all ventures. When an issue is created, it auto-assigns priority labels and QA grades based on content analysis. Work enters the queue pre-sorted.
+A webhook processor handles incoming GitHub events for all ventures. When an issue is created, it auto-assigns priority labels and QA grades based on content analysis. Work enters the queue pre-sorted.
 
 ### Fleet Management
 
@@ -53,7 +53,7 @@ Development machines run Tailscale for mesh networking. An SSH mesh script estab
 
 ## How the Portfolio Model Works
 
-The venture registry in `config/ventures.json` maps each venture to its capabilities:
+The venture registry maps each venture to its capabilities:
 
 ```json
 {
@@ -104,7 +104,7 @@ These are real constraints, drawn from operational experience and open issues.
 
 ## The Venture Registry
 
-The registry uses a `sharedSecrets` block to distribute common infrastructure credentials to every venture automatically:
+The registry uses a shared secrets block to distribute common infrastructure credentials to every venture automatically:
 
 ```json
 {
