@@ -32,6 +32,7 @@ const orgSchema = {
   name: 'Venture Crane',
   url: 'https://venturecrane.com',
   description: 'A development lab building real products with AI agents.',
+  logo: 'https://venturecrane.com/favicon.svg',
 }
 
 const websiteSchema = {
@@ -86,6 +87,9 @@ const allSchemas = [
       )
     }
     {articleMeta?.tags?.map((tag) => <meta property="article:tag" content={tag} />)}
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title="Venture Crane" href="/feed.xml" />
     {

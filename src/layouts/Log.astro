@@ -21,7 +21,11 @@ const blogPostingSchema = {
   headline: title,
   datePublished: date.toISOString(),
   author: { '@type': 'Organization', name: 'Venture Crane' },
-  publisher: { '@type': 'Organization', name: 'Venture Crane' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Venture Crane',
+    logo: { '@type': 'ImageObject', url: 'https://venturecrane.com/favicon.svg' },
+  },
   keywords: tags.join(', '),
   url: canonicalURL.href,
   mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL.href },

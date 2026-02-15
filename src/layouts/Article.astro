@@ -48,7 +48,11 @@ const articleSchema = {
   datePublished: date.toISOString(),
   dateModified: (updatedDate || date).toISOString(),
   author: { '@type': 'Person', name: author },
-  publisher: { '@type': 'Organization', name: 'Venture Crane' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Venture Crane',
+    logo: { '@type': 'ImageObject', url: 'https://venturecrane.com/favicon.svg' },
+  },
   keywords: tags.join(', '),
   url: canonicalURL.href,
   mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL.href },
