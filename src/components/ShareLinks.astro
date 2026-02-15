@@ -1,0 +1,54 @@
+---
+interface Props {
+  title: string
+  url: string
+}
+
+const { title, url } = Astro.props
+const encodedTitle = encodeURIComponent(title)
+const encodedUrl = encodeURIComponent(url)
+---
+
+<div class="mt-8 border-t border-border pt-6 text-sm text-vc-text-muted">
+  <span>Share:</span>
+  <a
+    href={`https://news.ycombinator.com/submitlink?u=${encodedUrl}&t=${encodedTitle}`}
+    class="ml-2 text-accent no-underline hover:text-accent-hover"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Hacker News
+  </a>
+  <span class="mx-1" aria-hidden="true">&middot;</span>
+  <a
+    href={`https://reddit.com/submit?url=${encodedUrl}&title=${encodedTitle}`}
+    class="text-accent no-underline hover:text-accent-hover"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Reddit
+  </a>
+  <span class="mx-1" aria-hidden="true">&middot;</span>
+  <button
+    class="cursor-pointer border-none bg-transparent p-0 text-sm text-accent hover:text-accent-hover"
+    data-copy-url={url}
+    aria-label="Copy link to clipboard"
+  >
+    Copy link
+  </button>
+</div>
+
+<script is:inline>
+  document.querySelectorAll('[data-copy-url]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const url = btn.getAttribute('data-copy-url')
+      navigator.clipboard.writeText(url).then(function () {
+        const original = btn.textContent
+        btn.textContent = 'Copied!'
+        setTimeout(function () {
+          btn.textContent = original
+        }, 2000)
+      })
+    })
+  })
+</script>

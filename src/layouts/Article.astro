@@ -3,6 +3,7 @@ import Base from './Base.astro'
 import ArticleMeta from '../components/ArticleMeta.astro'
 import AIDisclosure from '../components/AIDisclosure.astro'
 import TagList from '../components/TagList.astro'
+import ShareLinks from '../components/ShareLinks.astro'
 
 interface Heading {
   depth: number
@@ -36,9 +37,33 @@ const {
   headings = [],
 } = Astro.props
 const showToc = headings.length > 0
+const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: date.toISOString(),
+  dateModified: (updatedDate || date).toISOString(),
+  author: { '@type': 'Person', name: author },
+  publisher: { '@type': 'Organization', name: 'Venture Crane' },
+  keywords: tags.join(', '),
+  url: canonicalURL.href,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL.href },
+}
 ---
 
-<Base title={`${title} | Venture Crane`} description={description}>
+<Base
+  title={`${title} | Venture Crane`}
+  description={description}
+  jsonLd={articleSchema}
+  articleMeta={{
+    publishedTime: date.toISOString(),
+    modifiedTime: updatedDate?.toISOString(),
+    tags,
+  }}
+>
   <div
     class="rounded-lg bg-surface p-4 sm:p-6 lg:p-8"
     data-pagefind-body
@@ -87,6 +112,17 @@ const showToc = headings.length > 0
     </div>
 
     <AIDisclosure author={author} />
+
+    <ShareLinks title={title} url={canonicalURL.href} />
+
+    <aside class="mt-6 text-sm text-vc-text-muted">
+      <p>
+        Thoughts?{' '}
+        <a href="mailto:smdurgan@venturecrane.com" class="text-accent hover:text-accent-hover">
+          Email me
+        </a>
+      </p>
+    </aside>
 
     {
       (prevArticle || nextArticle) && (

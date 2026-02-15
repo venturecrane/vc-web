@@ -9,12 +9,25 @@ interface Props {
 }
 
 const { title, date, tags = [] } = Astro.props
+const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
 const formatDate = (d: Date) =>
   d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+
+const blogPostingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  datePublished: date.toISOString(),
+  author: { '@type': 'Organization', name: 'Venture Crane' },
+  publisher: { '@type': 'Organization', name: 'Venture Crane' },
+  keywords: tags.join(', '),
+  url: canonicalURL.href,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL.href },
+}
 ---
 
-<Base title={`${title} | Venture Crane`}>
+<Base title={`${title} | Venture Crane`} jsonLd={blogPostingSchema}>
   <div
     class="rounded-lg bg-surface p-6 sm:p-8"
     data-pagefind-body
@@ -37,5 +50,14 @@ const formatDate = (d: Date) =>
     <div class="vc-prose">
       <slot />
     </div>
+
+    <aside class="mt-12 border-t border-border pt-6 text-sm text-vc-text-muted">
+      <p>
+        Thoughts?{' '}
+        <a href="mailto:smdurgan@venturecrane.com" class="text-accent hover:text-accent-hover">
+          Email me
+        </a>
+      </p>
+    </aside>
   </div>
 </Base>
