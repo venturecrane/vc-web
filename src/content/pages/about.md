@@ -33,6 +33,10 @@ The methodology produces the work. These articles show it in action:
 
 ## Founder
 
-Scott Durgan spent 25 years building enterprise software - large-scale systems, distributed teams, the full lifecycle from architecture through production operations. Along the way, he noticed the same pattern: most of the time spent shipping software wasn't spent on the hard problems. It was spent on coordination, context-switching, and rediscovering what someone already knew. AI agents don't eliminate the hard problems, but they eliminate the coordination tax. Venture Crane is the infrastructure that makes that operational - one person setting direction, agent teams handling implementation, and a publishing practice that documents what actually works.
+I've been a cook, a silversmith, a woodworker, a video producer, a product manager, and a software developer. Every time I change materials, I do the same thing first: set up the station, build the jigs, get the process right.
+
+When I started building products again, I built the shop first. A small fleet of Macs on a Tailscale mesh, Cloudflare Workers on the backend, Vercel on the front. Agents that start each session by reading what happened in the last one. Every issue gets a QA grade. Every venture has kill criteria. If the numbers don't hit, it dies.
+
+That's the setup. Now it's time to ship. Or, you know, go down trying.
 
 [X](https://x.com/venturecrane) · [GitHub](https://github.com/venturecrane)
