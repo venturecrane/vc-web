@@ -2,6 +2,20 @@
 import Base from '../layouts/Base.astro'
 import PortfolioCard from '../components/PortfolioCard.astro'
 import { sortedVentures, lastReviewed } from '../data/ventures'
+import { getCollection } from 'astro:content'
+
+const articles = (await getCollection('articles')).filter((a) => !a.data.draft)
+const logs = (await getCollection('logs')).filter((l) => !l.data.draft)
+
+const contentCountByTag = new Map<string, number>()
+for (const venture of sortedVentures) {
+  if (!venture.contentTag) continue
+  const tag = venture.contentTag
+  const count =
+    articles.filter((a) => a.data.tags.includes(tag)).length +
+    logs.filter((l) => l.data.tags.includes(tag)).length
+  contentCountByTag.set(tag, count)
+}
 
 const reviewDate = new Date(lastReviewed + 'T00:00:00')
 const formattedDate = reviewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
@@ -17,7 +31,15 @@ const formattedDate = reviewDate.toLocaleDateString('en-US', { month: 'long', ye
   </p>
 
   <div class="grid gap-4">
-    {sortedVentures.map((venture) => <PortfolioCard venture={venture} />)}
+    {
+      sortedVentures.map((venture) => (
+        <PortfolioCard
+          venture={venture}
+          contentTag={venture.contentTag}
+          contentCount={venture.contentTag ? contentCountByTag.get(venture.contentTag) : undefined}
+        />
+      ))
+    }
   </div>
 
   <p class="mt-8 text-sm text-vc-text-muted">Last reviewed {formattedDate}</p>
