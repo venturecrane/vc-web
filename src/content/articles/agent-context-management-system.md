@@ -4,7 +4,7 @@ date: 2026-02-14
 description: 'Building centralized context management so AI agents start every session with the right knowledge.'
 author: 'Venture Crane'
 tags: ['agent-context', 'mcp', 'infrastructure']
-draft: true
+draft: false
 ---
 
 When running AI coding agents across multiple machines and sessions, context is the bottleneck. Each session starts cold. The agent doesn't know what happened yesterday, what another agent is working on right now, or what the project's business context is. Existing approaches - committing markdown handoff files to git, setting environment variables, pasting context manually - are fragile and don't scale past a single developer on a single machine.
