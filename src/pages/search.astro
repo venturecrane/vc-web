@@ -6,16 +6,8 @@ import Base from '../layouts/Base.astro'
   <h1 class="mb-8">Search</h1>
   <div id="search"></div>
   <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
-  <script is:inline>
-    window.addEventListener('DOMContentLoaded', function () {
-      new PagefindUI({
-        element: '#search',
-        showSubResults: true,
-        showImages: false,
-      })
-    })
-  </script>
   <script is:inline src="/pagefind/pagefind-ui.js"></script>
+  <script is:inline src="/js/search-init.js"></script>
   <style is:global>
     :root {
       --pagefind-ui-scale: 1;
