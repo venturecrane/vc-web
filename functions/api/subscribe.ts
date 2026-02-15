@@ -115,7 +115,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email,
+        email_address: email,
         type: 'regular',
       }),
     })
