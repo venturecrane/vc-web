@@ -4,6 +4,7 @@ import ArticleMeta from '../components/ArticleMeta.astro'
 import AIDisclosure from '../components/AIDisclosure.astro'
 import TagList from '../components/TagList.astro'
 import ShareLinks from '../components/ShareLinks.astro'
+import Subscribe from '../components/Subscribe.astro'
 
 interface Heading {
   depth: number
@@ -124,6 +125,8 @@ const articleSchema = {
       </p>
     </aside>
 
+    <Subscribe variant="inline" />
+
     {
       (prevArticle || nextArticle) && (
         <nav
@@ -148,4 +151,6 @@ const articleSchema = {
       )
     }
   </div>
+
+  <script is:inline src="/js/subscribe.js"></script>
 </Base>

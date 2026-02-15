@@ -1,6 +1,7 @@
 ---
 import Base from './Base.astro'
 import TagList from '../components/TagList.astro'
+import Subscribe from '../components/Subscribe.astro'
 
 interface Props {
   title: string
@@ -59,5 +60,9 @@ const blogPostingSchema = {
         </a>
       </p>
     </aside>
+
+    <Subscribe variant="inline" />
   </div>
+
+  <script is:inline src="/js/subscribe.js"></script>
 </Base>
