@@ -64,29 +64,22 @@
   --vc-font-mono:
     ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 
-  /* Type scale */
-  --vc-text-body: 1.125rem;
-  --vc-leading-body: 1.7;
-  --vc-text-h1: 2.25rem;
+  /* Type scale - aligned to industry standard (16px base) */
+  --vc-text-body: 1rem;
+  --vc-leading-body: 1.5;
+  --vc-text-h1: 2rem;
   --vc-leading-h1: 1.2;
-  --vc-text-h2: 1.75rem;
+  --vc-text-h2: 1.5rem;
   --vc-leading-h2: 1.3;
-  --vc-text-h3: 1.375rem;
+  --vc-text-h3: 1.25rem;
   --vc-leading-h3: 1.4;
-  --vc-text-code: 0.9375rem;
-  --vc-leading-code: 1.6;
+  --vc-text-code: 0.8125rem;
+  --vc-leading-code: 1.4;
   --vc-text-small: 0.875rem;
   --vc-leading-small: 1.5;
 
   /* Content width */
-  --vc-content-width: 680px;
-}
-
-@media (max-width: 640px) {
-  :root {
-    --vc-text-body: 1rem;
-    --vc-leading-body: 1.6;
-  }
+  --vc-content-width: 640px;
 }
 
 /* Base styles */
@@ -147,6 +140,13 @@ pre {
   position: relative;
 }
 
+@media (max-width: 640px) {
+  pre {
+    font-size: clamp(0.55rem, 1.8vw, var(--vc-text-code));
+    line-height: 1.2;
+  }
+}
+
 pre::after {
   content: '';
   position: sticky;
@@ -205,7 +205,7 @@ small,
   font-size: var(--vc-text-h2);
   line-height: var(--vc-leading-h2);
   font-weight: 600;
-  margin-top: 3em;
+  margin-top: 2.5em;
   margin-bottom: 0.75em;
 }
 
@@ -218,7 +218,7 @@ small,
 }
 
 .vc-prose p {
-  margin-bottom: 1.25em;
+  margin-bottom: 1em;
 }
 
 .vc-prose ul,
@@ -228,7 +228,7 @@ small,
 }
 
 .vc-prose li {
-  margin-bottom: 0.5em;
+  margin-bottom: 0.375em;
 }
 
 .vc-prose ul ul,
