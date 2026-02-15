@@ -11,26 +11,26 @@ export const lastReviewed = '2026-02-15'
 
 export const ventures: Venture[] = [
   {
-    name: 'Durgan Field Guide',
-    slug: 'dfg',
-    description:
-      'Curated trail information with detailed conditions, difficulty ratings, and seasonal recommendations for hikers and outdoor enthusiasts.',
-    status: 'building',
-    techStack: ['Astro', 'Cloudflare Pages', 'D1'],
-  },
-  {
     name: 'Kid Expenses',
     slug: 'ke',
     description:
-      'Track, categorize, and split child-related expenses between co-parents with receipt capture and export.',
+      'Shared custody means shared costs and shared disagreements about money. Kid Expenses gives divorced and separated parents a structured way to log, split, and settle child-related expenses without the conflict.',
     status: 'building',
     techStack: ['Next.js', 'Cloudflare Workers', 'D1'],
+  },
+  {
+    name: 'Durgan Field Guide',
+    slug: 'dfg',
+    description:
+      'Solo resellers spend hours scanning auction listings by hand, missing good deals and overpaying on bad ones. Durgan Field Guide automates the scouting - scraping auction platforms, running AI-powered profit analysis, and surfacing buy-or-pass recommendations.',
+    status: 'building',
+    techStack: ['Astro', 'Cloudflare Workers', 'D1'],
   },
   {
     name: 'Draft Crane',
     slug: 'dc',
     description:
-      'Structured editing and review pipelines for technical content with AI-assisted writing workflows.',
+      'Consultants, coaches, and subject-matter experts want to write a book but stay stuck in scattered docs and half-finished drafts. Draft Crane is a focused writing environment with AI assistance that turns expertise into publishable nonfiction.',
     status: 'building',
     techStack: ['Astro', 'Cloudflare Workers'],
   },
@@ -38,7 +38,7 @@ export const ventures: Venture[] = [
     name: 'Silicon Crane',
     slug: 'sc',
     description:
-      'Rapid prototype-to-signal pipeline for testing product ideas before full build commitment.',
+      'Most product ideas fail because teams build before validating. Silicon Crane helps founders and product teams test assumptions through structured experiments - landing pages, user interviews, and prototypes - before committing to a full build.',
     status: 'building',
     techStack: ['Cloudflare Workers', 'D1'],
   },
