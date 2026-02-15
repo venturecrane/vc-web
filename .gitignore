@@ -26,6 +26,7 @@ Thumbs.db
 
 # Test
 coverage/
+.lighthouseci/
 
 # Logs
 *.log

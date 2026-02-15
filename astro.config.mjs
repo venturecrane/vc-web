@@ -6,6 +6,9 @@ import { rehypeAccessibleOverflow } from './src/plugins/rehype-accessible-overfl
 export default defineConfig({
   site: 'https://venturecrane.com',
   output: 'static',
+  build: {
+    inlineStylesheets: 'always',
+  },
   markdown: {
     shikiConfig: {
       theme: 'github-dark',

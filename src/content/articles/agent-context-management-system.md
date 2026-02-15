@@ -4,7 +4,7 @@ date: 2026-02-14
 description: 'Building centralized context management so AI agents start every session with the right knowledge.'
 author: 'Venture Crane'
 tags: ['agent-context', 'mcp', 'infrastructure']
-draft: false
+draft: true
 ---
 
 When running AI coding agents across multiple machines and sessions, context is the bottleneck. Each session starts cold. The agent doesn't know what happened yesterday, what another agent is working on right now, or what the project's business context is. Existing approaches - committing markdown handoff files to git, setting environment variables, pasting context manually - are fragile and don't scale past a single developer on a single machine.
@@ -53,10 +53,10 @@ The system is designed for a small team (1-5 humans) running multiple AI agent s
 │                                                            │
 │  ┌────────────────┐  ┌───────────────┐  ┌─────────────┐  │
 │  │  Context API    │  │  Knowledge    │  │  GitHub      │  │
-│  │  • Sessions     │  │  Store (KMS) │  │  Relay       │  │
-│  │  • Handoffs     │  │  • Notes      │  │  • Events    │  │
-│  │  • Heartbeats   │  │  • Tags       │  │  • Labels    │  │
-│  │  • Doc audit    │  │  • Scope      │  │  • Comments  │  │
+│  │  • Sessions     │  │  Store (VCMS)│  │  Classifier  │  │
+│  │  • Handoffs     │  │  • Notes      │  │  • Webhooks  │  │
+│  │  • Heartbeats   │  │  • Tags       │  │  • Grading   │  │
+│  │  • Doc audit    │  │  • Scope      │  │  • Labels    │  │
 │  │  • Rate limits  │  │              │  │              │  │
 │  └────────┬───────┘  └──────┬────────┘  └──────┬──────┘  │
 │           └─────────────────┼──────────────────┘          │
@@ -472,7 +472,7 @@ The launcher binary is installed via `npm link` from the MCP package directory:
 // package.json
 "bin": {
   "context-mcp": "./bin/context-mcp.js",
-  "launch": "./bin/launch.js"
+  "launcher": "./bin/launcher.js"
 }
 ```
 
@@ -789,21 +789,21 @@ GitHub Actions runs on every push and PR:
 
 4. **Stale process state** - Node.js caches modules at process start. If you rebuild the MCP server but don't restart the CLI, the old code runs. This is not obvious and has bitten us multiple times.
 
-5. **Context window budget** - SOD output hit 298K characters in one measured session. There is currently no truncation or budget management - the full output is injected into the agent's context. This is an acknowledged open problem. Long SOD output competes for space with the actual work the agent needs to do. Solutions under consideration include: metadata-only doc delivery (partially implemented), progressive loading, and hard character budgets per section.
+5. **Context window budget** - SOD output hit 298K characters in one measured session. We addressed this with metadata-only doc delivery (returning titles and freshness instead of full content) and a 12KB budget cap on enterprise notes. The result was a 96% reduction in SOD token consumption. Documents are now loaded on demand when the agent needs them.
 
 ---
 
 ## Infrastructure
 
-| Component        | Technology                  | Purpose                                          |
-| ---------------- | --------------------------- | ------------------------------------------------ |
-| Context API      | Cloudflare Worker + D1      | Sessions, handoffs, knowledge, docs, rate limits |
-| GitHub Relay     | Cloudflare Worker + D1      | Label management, QA events                      |
-| MCP Server       | Node.js (TypeScript, stdio) | Client-side context rendering, doc generation    |
-| CLI Launcher     | Node.js (TypeScript)        | Secret injection, venture routing, agent spawn   |
-| Secrets Manager  | Infisical                   | API keys, tokens per project                     |
-| Fleet Networking | Tailscale                   | SSH mesh between machines                        |
-| CI/CD            | GitHub Actions              | Test, deploy, doc sync, security scanning        |
+| Component         | Technology                  | Purpose                                          |
+| ----------------- | --------------------------- | ------------------------------------------------ |
+| Context API       | Cloudflare Worker + D1      | Sessions, handoffs, knowledge, docs, rate limits |
+| GitHub Classifier | Cloudflare Worker           | Webhook processing, issue classification         |
+| MCP Server        | Node.js (TypeScript, stdio) | Client-side context rendering, doc generation    |
+| CLI Launcher      | Node.js (TypeScript)        | Secret injection, venture routing, agent spawn   |
+| Secrets Manager   | Infisical                   | API keys, tokens per project                     |
+| Fleet Networking  | Tailscale                   | SSH mesh between machines                        |
+| CI/CD             | GitHub Actions              | Test, deploy, doc sync, security scanning        |
 
 **Deployment**: Workers deploy via Wrangler (`npx wrangler deploy`). MCP server builds locally and links via `npm link`. Fleet updates propagate via git pull + rebuild on each machine, either manually or via a fleet deployment script.
 
@@ -1136,8 +1136,6 @@ These features are designed and in some cases partially implemented, but not yet
 **Scheduled cleanup** - Stale sessions are currently soft-filtered in queries. A Cloudflare Cron Trigger to mark sessions `abandoned` after 45 minutes, purge expired idempotency keys, and rotate the request log (7-day retention) is designed in the ADR but not yet deployed.
 
 **Staging/production environments** - Currently single-environment. ADR 026 proposes: `[env.production]` blocks in `wrangler.toml`, staging as default deployment, manual promotion to production. This protects live agent sessions from deployment-time breakage.
-
-**Context window budget management** - SOD output measured at 298K characters in one session. No truncation or budget management exists today. Planned approach: hard character budgets per section, metadata-only doc delivery by default (partially implemented), progressive loading where the agent requests full doc content when needed.
 
 ### Phase 3 (Aspirational)
 

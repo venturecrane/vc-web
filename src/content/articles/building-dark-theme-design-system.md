@@ -4,10 +4,10 @@ date: 2026-02-14
 description: 'How we built a dark-first design system using CSS custom properties and Tailwind v4 theme configuration.'
 author: 'Venture Crane'
 tags: ['design-system', 'tailwind', 'css', 'dark-theme']
-draft: false
+draft: true
 ---
 
-Most design system guides start with light mode and bolt dark mode on as an afterthought. We went the other direction. Venture Crane's site was designed dark-first - every color token, every contrast ratio, every surface elevation was conceived for a dark canvas. Here's what we learned building it with Tailwind CSS v4 and vanilla CSS custom properties.
+Most design system guides start with light mode and bolt dark mode on as an afterthought. We went the other direction. Venture Crane's site was designed dark-first - every color token, every contrast ratio, every surface elevation was conceived for a dark canvas. Here's how we built it with Tailwind CSS v4 and vanilla CSS custom properties.
 
 ## Why Dark-First
 
@@ -27,7 +27,7 @@ Our system uses three semantic layers for background surfaces:
 2. **Surface** (`#242438`) - content reading areas where long-form text lives
 3. **Surface Raised** (`#2a2a42`) - cards, code blocks, and interactive elements that float above the surface
 
-The chrome-to-surface transition is deliberate. When you navigate from the homepage to an article, the reading area shifts from `#1a1a2e` to `#242438` - a subtle but noticeable increase in lightness that signals "you're in reading mode now." It's only 6 points different in lightness, but your eyes register it immediately.
+The chrome-to-surface transition is deliberate. When you navigate from the homepage to an article, the reading area shifts from `#1a1a2e` to `#242438` - a subtle but noticeable increase in lightness that signals "you're in reading mode now." It's only about 4 points different in HSL lightness, but your eyes register it immediately.
 
 ### Custom Properties Over Theme Extensions
 
@@ -68,14 +68,14 @@ Every color pairing was checked against WCAG AA (4.5:1) and AAA (7:1) thresholds
 
 | Pairing         | Foreground | Background | Ratio  | Grade |
 | --------------- | ---------- | ---------- | ------ | ----- |
-| Body text       | `#e8e8f0`  | `#242438`  | 11.2:1 | AAA   |
-| Muted text      | `#a0a0b8`  | `#242438`  | 5.4:1  | AA    |
-| Accent links    | `#818cf8`  | `#242438`  | 5.8:1  | AA    |
-| Gold wordmark   | `#dbb05c`  | `#1a1a2e`  | 7.5:1  | AAA   |
-| Code text       | `#e8e8f0`  | `#14142a`  | 14.1:1 | AAA   |
-| Muted on chrome | `#a0a0b8`  | `#1a1a2e`  | 6.2:1  | AA    |
+| Body text       | `#e8e8f0`  | `#242438`  | 12.5:1 | AAA   |
+| Muted text      | `#a0a0b8`  | `#242438`  | 5.9:1  | AA    |
+| Accent links    | `#818cf8`  | `#242438`  | 5.1:1  | AA    |
+| Gold wordmark   | `#dbb05c`  | `#1a1a2e`  | 8.4:1  | AAA   |
+| Code text       | `#e8e8f0`  | `#14142a`  | 14.8:1 | AAA   |
+| Muted on chrome | `#a0a0b8`  | `#1a1a2e`  | 6.7:1  | AA    |
 
-The gold accent (`#dbb05c`) was specifically tuned to clear AAA on the chrome background. An earlier candidate (`#d4a855`) only hit 6.9:1 - technically AA-compliant, but uncomfortably close to the boundary. We bumped it to `#dbb05c` for margin.
+The gold accent (`#dbb05c`) was chosen for its warmth and AAA-clearing contrast on the chrome background at 8.4:1.
 
 ## Typography Decisions
 
@@ -206,5 +206,3 @@ Our reading comfort check isn't "does this look okay for 30 seconds." It's "can 
 ### Don't Build What Astro Gives You
 
 We started writing a custom Markdown processing pipeline before realizing Astro's built-in content collections already handled 90% of what we needed. The only custom piece is a single rehype plugin that adds `tabindex` attributes and wraps tables. Everything else - frontmatter parsing, type-safe schemas, slug generation, RSS feeds - is Astro out of the box.
-
-The best code is the code you delete. The second best is the code you never write.
