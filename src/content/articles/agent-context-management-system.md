@@ -83,10 +83,10 @@ The system is designed for a small team (1-5 humans) running multiple AI agent s
 The primary entry point for agent sessions is a Node.js CLI launcher that handles secrets, routing, and agent spawning in a single command:
 
 ```bash
-launcher alpha            # Launch Claude Code for Project Alpha
-launcher beta --gemini    # Launch Gemini CLI for Project Beta
-launcher gamma --codex    # Launch Codex CLI for Project Gamma
-launcher --list           # Show all ventures with install status
+launcher alpha         # Claude Code for Project Alpha
+launcher beta --gemini # Gemini CLI for Project Beta
+launcher gamma --codex # Codex CLI for Project Gamma
+launcher --list        # Show ventures with install status
 ```
 
 **What `launcher <project>` does internally:**
@@ -233,11 +233,11 @@ A `notes` table in D1 stores typed knowledge entries:
 
 ```sql
 CREATE TABLE notes (
-  id TEXT PRIMARY KEY,        -- note_<ULID>
+  id TEXT PRIMARY KEY,   -- note_<ULID>
   title TEXT,
   content TEXT NOT NULL,
-  tags TEXT,                  -- JSON array: ["executive-summary", "prd"]
-  venture TEXT,               -- project scope (null = global)
+  tags TEXT,              -- JSON array of tag strings
+  venture TEXT,           -- scope (null = global)
   archived INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL,
