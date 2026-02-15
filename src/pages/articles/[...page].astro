@@ -1,0 +1,46 @@
+---
+import Base from '../../layouts/Base.astro'
+import ArticleCard from '../../components/ArticleCard.astro'
+import Pagination from '../../components/Pagination.astro'
+import { getCollection } from 'astro:content'
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro'
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const articles = (await getCollection('articles'))
+    .filter((a) => !a.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+
+  return paginate(articles, { pageSize: 10 })
+}) satisfies GetStaticPaths
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+
+const { page } = Astro.props as Props
+---
+
+<Base title="Articles | Venture Crane" description="Engineering articles from Venture Crane.">
+  <h1 class="mb-8">Articles</h1>
+  {
+    page.data.length > 0 ? (
+      <div class="flex flex-col gap-4">
+        {page.data.map((article) => (
+          <ArticleCard
+            title={article.data.title}
+            date={article.data.date}
+            description={article.data.description}
+            readingTime={Math.ceil(article.body!.split(/\s+/).length / 225)}
+            slug={article.id}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="text-vc-text-muted">Content coming soon.</p>
+    )
+  }
+  <Pagination
+    prevUrl={page.url.prev}
+    nextUrl={page.url.next}
+    currentPage={page.currentPage}
+    lastPage={page.lastPage}
+  />
+</Base>

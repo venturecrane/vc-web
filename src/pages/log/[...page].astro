@@ -1,0 +1,43 @@
+---
+import Base from '../../layouts/Base.astro'
+import LogEntry from '../../components/LogEntry.astro'
+import Pagination from '../../components/Pagination.astro'
+import { getCollection } from 'astro:content'
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro'
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const logs = (await getCollection('logs'))
+    .filter((l) => !l.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+
+  return paginate(logs, { pageSize: 20 })
+}) satisfies GetStaticPaths
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>
+
+const { page } = Astro.props as Props
+---
+
+<Base
+  title="Build Log | Venture Crane"
+  description="Build log from the Venture Crane development lab."
+>
+  <h1 class="mb-8">Build Log</h1>
+  {
+    page.data.length > 0 ? (
+      <div class="flex flex-col gap-2">
+        {page.data.map((log) => (
+          <LogEntry title={log.data.title} date={log.data.date} slug={log.id} />
+        ))}
+      </div>
+    ) : (
+      <p class="text-vc-text-muted">No build log entries yet.</p>
+    )
+  }
+  <Pagination
+    prevUrl={page.url.prev}
+    nextUrl={page.url.next}
+    currentPage={page.currentPage}
+    lastPage={page.lastPage}
+  />
+</Base>
