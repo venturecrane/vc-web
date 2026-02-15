@@ -1,71 +1,70 @@
 ---
 import Base from '../layouts/Base.astro'
-import PortfolioCard from '../components/PortfolioCard.astro'
+import FeaturedArticle from '../components/FeaturedArticle.astro'
 import ArticleCard from '../components/ArticleCard.astro'
 import LogEntry from '../components/LogEntry.astro'
+import PortfolioCard from '../components/PortfolioCard.astro'
 import { sortedVentures } from '../data/ventures'
 import { getCollection } from 'astro:content'
 
 const articles = (await getCollection('articles'))
   .filter((a) => !a.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 5)
 
 const logs = (await getCollection('logs'))
   .filter((l) => !l.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 3)
+  .slice(0, 5)
+
+const leadArticle = articles[0]
+const remainingArticles = articles.slice(1, 5)
 ---
 
 <Base title="Venture Crane">
-  <section class="py-16 text-center sm:py-24">
-    <h1 class="mb-4 text-3xl font-bold sm:text-4xl">
-      A development lab building real products with AI agents.
+  <section class="pb-8 pt-6 sm:pb-12 sm:pt-8">
+    <h1 class="text-2xl font-bold sm:text-3xl">
+      Field notes on building software with AI agent teams.
     </h1>
-    <p class="mx-auto max-w-2xl text-lg text-vc-text-muted">
-      Venture Crane is a solo-founder venture studio powered by multi-agent development teams. We
-      build the tooling, use it to ship products, and publish what we learn - operational
-      methodology, real costs, honest failures.
+    <p class="mt-2 text-vc-text-muted">
+      Venture Crane is a solo-founder studio that builds products with multi-agent development teams
+      and publishes what we learn.
     </p>
   </section>
 
-  <section class="mb-16">
-    <div class="mb-6 flex items-baseline justify-between">
-      <h2 class="text-xl font-semibold">Portfolio</h2>
-      <a href="/portfolio/" class="text-sm text-vc-text-muted no-underline hover:text-accent">
-        View all
-      </a>
-    </div>
-    <div class="grid gap-4">
-      {sortedVentures.map((venture) => <PortfolioCard venture={venture} />)}
-    </div>
-  </section>
-
-  <section class="mb-16">
-    <div class="mb-6 flex items-baseline justify-between">
-      <h2 class="text-xl font-semibold">Recent Articles</h2>
-      <a href="/articles/" class="text-sm text-vc-text-muted no-underline hover:text-accent">
-        View all
-      </a>
-    </div>
-    {
-      articles.length > 0 ? (
-        <div class="flex flex-col gap-4">
-          {articles.map((article) => (
-            <ArticleCard
-              title={article.data.title}
-              date={article.data.date}
-              description={article.data.description}
-              readingTime={Math.ceil(article.body!.split(/\s+/).length / 225)}
-              slug={article.id}
-            />
-          ))}
+  {
+    articles.length > 0 && (
+      <section class="mb-16">
+        <div class="mb-6 flex items-baseline justify-between">
+          <h2 class="text-xl font-semibold">Articles</h2>
+          {articles.length > 1 && (
+            <a href="/articles/" class="text-sm text-vc-text-muted no-underline hover:text-accent">
+              View all
+            </a>
+          )}
         </div>
-      ) : (
-        <p class="text-vc-text-muted">Articles coming soon.</p>
-      )
-    }
-  </section>
+        <FeaturedArticle
+          title={leadArticle.data.title}
+          date={leadArticle.data.date}
+          description={leadArticle.data.description}
+          readingTime={Math.ceil(leadArticle.body!.split(/\s+/).length / 225)}
+          slug={leadArticle.id}
+        />
+        {remainingArticles.length > 0 && (
+          <div class="mt-4 flex flex-col gap-4">
+            {remainingArticles.map((article) => (
+              <ArticleCard
+                title={article.data.title}
+                date={article.data.date}
+                description={article.data.description}
+                readingTime={Math.ceil(article.body!.split(/\s+/).length / 225)}
+                slug={article.id}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+    )
+  }
 
   <section class="mb-16">
     <div class="mb-6 flex items-baseline justify-between">
@@ -88,7 +87,21 @@ const logs = (await getCollection('logs'))
   </section>
 
   <section class="mb-16">
-    <h2 class="mb-4 text-xl font-semibold">Why We Publish</h2>
+    <div class="mb-6 flex items-baseline justify-between">
+      <h2 class="text-xl font-semibold">What We Build</h2>
+      <a href="/portfolio/" class="text-sm text-vc-text-muted no-underline hover:text-accent">
+        View all
+      </a>
+    </div>
+    <div class="grid gap-4">
+      {sortedVentures.map((venture) => <PortfolioCard venture={venture} />)}
+    </div>
+  </section>
+
+  <section class="mb-16 border-t border-border pt-8">
+    <h2 class="mb-4 text-sm font-semibold uppercase tracking-wider text-vc-text-muted">
+      Why We Publish
+    </h2>
     <p class="text-vc-text-muted">
       The discipline of AI-native development operations is forming right now. The vocabulary is
       new, the patterns are unstable, and most of what gets published is either vendor marketing or
