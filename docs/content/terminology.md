@@ -62,4 +62,4 @@ Articles on venturecrane.com follow additional naming rules for external audienc
 
 The `sources` frontmatter field is an exception - real repo URLs are acceptable there since they are metadata, not reader-facing prose.
 
-The canonical name table above still applies to internal docs (CLAUDE.md, ADRs, build logs, process docs). Articles are the only context where generic substitutions apply.
+The canonical name table above still applies to internal docs (CLAUDE.md, ADRs, process docs). Published build logs on venturecrane.com are reader-facing and follow the same genericization rules as articles. Only internal build logs (drafts, session notes) use real names.
