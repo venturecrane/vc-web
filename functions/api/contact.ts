@@ -12,7 +12,7 @@ interface ContactPayload {
 }
 
 const ALLOWED_ORIGINS = ['https://venturecrane.com', 'https://www.venturecrane.com']
-const TO_EMAIL = 'scott@venturecrane.com'
+const TO_EMAIL = 'smdurgan@venturecrane.com'
 const FROM_EMAIL = 'Venture Crane <contact@venturecrane.com>'
 const CONTROL_CHAR_RE = /[\r\n\0]/
 
@@ -173,7 +173,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       ? Response.redirect(new URL('/contact/?error=server', request.url).toString(), 303)
       : new Response(
           JSON.stringify({
-            error: 'Failed to send message. Please email scott@venturecrane.com directly.',
+            error: 'Failed to send message. Please email smdurgan@venturecrane.com directly.',
           }),
           { status: 500, headers: { 'Content-Type': 'application/json' } }
         )
