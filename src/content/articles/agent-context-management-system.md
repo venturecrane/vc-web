@@ -498,7 +498,7 @@ Pre-commit hooks run Prettier formatting and ESLint fixes on staged files (via l
 
 ## What We Learned
 
-**SOD/EOD discipline produces dramatically better work.** The 30-second overhead of SOD pays for itself within minutes. Agents that start with full context make better decisions from the first tool call. Without it, they spend the first 10-15 minutes rediscovering what the previous session already knew.
+**SOD/EOD discipline produces better work.** The 30-second overhead of SOD pays for itself within minutes. Agents that start with full context make better decisions from the first tool call. Without it, they spend the first 10-15 minutes rediscovering what the previous session already knew.
 
 **Structured handoffs beat free-text notes.** Forcing handoffs into accomplished / in_progress / blocked / next_steps makes them actually useful to the receiving agent. Free-text summaries are too inconsistent - sometimes they capture the right details, sometimes they don't.
 
