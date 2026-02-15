@@ -94,7 +94,7 @@ These are real constraints, drawn from operational experience and open issues.
 
 **Agent quality varies by task type.** Agents handle infrastructure, backend logic, and structured content well. Design judgment, copy tone, and novel architecture decisions require heavy human involvement. The lab saves time on tasks agents are good at but doesn't eliminate the tasks they're not.
 
-**Context window pressure.** The start-of-day initialization measured 298K characters in one session. There is currently no truncation or budget management - the full context is injected into the agent's working memory. This competes for space with the actual work. Metadata-only document delivery is partially implemented but not yet the default.
+**Context window pressure (mitigated).** The start-of-day initialization originally consumed ~71K tokens - roughly a third of the context window - before the agent did any useful work. Switching documentation delivery from full contents to a metadata index (agents fetch specific docs on demand) and adding section budgets with relevance-tiered truncation brought this down to ~3K tokens - a 96% reduction. The problem is solved for now, but context budget management remains an ongoing concern as the knowledge store grows.
 
 **Single-environment deployment.** All ventures run in a single Cloudflare environment. There is no staging/production separation for the context API. A bad deployment affects all active agent sessions across all ventures simultaneously. Environment separation is designed but not yet deployed.
 
