@@ -33,7 +33,7 @@ All design tokens are CSS custom properties prefixed `--vc-*` defined in `src/st
 
 ## Code Patterns
 
-- Zero client-side JavaScript - all pages are static HTML + CSS
+- Minimal client-side JavaScript (contact form enhancement only) - all other pages are static HTML + CSS
 - Content uses Astro Content Collections with Zod schemas
 - CSS-only interactions (mobile nav uses `<details><summary>`)
 - Dark theme: chrome (`--vc-chrome`) for structure, surface (`--vc-surface`) for content

@@ -1,0 +1,160 @@
+---
+import Base from '../layouts/Base.astro'
+
+const sent = Astro.url.searchParams.get('sent') === '1'
+const error = Astro.url.searchParams.get('error')
+---
+
+<Base title="Contact" description="Get in touch with Venture Crane.">
+  <div class="rounded-lg bg-surface p-6 sm:p-8">
+    <h1 class="mb-2 text-3xl font-bold">Get in Touch</h1>
+    <p class="mb-8 text-vc-text-muted">
+      Have a question or want to work together? Send a message and I'll get back to you.
+    </p>
+
+    <div id="form-status" aria-live="polite">
+      {
+        sent && (
+          <div class="mb-6 rounded border border-accent/30 bg-accent/10 px-4 py-3 text-sm text-accent">
+            Message sent. I'll get back to you soon.
+          </div>
+        )
+      }
+      {
+        error === 'validation' && (
+          <div class="mb-6 rounded border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-400">
+            Please check your input and try again.
+          </div>
+        )
+      }
+      {
+        error === 'server' && (
+          <div class="mb-6 rounded border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-400">
+            Something went wrong. Please email{' '}
+            <a href="mailto:scott@venturecrane.com" class="underline">
+              scott@venturecrane.com
+            </a>{' '}
+            directly.
+          </div>
+        )
+      }
+    </div>
+
+    {
+      !sent && (
+        <form id="contact-form" action="/api/contact" method="POST" class="space-y-5">
+          <div>
+            <label for="name" class="mb-1 block text-sm font-medium text-vc-text">
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              maxlength="200"
+              autocomplete="name"
+              class="w-full rounded border border-border bg-chrome px-3 py-2 text-vc-text placeholder:text-vc-text-muted/50 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              placeholder="Your name"
+            />
+          </div>
+
+          <div>
+            <label for="email" class="mb-1 block text-sm font-medium text-vc-text">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              maxlength="254"
+              autocomplete="email"
+              class="w-full rounded border border-border bg-chrome px-3 py-2 text-vc-text placeholder:text-vc-text-muted/50 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              placeholder="you@example.com"
+            />
+          </div>
+
+          <div>
+            <label for="message" class="mb-1 block text-sm font-medium text-vc-text">
+              Message
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              maxlength="5000"
+              rows="6"
+              class="w-full rounded border border-border bg-chrome px-3 py-2 text-vc-text placeholder:text-vc-text-muted/50 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              placeholder="What's on your mind?"
+            />
+          </div>
+
+          {/* Honeypot - hidden from real users */}
+          <div class="absolute -left-[9999px]" aria-hidden="true">
+            <label for="website">Website</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+          </div>
+
+          <button
+            type="submit"
+            class="rounded border border-accent bg-accent/10 px-5 py-2.5 text-sm font-medium text-accent hover:bg-accent/20"
+          >
+            Send Message
+          </button>
+        </form>
+      )
+    }
+  </div>
+</Base>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const status = document.getElementById('form-status')!
+      const button = form.querySelector('button[type="submit"]') as HTMLButtonElement
+
+      button.disabled = true
+      button.textContent = 'Sending...'
+      status.innerHTML = ''
+
+      const data = {
+        name: (form.elements.namedItem('name') as HTMLInputElement).value,
+        email: (form.elements.namedItem('email') as HTMLInputElement).value,
+        message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
+        website: (form.elements.namedItem('website') as HTMLInputElement).value,
+      }
+
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        })
+
+        if (res.ok) {
+          status.innerHTML =
+            '<div class="mb-6 rounded border border-accent/30 bg-accent/10 px-4 py-3 text-sm text-accent">Message sent. I\'ll get back to you soon.</div>'
+          form.reset()
+          form.style.display = 'none'
+        } else {
+          const body = (await res.json()) as { fields?: Record<string, string>; error?: string }
+          if (res.status === 400 && body.fields) {
+            const msgs = Object.values(body.fields).join('. ')
+            status.innerHTML = `<div class="mb-6 rounded border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-400">${msgs}</div>`
+          } else {
+            throw new Error(body.error || 'Request failed')
+          }
+        }
+      } catch {
+        status.innerHTML =
+          '<div class="mb-6 rounded border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-400">Something went wrong. Please email <a href="mailto:scott@venturecrane.com" class="underline">scott@venturecrane.com</a> directly.</div>'
+      } finally {
+        button.disabled = false
+        button.textContent = 'Send Message'
+      }
+    })
+  }
+</script>

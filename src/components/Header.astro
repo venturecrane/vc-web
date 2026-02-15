@@ -9,6 +9,7 @@ const navLinks = [
   { href: '/log/', label: 'Build Log' },
   { href: '/portfolio/', label: 'Portfolio' },
   { href: '/methodology/', label: 'Methodology' },
+  { href: '/contact/', label: 'Contact' },
 ]
 ---
 
@@ -25,7 +26,7 @@ const navLinks = [
       <span class="text-gold hover:text-gold-hover">Crane</span>
     </a>
 
-    <nav class="hidden sm:flex sm:gap-6" aria-label="Main">
+    <nav class="hidden sm:flex sm:gap-4" aria-label="Main">
       {
         navLinks.map(({ href, label }) => (
           <a
