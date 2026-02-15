@@ -39,7 +39,11 @@ const showToc = headings.length > 0
 ---
 
 <Base title={`${title} | Venture Crane`} description={description}>
-  <div class="rounded-lg bg-surface p-4 sm:p-6 lg:p-8">
+  <div
+    class="rounded-lg bg-surface p-4 sm:p-6 lg:p-8"
+    data-pagefind-body
+    data-pagefind-meta={`type:article, date:${date.toISOString().split('T')[0]}`}
+  >
     <header class="mb-8">
       <h1 class="mb-3">{title}</h1>
       <ArticleMeta

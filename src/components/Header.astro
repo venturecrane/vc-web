@@ -26,7 +26,7 @@ const navLinks = [
       <span class="text-gold hover:text-gold-hover">Crane</span>
     </a>
 
-    <nav class="hidden sm:flex sm:gap-4" aria-label="Main">
+    <nav class="hidden sm:flex sm:items-center sm:gap-4" aria-label="Main">
       {
         navLinks.map(({ href, label }) => (
           <a
@@ -43,6 +43,30 @@ const navLinks = [
           </a>
         ))
       }
+      <a
+        href="/search/"
+        aria-label="Search"
+        class:list={[
+          'text-sm no-underline transition-colors',
+          pathname === '/search/' ? 'text-accent' : 'text-vc-text-muted hover:text-vc-text',
+        ]}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </a>
     </nav>
 
     <MobileNav />

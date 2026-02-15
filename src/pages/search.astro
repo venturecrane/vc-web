@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro'
+---
+
+<Base title="Search | Venture Crane" description="Search articles and build logs.">
+  <h1 class="mb-8">Search</h1>
+  <div id="search"></div>
+  <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  <script is:inline>
+    window.addEventListener('DOMContentLoaded', function () {
+      new PagefindUI({
+        element: '#search',
+        showSubResults: true,
+        showImages: false,
+      })
+    })
+  </script>
+  <script is:inline src="/pagefind/pagefind-ui.js"></script>
+  <style is:global>
+    :root {
+      --pagefind-ui-scale: 1;
+      --pagefind-ui-primary: var(--vc-accent);
+      --pagefind-ui-text: var(--vc-text);
+      --pagefind-ui-background: var(--vc-surface);
+      --pagefind-ui-border: var(--vc-border);
+      --pagefind-ui-tag: var(--vc-surface-raised);
+      --pagefind-ui-border-width: 1px;
+      --pagefind-ui-border-radius: 0.375rem;
+      --pagefind-ui-font: var(--vc-font-body);
+    }
+
+    .pagefind-ui__search-input {
+      background-color: var(--vc-chrome) !important;
+      color: var(--vc-text) !important;
+    }
+
+    .pagefind-ui__search-input::placeholder {
+      color: var(--vc-text-muted) !important;
+    }
+
+    .pagefind-ui__result-link {
+      color: var(--vc-accent) !important;
+    }
+
+    .pagefind-ui__result-link:hover {
+      color: var(--vc-accent-hover) !important;
+    }
+
+    .pagefind-ui__result-excerpt {
+      color: var(--vc-text-muted) !important;
+    }
+
+    .pagefind-ui__button {
+      background-color: var(--vc-surface-raised) !important;
+      color: var(--vc-text) !important;
+    }
+
+    .pagefind-ui__button:hover {
+      background-color: var(--vc-accent) !important;
+      color: var(--vc-text-inverse) !important;
+    }
+
+    .pagefind-ui__message {
+      color: var(--vc-text-muted) !important;
+    }
+  </style>
+</Base>

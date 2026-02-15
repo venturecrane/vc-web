@@ -15,7 +15,11 @@ const formatDate = (d: Date) =>
 ---
 
 <Base title={`${title} | Venture Crane`}>
-  <div class="rounded-lg bg-surface p-6 sm:p-8">
+  <div
+    class="rounded-lg bg-surface p-6 sm:p-8"
+    data-pagefind-body
+    data-pagefind-meta={`type:log, date:${date.toISOString().split('T')[0]}`}
+  >
     <header class="mb-8">
       <h1 class="mb-3">{title}</h1>
       <div class="text-sm text-vc-text-muted">
