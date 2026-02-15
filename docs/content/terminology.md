@@ -36,6 +36,30 @@ Read this before drafting any content for venturecrane.com. These are the canoni
 ## Style Rules
 
 - Never use em dashes. Use hyphens in prose, pipes in page title separators.
-- Real numbers, real tool names, real configs. No anonymization.
+- Real numbers, real tool names, real configs.
 - Code snippets come from the actual codebase, not made-up examples.
 - No marketing language. Write like you're explaining to a peer.
+
+## Published Content (Articles)
+
+Articles on venturecrane.com follow additional naming rules for external audiences.
+
+**Use real names for:** External tools and services (Claude Code, D1, Infisical, Tailscale, GitHub Actions, Astro, Cloudflare Workers).
+
+**Use generic functional names for:** Internal project identifiers.
+
+| Internal Name                           | Published As                                           |
+| --------------------------------------- | ------------------------------------------------------ |
+| crane-context                           | "the context API" or "the context worker"              |
+| crane-mcp                               | "the MCP server" or "the local MCP server"             |
+| crane-classifier                        | "the GitHub classifier" or "the webhook processor"     |
+| crane-relay                             | "the legacy webhook worker" or "the monolithic worker" |
+| Any other `crane-*` name                | Functional description                                 |
+| Real venture names (Kid Expenses, etc.) | Generic names (Project Alpha, Project Beta, etc.)      |
+| Venture codes (vc, ke, sc, dfg, dc)     | Generic codes (alpha, beta, gamma, etc.)               |
+| venturecrane (GitHub org)               | Omit or use "example-org"                              |
+| Specific venture counts ("5 ventures")  | "multiple ventures" or "several projects"              |
+
+The `sources` frontmatter field is an exception - real repo URLs are acceptable there since they are metadata, not reader-facing prose.
+
+The canonical name table above still applies to internal docs (CLAUDE.md, ADRs, build logs, process docs). Articles are the only context where generic substitutions apply.
