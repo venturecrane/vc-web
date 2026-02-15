@@ -14,7 +14,7 @@ const formatDate = (d: Date) =>
   d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 ---
 
-<div class="group relative rounded-lg p-4 transition-colors hover:bg-surface">
+<div class="group relative rounded-lg bg-surface p-6 transition-colors hover:bg-surface-raised">
   <a href={`/log/${slug}/`} class="absolute inset-0 z-0 rounded-lg" aria-label={title}></a>
   <div class="text-sm font-medium text-vc-text-muted">{formatDate(date)}</div>
   <h2 class="mt-1 text-base font-semibold text-vc-text group-hover:text-accent">{title}</h2>

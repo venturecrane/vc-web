@@ -1,6 +1,6 @@
 ---
 title: 'Adding a newsletter with Buttondown'
-date: 2026-02-15
+date: 2026-02-15T15:00:00
 tags: ['website', 'infrastructure']
 draft: false
 ---

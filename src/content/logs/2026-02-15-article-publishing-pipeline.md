@@ -1,6 +1,6 @@
 ---
 title: 'Building an editorial pipeline for practitioner content'
-date: 2026-02-15
+date: 2026-02-15T10:00:00
 tags: ['content', 'process']
 draft: false
 ---

@@ -1,6 +1,6 @@
 ---
 title: 'Adding a contact form without a form service'
-date: 2026-02-15
+date: 2026-02-15T12:00:00
 tags: ['website', 'infrastructure']
 draft: false
 ---

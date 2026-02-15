@@ -1,6 +1,6 @@
 ---
 title: 'Staging environments for agent infrastructure'
-date: 2026-02-15
+date: 2026-02-15T09:00:00
 tags: ['infrastructure', 'deployment']
 draft: false
 ---
