@@ -7,7 +7,9 @@ tags: ['agent-context', 'mcp', 'infrastructure']
 draft: false
 ---
 
-When running AI coding agents across multiple machines and sessions, context is the bottleneck. Each session starts cold. The agent doesn't know what happened yesterday, what another agent is working on right now, or what the project's business context is. Existing approaches - committing markdown handoff files to git, setting environment variables, pasting context manually - are fragile and don't scale past a single developer on a single machine.
+When running AI coding agents across multiple machines and sessions, context is the bottleneck. Each session starts cold. The agent doesn't know what happened yesterday, what another agent is working on right now, or what the project's business context is.
+
+Existing approaches - committing markdown handoff files to git, setting environment variables, pasting context manually - are fragile and don't scale past a single developer on a single machine.
 
 We built a centralized context management system to solve this. It gives every agent session, on any machine, immediate access to:
 
@@ -69,10 +71,10 @@ The system is designed for a small team (1-5 humans) running multiple AI agent s
 
 **Key design decisions:**
 
-- **Separation of concerns**: GitHub owns work artifacts (issues, PRs, code). The context system owns operational state (sessions, handoffs, knowledge). Neither duplicates the other.
-- **Edge-first**: Cloudflare Workers + D1 means the API is globally distributed with ~20ms latency. No servers to manage.
-- **Claude Code-native, multi-CLI aspirational**: The system is deeply integrated with Claude Code (`.claude/commands/` slash commands, `CLAUDE.md` project instructions, Claude Code memory files). The launcher supports Gemini CLI and Codex CLI as alternate agents, but Claude Code is the primary and most complete integration. The context API itself is plain HTTP + MCP - genuinely CLI-agnostic at the protocol layer.
-- **Retry-safe**: All mutating endpoints are idempotent. Calling SOD twice returns the same session. Calling EOD twice is a no-op on an ended session.
+- **Separation of concerns.** GitHub owns work artifacts (issues, PRs, code). The context system owns operational state (sessions, handoffs, knowledge). Neither duplicates the other.
+- **Edge-first.** Cloudflare Workers + D1 means the API is globally distributed with ~20ms latency. No servers to manage.
+- **Claude Code-native, multi-CLI aspirational.** The system is deeply integrated with Claude Code's slash commands, project instructions, and memory files. The launcher also supports Gemini CLI and Codex CLI, but Claude Code is the primary integration. The context API itself is plain HTTP + MCP, genuinely CLI-agnostic at the protocol layer.
+- **Retry-safe.** All mutating endpoints are idempotent. Calling SOD twice returns the same session. Calling EOD twice is a no-op on an ended session.
 
 ---
 
@@ -89,14 +91,14 @@ launcher --list           # Show all ventures with install status
 
 **What `launcher <project>` does internally:**
 
-1. **Resolves the agent** - checks `--claude | --gemini | --codex` flags, falls back to `DEFAULT_AGENT` env var, defaults to `claude`
-2. **Validates the agent binary** - confirms `claude`/`gemini`/`codex` is on `PATH`; prints install hint if missing
-3. **Loads venture configuration** - reads `config/ventures.json` for project metadata and capabilities
-4. **Discovers the local repo** - scans `~/dev/` for git repos matching the venture's org, matches by naming convention
-5. **Fetches secrets** - calls `infisical export --format=json --path /<project-code> --env dev` to get project-specific secrets (API keys, tokens). Secrets are fetched once and frozen for the session lifetime
-6. **Ensures MCP registration** - copies `.mcp.json` into the venture repo (for Claude Code), or writes to `~/.gemini/settings.json` (Gemini) or `~/.codex/config.toml` (Codex)
-7. **Self-heals MCP binary** - if the MCP server binary isn't found on `PATH`, auto-rebuilds and re-links it
-8. **Spawns the agent** - `cd` to the repo directory, spawns the CLI binary with all secrets injected as environment variables, `stdio: 'inherit'`
+1. **Resolves the agent** - checks `--claude | --gemini | --codex` flags, defaults to `claude`
+2. **Validates the binary** - confirms the agent CLI is on `PATH`; prints install hint if missing
+3. **Loads venture config** - reads `config/ventures.json` for project metadata and capabilities
+4. **Discovers the local repo** - scans `~/dev/` for git repos matching the venture's org
+5. **Fetches secrets** - calls Infisical to get project-specific API keys and tokens, frozen for the session lifetime
+6. **Ensures MCP registration** - copies the right MCP config file for the selected agent CLI
+7. **Self-heals MCP binary** - if the MCP server isn't found on `PATH`, auto-rebuilds and re-links
+8. **Spawns the agent** - `cd` to the repo, launch the CLI with all secrets injected as environment variables
 
 This eliminates the need to manually set environment variables, navigate to repos, or configure MCP servers. One command, fully configured session.
 
@@ -117,7 +119,7 @@ Projects are registered in `config/ventures.json`:
 
 The `capabilities` array drives conditional behavior: documentation requirements, schema audits, and API doc generation are only triggered for ventures with matching capabilities.
 
-**Bootstrap** takes about five minutes on a new machine. A single script installs Node.js dependencies, builds the MCP package, runs `npm link` to make the launcher and MCP server available globally on `PATH`, copies `.mcp.json` templates for Claude Code integration, and validates API connectivity via `preflight`.
+**Bootstrap takes about five minutes on a new machine.** A single script handles all of it: install Node.js dependencies, build the MCP package, link binaries to `PATH`, copy `.mcp.json` templates, and validate API connectivity.
 
 ```
 $ ./scripts/bootstrap-machine.sh
@@ -129,9 +131,9 @@ $ ./scripts/bootstrap-machine.sh
 ✓ MCP connected
 ```
 
-This replaced a manual process that required configuring 3+ environment variables, installing skill scripts, debugging OAuth conflicts, and manual troubleshooting - often taking 2+ hours per machine.
+This replaced a manual process that required configuring 3+ environment variables, installing skill scripts, and debugging OAuth conflicts - often taking 2+ hours per machine.
 
-**Fleet management** uses machine registration with the context API. Machines register their hostname, OS, architecture, Tailscale IP (for SSH mesh networking), and SSH public keys (for automated key distribution). A fleet health script checks all registered machines in parallel, verifying SSH connectivity, disk space, and service status.
+**Fleet management** uses machine registration with the context API. Each machine registers its hostname, OS, architecture, Tailscale IP, and SSH public keys. A fleet health script checks all registered machines in parallel, verifying SSH connectivity, disk space, and service status.
 
 ---
 
@@ -139,15 +141,15 @@ This replaced a manual process that required configuring 3+ environment variable
 
 Every agent session begins with Start of Day (SOD). In Claude Code, the `/sod` slash command orchestrates a multi-step initialization:
 
-1. **Cache docs** - runs a cache script in the background, pre-fetching documentation from the context API to a local temp directory
-2. **Preflight** - calls `preflight` MCP tool to validate: `CONTEXT_API_KEY` is set, `gh` CLI is authenticated, git repo detected, API connectivity OK
-3. **Create/resume session** - calls `sod` MCP tool. If an active session exists for this agent+project+repo tuple, it resumes it; otherwise creates new
-4. **Load last handoff** - retrieves the structured summary from the previous session
-5. **Show P0 issues** - queries GitHub for critical priority issues
-6. **Show active sessions** - lists other agents currently working on the same project
-7. **Two-stage doc delivery** - documentation metadata is returned by default (titles, versions, freshness). Full content is fetched on request. This prevents bloating the initial context load
-8. **Check documentation health** - audits for missing or stale docs and self-heals where possible
-9. **Check weekly plan** - reads `docs/planning/WEEKLY_PLAN.md`, shows current priority, alerts if the plan is stale
+1. **Cache docs** - pre-fetch documentation from the context API to a local temp directory
+2. **Preflight** - validate API key, `gh` CLI auth, git repo detection, API connectivity
+3. **Create/resume session** - if an active session exists for this agent+project+repo tuple, resume it; otherwise create new
+4. **Load last handoff** - retrieve the structured summary from the previous session
+5. **Show P0 issues** - query GitHub for critical priority issues
+6. **Show active sessions** - list other agents currently working on the same project
+7. **Two-stage doc delivery** - return doc metadata by default (titles, freshness); fetch full content on demand
+8. **Check documentation health** - audit for missing or stale docs, self-heal where possible
+9. **Check weekly plan** - show current priority venture, alert if the plan is stale
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -181,17 +183,17 @@ What would you like to focus on?
 
 During work, the session can be updated with current branch and commit SHA, arbitrary metadata (last file edited, current issue, etc.), and heartbeat pings to prevent staleness. Heartbeats use server-side jitter (10min base +/- 2min) to prevent thundering herd across many agents.
 
-**End of Day uses a dual-write pattern.** The system has two complementary EOD mechanisms that write to different stores:
+**End of Day uses a dual-write pattern.** Two complementary EOD mechanisms write to different stores.
 
-The `handoff` MCP tool writes a structured handoff to D1 via the context API's `/eod` endpoint. This handoff is stored as canonical JSON (RFC 8785) with SHA-256 hash, scoped to venture + repo + agent, automatically retrieved by the next session's SOD call, and queryable via API for cross-session history.
+The `handoff` MCP tool writes a structured handoff to D1 via the context API. The handoff is stored as canonical JSON (RFC 8785) with SHA-256 hash, scoped to venture + repo + agent. The next session's SOD call retrieves it automatically.
 
-The `/eod` Claude Code slash command writes a markdown handoff to `docs/handoffs/DEV.md` and commits it to the repo. The agent synthesizes from conversation history, `git log`, PRs created, and issues touched. The output is structured into accomplished, in progress, blocked, and next session. The user confirms with a single yes/no before committing.
+The `/eod` slash command writes a markdown handoff to `docs/handoffs/DEV.md` and commits it to the repo. The agent synthesizes from conversation history, `git log`, PRs created, and issues touched. The output is structured into accomplished, in progress, blocked, and next session.
 
-**Why both?** D1 handoffs provide structured, queryable continuity across agents and machines. Git handoffs provide human-readable history in the repo, visible in PRs and code review. The two aren't duplicates - they serve different audiences.
+**Why both?** D1 handoffs provide structured, queryable continuity across agents and machines. Git handoffs provide human-readable history visible in PRs and code review. Different audiences, different stores.
 
-**Critical principle**: The agent summarizes. The human confirms. The human never writes the handoff - the agent has full session context and synthesizes it.
+**The agent summarizes. The human confirms.** The human never writes the handoff. The agent has full session context and synthesizes it. The user gets a single yes/no before committing.
 
-Sessions have a 45-minute idle timeout. If no heartbeat is received, the session is filtered out of "active" queries (Phase 1: soft filter), then marked `abandoned` (Phase 2: scheduled cleanup - designed, not yet deployed). The next SOD for the same agent creates a fresh session.
+Sessions have a 45-minute idle timeout. If no heartbeat arrives, the session drops out of "active" queries. The next SOD for the same agent creates a fresh session.
 
 ---
 
@@ -199,7 +201,9 @@ Sessions have a 45-minute idle timeout. If no heartbeat is received, the session
 
 Multiple agents working on the same codebase need to know about each other. Without coordination, two agents pick the same issue, branch conflicts arise from simultaneous work on the same files, and handoffs overwrite each other.
 
-**Session awareness** is the first layer: SOD shows all active sessions for the same project. Each session records agent identity, repo, branch, and optionally the issue being worked on. **Branch isolation** provides the second layer, with each agent instance using a dedicated branch prefix:
+**Session awareness** is the first layer. SOD shows all active sessions for the same project. Each session records agent identity, repo, branch, and optionally the issue being worked on.
+
+**Branch isolation** provides the second layer. Each agent instance uses a dedicated branch prefix:
 
 ```
 dev/host/fix-auth-timeout
@@ -209,7 +213,7 @@ dev/instance2/update-schema
 
 Rules are simple: one branch per agent at a time, always branch from main, coordinate via PRs not shared files, push frequently for visibility.
 
-The D1 schema also supports a **track system** (designed, not actively used). The design allows issues to be assigned to numbered tracks, with agents claiming a track at SOD time and only seeing issues for their track. The schema, indexes, and query patterns are all in place - this feature is ready to activate when parallel agent operations become routine.
+The D1 schema also supports a **track system** (designed, not actively used). Issues can be assigned to numbered tracks, with agents claiming a track at SOD time and only seeing issues for their track. The schema and indexes are in place - ready to activate when parallel agent operations become routine.
 
 ```
 Agent 1: SOD project track-1  → works on track 1 issues
@@ -260,9 +264,15 @@ New tags can be added without code changes.
 
 Notes are scoped to a project (e.g., `venture: "alpha"`) or global (`venture: null`). At SOD, the system fetches notes tagged `executive-summary` scoped to the current project and notes tagged `executive-summary` with global scope. These are injected into the agent's context automatically.
 
-The knowledge store is specifically for content that makes agents smarter. It is NOT a general note-taking app (personal notes go to Apple Notes), a code repository (code goes in git), a secrets manager (secrets go in Infisical), a session log (that's what handoffs are for), or an architecture decision record (those go in `docs/adr/`).
+The knowledge store is specifically for content that makes agents smarter. It is not:
 
-**Storage is explicit**: Notes are only created when a human explicitly asks. The agent never auto-saves to the knowledge store.
+- A general note-taking app (personal notes go to Apple Notes)
+- A code repository (code goes in git)
+- A secrets manager (secrets go in Infisical)
+- A session log (that's what handoffs are for)
+- An architecture decision record (those go in `docs/adr/`)
+
+**Storage is explicit.** Notes are only created when a human explicitly asks. The agent never auto-saves to the knowledge store.
 
 ---
 
@@ -291,15 +301,17 @@ CREATE TABLE context_docs (
 
 On SOD, relevant docs are returned to the agent: global docs (same for all projects like team workflow and dev standards) and project-specific docs scoped to the current venture.
 
-The system self-heals through three cooperating components. The **D1 audit engine** (worker endpoint) queries `doc_requirements` against `context_docs`. Each requirement specifies a `doc_name_pattern`, `scope_type` (global, all ventures, or specific venture), `condition` (capability gate), `staleness_days` (freshness threshold, default 90 days), `auto_generate` flag, and `generation_sources` (hints for the generator like `["routes", "migrations", "readme"]`).
+The system self-heals through three cooperating components.
 
-The **doc generator** (local MCP) reads source files from the venture repo and assembles documentation. Sources include `CLAUDE.md`, `README.md`, `package.json` (relevant fields), route files (`src/routes/`, `src/api/`, `workers/*/src`), `.sql` migration files, database schema files, Cloudflare Worker configuration, `openapi.yaml`/`openapi.json`, and HTTP-related test files. The generator produces typed docs: `project-instructions`, `api`, and `schema`.
+The **D1 audit engine** runs on the worker. It compares `doc_requirements` against `context_docs` to find gaps. Each requirement specifies a name pattern, scope, capability gate, freshness threshold (default 90 days), and whether auto-generation is allowed.
 
-The **doc audit tool** (CLI) ties it together: calls the worker's audit endpoint to identify missing/stale docs, invokes the local generator for each missing doc with `auto_generate: true`, uploads regenerated docs via `POST /admin/docs` (requires `ADMIN_API_KEY`), and reports what was healed and what couldn't be auto-generated. During `/sod`, the `healMissingDocs()` function runs this pipeline automatically. New ventures get baseline documentation without anyone remembering to create it.
+The **doc generator** runs locally via MCP. It reads source files from the venture repo - `CLAUDE.md`, `README.md`, route files, migrations, schema files, worker configs, OpenAPI specs - and assembles typed documentation (`project-instructions`, `api`, `schema`).
 
-**Sync pipeline:** When docs are updated in git (process docs, ADRs merged to main), a GitHub Actions workflow `sync-docs-to-context-worker.yml` triggers on changes to `docs/process/**/*.md` and `docs/adr/**/*.md`. The workflow detects changed files, calls `scripts/upload-doc-to-context-worker.sh` for each, which POSTs the doc to the context API's `/admin/docs` endpoint using `ADMIN_API_KEY`. Version is incremented, content hash updated. Next SOD call returns the latest version. Manual trigger (`workflow_dispatch`) syncs all docs at once - useful for recovery.
+The **doc audit tool** ties them together. It calls the worker to find missing or stale docs, invokes the generator for anything that can be auto-generated, and uploads the results. During `/sod`, this pipeline runs automatically. New ventures get baseline documentation without anyone remembering to create it.
 
-For environments where the MCP server isn't running (standalone scripts, CI), a **cache script** pre-fetches all documentation from the context API to a local temp directory. This ensures offline access and reduces API calls during rapid session restarts.
+**Sync pipeline.** When process docs or ADRs are merged to main, a GitHub Actions workflow detects the changes and uploads them to the context API. Version increments and content hashes update automatically. A manual `workflow_dispatch` trigger syncs all docs at once for recovery.
+
+For environments where the MCP server isn't running, a **cache script** pre-fetches all documentation to a local temp directory. This ensures offline access and reduces API calls during rapid session restarts.
 
 ---
 
@@ -307,9 +319,14 @@ For environments where the MCP server isn't running (standalone scripts, CI), a 
 
 The system was originally implemented as bash scripts called via CLI skill/command systems. This proved unreliable: environment variables didn't pass through to skill execution, auth token conflicts arose between OAuth and API keys, and setup friction was high per machine.
 
-MCP (Model Context Protocol) is the standard extension mechanism for AI coding tools. It provides reliable auth (API key in config file, passed automatically on every request), type-safe tools (Zod-validated input/output schemas), single-file configuration (one JSON file per machine, no environment variables needed), and discoverability (`claude mcp list` shows connected servers).
+MCP (Model Context Protocol) is the standard extension mechanism for AI coding tools. It provides:
 
-Rather than connecting the AI CLI directly to the cloud API, we run a local MCP server (Node.js, TypeScript, stdio transport) that handles git repo detection client-side, calls the cloud context API over HTTPS, queries GitHub via `gh` CLI for issue status, renders structured output for the agent, self-heals missing documentation, and generates docs from local source files. This keeps the cloud API simple (stateless HTTP) while allowing rich client-side behavior.
+- Reliable auth - API key in config, passed automatically on every request
+- Type-safe tools - Zod-validated input/output schemas
+- Single-file configuration - one JSON file per machine, no environment variables
+- Discoverability - `claude mcp list` shows connected servers
+
+Rather than connecting the AI CLI directly to the cloud API, we run a **local MCP server** (Node.js, TypeScript, stdio transport). It handles git repo detection client-side, calls the cloud context API over HTTPS, queries GitHub via `gh` CLI, and self-heals missing documentation. This keeps the cloud API simple (stateless HTTP) while allowing rich client-side behavior.
 
 | Tool        | Purpose                                | Transport        |
 | ----------- | -------------------------------------- | ---------------- |
@@ -324,9 +341,9 @@ Rather than connecting the AI CLI directly to the cloud API, we run a local MCP 
 | `plan`      | Read weekly priority plan              | Local MCP → file |
 | `ventures`  | List ventures with install status      | Local MCP → API  |
 
-Additionally, Claude Code slash commands (`.claude/commands/`) provide workflow automation: `/sod`, `/eod`, `/handoff`, `/question`, `/merge`, `/status`, `/update`, `/heartbeat`, `/new-venture`, `/prd-review`. These orchestrate MCP tools, `gh` CLI calls, git operations, and file writes into multi-step workflows.
+Claude Code slash commands (`.claude/commands/`) add workflow automation on top: `/sod`, `/eod`, `/handoff`, `/question`, `/merge`, and others. These orchestrate MCP tools, `gh` CLI calls, git operations, and file writes into multi-step workflows.
 
-The launcher binary and MCP server are installed via `npm link` from the MCP package directory, creating symlinks in npm's global bin directory. Fleet updates propagate via `git pull && npm run build && npm link` on each machine.
+The launcher binary and MCP server are installed via `npm link`, creating symlinks in npm's global bin. Fleet updates propagate via `git pull && npm run build && npm link` on each machine.
 
 The launcher knows about three agent CLIs:
 
@@ -338,9 +355,9 @@ The launcher knows about three agent CLIs:
 
 Claude Code uses per-repo `.mcp.json` files (the launcher copies a template). Gemini and Codex use global configuration files that the launcher auto-populates.
 
-For remote sessions (SSH into fleet machines), the launcher handles two additional concerns: **Infisical Universal Auth** (reads machine credentials from `~/.infisical-ua` and passes `INFISICAL_TOKEN` + `--projectId` to the export command) and **macOS Keychain Unlock** (ensures Claude Code's OAuth tokens are accessible in the remote session).
+For remote sessions (SSH into fleet machines), the launcher handles two additional concerns: **Infisical Universal Auth** for fetching secrets without interactive login, and **macOS Keychain Unlock** to make Claude Code's OAuth tokens accessible in headless sessions.
 
-The context API enforces per-actor rate limits: 100 requests per minute per actor, keyed by `rl:<actor_key_id>:<minute_timestamp>` in a D1 table with atomic upsert. Graceful degradation if the `rate_limits` table is unavailable. Response headers include `X-RateLimit-Remaining` and `X-RateLimit-Reset`. MCP error code `-32000` on limit breach.
+The context API enforces **per-actor rate limits**: 100 requests per minute per actor, tracked via atomic D1 upsert. The limit is designed to prevent runaway agent loops, not restrict normal usage. Response headers include `X-RateLimit-Remaining` and `X-RateLimit-Reset`.
 
 ---
 
@@ -425,7 +442,15 @@ auto_generate, generation_sources (JSON array)
 
 Supporting tables include **Rate Limits** (per-actor, per-minute request counters), **Idempotency Keys** (retry safety on all mutations), **Request Log** (full audit trail with correlation IDs), and **Machines** (fleet registration and SSH mesh state).
 
-Design choices across the schema: **ULID** for all IDs (sortable, timestamp-embedded), prefixed by type (`sess_`, `ho_`, `cp_`, `note_`, `mach_`). **Canonical JSON** (RFC 8785) for handoff payloads enabling stable hashing. **Actor key ID** derived from SHA-256 of API key (first 16 hex chars) for attribution without storing keys. **Two-tier correlation**: `corr_<UUID>` per-request header ID for debugging, stored creation ID for audit trail. 800KB payload limit on handoffs (D1 has 1MB row limit, leaving headroom). Hybrid idempotency storage (full response body if under 64KB, hash-only otherwise). 7-day request log retention with filter-on-read in Phase 1 and scheduled cleanup in Phase 2.
+Design choices across the schema:
+
+- **ULID for all IDs** - sortable, timestamp-embedded, prefixed by type (`sess_`, `ho_`, `note_`, `mach_`)
+- **Canonical JSON** (RFC 8785) for handoff payloads, enabling stable SHA-256 hashing
+- **Actor key ID** derived from SHA-256 of the API key (first 16 hex chars) - attribution without storing raw keys
+- **Two-tier correlation** - `corr_<UUID>` per-request for debugging, plus a stored creation ID for audit trail
+- **800KB payload limit** on handoffs (D1 has a 1MB row limit, leaving headroom)
+- **Hybrid idempotency** - full response body stored if under 64KB, hash-only otherwise
+- **7-day request log retention** with filter-on-read now, scheduled cleanup planned
 
 ---
 
@@ -440,15 +465,13 @@ Two key tiers:
 
 Both keys are 64-character hex strings generated via `openssl rand -hex 32`.
 
-Every mutating request records an `actor_key_id` - the first 16 hex characters of `SHA-256(api_key)`. This provides attribution without storing raw keys, an audit trail across all tables (sessions, handoffs, notes, request log), and key rotation safety (changing a key changes the actor ID, making old actions still traceable).
+Every mutating request records an `actor_key_id` - the first 16 hex characters of `SHA-256(api_key)`. This provides attribution without storing raw keys and an audit trail across all tables. Changing a key changes the actor ID, but old actions remain traceable.
 
-Every API request gets a `corr_<UUID>` correlation ID (generated server-side if not provided by the client). This ID is stored in the request log, embedded in records created during that request (`creation_correlation_id`), appears in error responses for debugging, and enables tracing a single user action across multiple internal operations.
+Every API request gets a `corr_<UUID>` correlation ID (generated server-side if not provided by the client). It's stored in the request log, embedded in records created during that request, and appears in error responses for debugging.
 
-Rate limiting enforces 100 requests per minute per actor, via atomic D1 upsert. Designed to prevent runaway agent loops, not to restrict normal usage.
+**Secrets never touch disk in plaintext.** Infisical stores all secrets organized by venture path (`/alpha`, `/beta`, etc.). The launcher fetches them once at session start and injects them as environment variables. The flow is Infisical to env vars to process memory.
 
-Infisical stores all secrets organized by venture path (`/alpha`, `/beta`, etc.). The launcher fetches secrets once at session start and injects them as environment variables. Secrets never touch disk in plaintext - they flow `Infisical → env vars → process memory`.
-
-GitHub Actions runs security checks on every push and PR: `npm audit --audit-level=high` on all workers, Gitleaks for secret detection scanning the full repo, and `tsc --noEmit` across all packages. These also run on a daily schedule at 6am UTC even without code changes.
+GitHub Actions runs security checks on every push and PR: `npm audit` for dependency vulnerabilities, Gitleaks for secret detection, and `tsc --noEmit` for type safety. These also run daily at 6am UTC.
 
 ---
 
@@ -497,7 +520,7 @@ On the harder side:
 
 **Stale process state is a recurring trap.** Node.js caches modules at process start. If you rebuild the MCP server but don't restart the CLI, the old code runs. This is the same root cause as the MCP lifecycle issue but manifests differently.
 
-**Context window budget blew up silently.** SOD output hit 298K characters in one measured session. We addressed this with metadata-only doc delivery (returning titles and freshness instead of full content) and a 12KB budget cap on enterprise notes. The result was a 96% reduction in SOD token consumption. Documents are now loaded on demand when the agent needs them.
+**Context window budget blew up silently.** SOD output hit 298K characters in one measured session - roughly a third of the context window consumed before the agent did any work. We addressed this with metadata-only doc delivery and a 12KB budget cap on enterprise notes. The result was a 96% reduction in SOD token consumption.
 
 ---
 
@@ -515,7 +538,7 @@ On the harder side:
 
 **Deployment**: Workers deploy via Wrangler (`npx wrangler deploy`). MCP server builds locally and links via `npm link`. Fleet updates propagate via git pull + rebuild on each machine, either manually or via a fleet deployment script.
 
-Architectural Decision Records are tracked in `docs/adr/` and synced to D1 via the doc sync GitHub Actions workflow. ADRs capture context (why a decision was needed), decision (what was chosen and why), and consequences (tradeoffs and follow-up work). They serve as the authoritative record for "why is it built this way?" questions that agents encounter during development.
+Architectural Decision Records live in `docs/adr/` and sync to D1 via the doc sync workflow. They serve as the authoritative record for "why is it built this way?" questions that agents encounter during development.
 
 ---
 
@@ -564,17 +587,26 @@ server2     | OK        | OK        | --        | OK
 laptop1     | OK        | OK        | OK        | --
 ```
 
-Key design decisions: **config fragments, not config files** - the mesh script writes `~/.ssh/config.d/fleet-mesh`, included via `Include config.d/*` in the main SSH config, so the mesh config is fully managed without touching any user-maintained SSH settings. **API-driven machine registry** - when the context API key is available, the script fetches the machine list from the API instead of using a hardcoded list, so new machines registered via the API automatically appear in the mesh on next run. **Tailscale IPs** - all SSH config uses Tailscale IPs (100.x.x.x), which are stable regardless of physical network. **Idempotent and safe** - safe to re-run, checks before adding keys, never removes existing entries, supports `DRY_RUN=true` for previewing changes. **Bash 3.2 compatible** - runs on macOS default bash without requiring bash 4+.
+Key design decisions:
 
-All machines run Tailscale, a WireGuard-based mesh VPN. Traffic goes directly between machines when possible (peer-to-peer, not through a relay). It works behind firewalls, hotel WiFi, and cellular networks (NAT traversal). Each machine gets a fixed 100.x.x.x address. Machines find each other automatically via coordination server. MagicDNS makes machines addressable by hostname. Tailscale replaces the need for port forwarding, dynamic DNS, or VPN servers. SSH, Mosh, and all other traffic flows over the encrypted Tailscale tunnel.
+- **Config fragments, not config files.** The mesh script writes `~/.ssh/config.d/fleet-mesh`, included via `Include config.d/*` in the main SSH config. User-maintained SSH settings are never touched.
+- **API-driven machine registry.** When the context API key is available, the script fetches the machine list from the API. New machines appear in the mesh automatically on next run.
+- **Tailscale IPs.** All SSH config uses Tailscale IPs (100.x.x.x), which are stable regardless of physical network.
+- **Idempotent and safe.** Checks before adding keys, never removes existing entries, supports `DRY_RUN=true` for previewing changes.
+
+All machines run Tailscale, a WireGuard-based mesh VPN. Traffic goes directly between machines when possible (peer-to-peer, not through a relay). Each machine gets a fixed 100.x.x.x address.
+
+Tailscale handles the hard parts: NAT traversal behind firewalls and cellular networks, automatic peer discovery via coordination server, hostname resolution via MagicDNS. It replaces the need for port forwarding, dynamic DNS, or VPN servers. All traffic flows over the encrypted Tailscale tunnel.
 
 ---
 
 ## tmux and Remote Sessions
 
-AI coding sessions can run for hours. If the SSH connection drops (network change, laptop sleep, timeout), the session is lost. tmux solves this: the tmux session lives on the server, so you disconnect and reconnect with the session exactly where you left it. It works identically over SSH and Mosh. And you can run the agent in one pane, a build watcher in another, logs in a third.
+AI coding sessions can run for hours. If the SSH connection drops - network change, laptop sleep, timeout - the session is lost.
 
-A deployment script (`setup-tmux.sh`) pushes identical tmux configuration to every machine in the fleet. It installs terminal emulator terminfo (for correct color/key handling over SSH), deploys a consistent `~/.tmux.conf`, and deploys a session wrapper script to `~/.local/bin/`.
+tmux solves this. The tmux session lives on the server. Disconnect and reconnect with the session exactly where you left it. It works identically over SSH and Mosh. Run the agent in one pane, a build watcher in another, logs in a third.
+
+A deployment script (`setup-tmux.sh`) pushes identical tmux configuration to every machine in the fleet: terminfo for correct color handling over SSH, a consistent `~/.tmux.conf`, and a session wrapper script.
 
 ```bash
 # Deploy to all machines
@@ -654,7 +686,7 @@ Mosh (Mobile Shell) is purpose-built for unreliable networks:
 
 Mosh is especially valuable on mobile: switch from WiFi to cellular, walk between rooms, lock the phone for 30 minutes - the session is still there when you come back. Setup is one command per server: `sudo apt install mosh`.
 
-Blink Shell is an iOS terminal app that supports both SSH and Mosh natively. It handles SSH key import via iCloud Files or paste, host configuration (import SSH config file or add manually), iCloud sync of keys and configs across all iOS devices, multiple sessions (swipe to switch), split screen on iPad, and full external keyboard support.
+Blink Shell is an iOS terminal app that supports both SSH and Mosh natively. Key features for this setup: iCloud sync of keys and configs across all iOS devices, multiple sessions with swipe-to-switch, split screen on iPad, and full external keyboard support.
 
 AI CLI tools that use alternate screen buffers break native touch scrolling on mobile. All machines are pre-configured to disable this:
 
@@ -671,7 +703,9 @@ alternate_screen = false
 
 Claude Code works with default settings. With alternate screen disabled, normal finger/trackpad scrolling works in Blink Shell, and scrollback history is preserved.
 
-**The OSC 52 clipboard bridge** solves a non-obvious problem: how do you copy text from a remote tmux session to your local device's clipboard? OSC 52 is an escape sequence that lets terminal programs write to the local clipboard through any number of SSH/Mosh hops. The chain works like this:
+**The OSC 52 clipboard bridge** solves a non-obvious problem: how do you copy text from a remote tmux session to your local device's clipboard?
+
+OSC 52 is an escape sequence that lets terminal programs write to the local clipboard through any number of SSH/Mosh hops:
 
 ```
 Agent output (remote) → tmux (OSC 52 enabled) → Mosh/SSH → Blink Shell → iOS clipboard
@@ -692,7 +726,9 @@ A portable laptop serves as the primary development machine when traveling. An i
 | Mid-session, stepping away                | Laptop via phone | Blink Shell to `laptop.local` over hotspot    |
 | First thing in the morning, laptop closed | Office server    | Mosh from Blink Shell (zero setup)            |
 
-When the phone creates a hotspot, the laptop and phone are on the same local network (172.20.10.x). The phone can SSH/Mosh to the laptop using mDNS/Bonjour (`laptop.local`) - no Tailscale needed, sub-millisecond latency. But hotspot IPs change between connections. Using `.local` hostname resolution (Bonjour) means it always resolves correctly regardless of the current IP assignment.
+When the phone creates a hotspot, the laptop and phone are on the same local network (172.20.10.x). The phone can SSH/Mosh to the laptop using mDNS/Bonjour (`laptop.local`) - no Tailscale needed, sub-millisecond latency.
+
+Hotspot IPs change between connections, but `.local` hostname resolution (Bonjour) always resolves correctly regardless of the current IP assignment.
 
 The phone's hotspot auto-disables after ~90 seconds of no connected devices. For intentional mid-session breaks:
 
@@ -737,9 +773,19 @@ This setup means you're never more than a Blink Shell session away from a full d
 
 ## Roadmap
 
-**Phase 2 (Planned):** Per-agent tokens for fine-grained revocation, per-agent rate limits, and cleaner audit trails (currently using a shared API key with actor attribution via key ID derivation). Scheduled cleanup via Cloudflare Cron Trigger to mark sessions `abandoned` after 45 minutes, purge expired idempotency keys, and rotate the request log (7-day retention). Staging/production environments with `[env.production]` blocks in `wrangler.toml`, staging as default deployment, manual promotion to production - protecting live agent sessions from deployment-time breakage.
+**Phase 2 (Planned):**
 
-**Phase 3 (Aspirational):** Cross-project visibility with a global dashboard showing all active sessions across all ventures. Real-time push notifications when a parallel agent creates a PR, hits a blocker, or completes a task. Advanced observability with Sentry and structured logging. Session analytics API for querying duration, handoff frequency, escalation rates, and time-to-resolution by issue type. Auto-generated OpenAPI specs from the Zod schemas (MCP) and Ajv schemas (Worker). Full-text search in the knowledge store via D1's FTS5. True multi-CLI parity with equivalent slash command systems for Gemini and Codex.
+- Per-agent tokens for fine-grained revocation and per-agent rate limits
+- Scheduled cleanup via Cloudflare Cron Trigger - abandon stale sessions, purge expired idempotency keys, rotate the request log
+- Staging/production environments with manual promotion to production, protecting live agent sessions from deployment-time breakage
+
+**Phase 3 (Aspirational):**
+
+- Cross-project dashboard showing all active sessions across all ventures
+- Real-time push notifications when a parallel agent creates a PR, hits a blocker, or completes a task
+- Session analytics API for querying duration, handoff frequency, escalation rates, and time-to-resolution
+- Full-text search in the knowledge store via D1's FTS5
+- True multi-CLI parity with equivalent slash command systems for Gemini and Codex
 
 ---
 
