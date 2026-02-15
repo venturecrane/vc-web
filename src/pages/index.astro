@@ -3,8 +3,6 @@ import Base from '../layouts/Base.astro'
 import FeaturedArticle from '../components/FeaturedArticle.astro'
 import ArticleCard from '../components/ArticleCard.astro'
 import LogEntry from '../components/LogEntry.astro'
-import PortfolioCard from '../components/PortfolioCard.astro'
-import { sortedVentures } from '../data/ventures'
 import { getCollection } from 'astro:content'
 
 const articles = (await getCollection('articles'))
@@ -84,18 +82,6 @@ const remainingArticles = articles.slice(1, 5)
         <p class="text-vc-text-muted">Build log entries coming soon.</p>
       )
     }
-  </section>
-
-  <section class="mb-16">
-    <div class="mb-6 flex items-baseline justify-between">
-      <h2 class="text-xl font-semibold">What We Build</h2>
-      <a href="/portfolio/" class="text-sm text-vc-text-muted no-underline hover:text-accent">
-        View all
-      </a>
-    </div>
-    <div class="grid gap-4">
-      {sortedVentures.map((venture) => <PortfolioCard venture={venture} />)}
-    </div>
   </section>
 
   <section class="mb-16 border-t border-border pt-8">
