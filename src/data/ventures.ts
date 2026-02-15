@@ -7,7 +7,7 @@ export interface Venture {
   url?: string
 }
 
-export const lastReviewed = '2026-02-14'
+export const lastReviewed = '2026-02-15'
 
 export const ventures: Venture[] = [
   {
