@@ -1,6 +1,6 @@
 ---
 title: 'Fleet Management for One Person'
-date: 2026-02-15
+date: 2026-02-26
 description: 'How a solo founder manages a distributed dev fleet with Tailscale, idempotent bootstrap scripts, SSH mesh networking, and macOS hardening.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'fleet-management', 'devops', 'tailscale']

@@ -1,6 +1,6 @@
 ---
 title: 'Documentation as Operational Infrastructure'
-date: 2026-02-15
+date: 2026-03-14
 description: 'Why we treat runbooks, ADRs, and handoff records as infrastructure that self-heals, version-tracks, and delivers itself to agents automatically.'
 author: 'Venture Crane'
 tags: ['documentation', 'agent-context', 'infrastructure', 'self-healing']

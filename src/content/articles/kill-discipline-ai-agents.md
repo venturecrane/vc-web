@@ -1,6 +1,6 @@
 ---
 title: 'Kill Discipline for AI Agent Teams'
-date: 2026-02-15
+date: 2026-02-19
 description: 'How mandatory stop points prevent the most expensive failure mode in agent-assisted development - silent churn on unsolvable problems.'
 author: 'Venture Crane'
 tags: ['agent-workflow', 'process', 'team-management']

@@ -1,6 +1,6 @@
 ---
 title: 'From Monolith to Microworker - Decommissioning the Relay'
-date: 2026-02-15
+date: 2026-03-10
 description: 'We deleted a 3,234-line Cloudflare Worker, its database, and its storage bucket. Here is what we learned about scope creep in serverless architectures.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'cloudflare', 'architecture']

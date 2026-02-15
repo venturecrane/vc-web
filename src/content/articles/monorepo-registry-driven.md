@@ -1,6 +1,6 @@
 ---
 title: 'One Monorepo, Multiple Ventures - Registry-Driven Multi-Tenant Infrastructure'
-date: 2026-02-15
+date: 2026-02-24
 description: 'How a JSON venture registry with capability flags lets a single monorepo serve multiple products without infrastructure sprawl or cross-contamination.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'monorepo', 'multi-tenant', 'automation']

@@ -1,6 +1,6 @@
 ---
 title: 'Staging Environments for AI Agents'
-date: 2026-02-15
+date: 2026-03-07
 description: 'A 4-phase environment strategy for AI agent infrastructure - Cloudflare splits, automated CI/CD, scoped secrets, and agent-aware routing.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'cloudflare-workers', 'ci-cd', 'staging']

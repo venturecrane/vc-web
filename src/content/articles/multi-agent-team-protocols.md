@@ -1,6 +1,6 @@
 ---
 title: 'Multi-Agent Team Protocols Without Chaos'
-date: 2026-02-15
+date: 2026-02-21
 description: 'How we coordinate dev agents, PM agents, an advisor, and a human captain using namespaced labels, QA grading, and explicit role boundaries.'
 author: 'Venture Crane'
 tags: ['agent-teams', 'process', 'github']
@@ -21,12 +21,12 @@ This means AI agent teams need more structure than human teams, not less. We lea
 
 Our team has four roles with explicit, non-overlapping boundaries:
 
-| Role      | Tool           | Responsibility                                         |
-| --------- | -------------- | ------------------------------------------------------ |
-| Dev Agent | Claude Code    | Implementation, PRs, technical decisions               |
-| PM Agent  | Claude Desktop | Requirements, prioritization, verification             |
-| Advisor   | Gemini         | Strategic input, risk assessment, planning perspective |
-| Captain   | Human          | Routing, approvals, final decisions                    |
+| Role      | Tool        | Responsibility                                         |
+| --------- | ----------- | ------------------------------------------------------ |
+| Dev Agent | Claude Code | Implementation, PRs, technical decisions               |
+| PM Agent  | Claude Code | Requirements, prioritization, verification             |
+| Advisor   | Gemini CLI  | Strategic input, risk assessment, planning perspective |
+| Captain   | Human       | Routing, approvals, final decisions                    |
 
 The Captain is always human. This is non-negotiable.
 
@@ -37,6 +37,16 @@ The Captain is always human. This is non-negotiable.
 **The advisor** provides a second perspective on planning and strategy. Different model, different training data, different biases. When we're making architectural decisions or prioritizing a backlog, having a second opinion from a model that reasons differently is valuable. The advisor doesn't touch code or GitHub.
 
 **The Captain** is the routing layer. The Captain reads handoffs from agents, decides what to do next, and pastes directives into the appropriate agent window. The Captain approves scope changes, answers questions agents can't resolve, and - critically - authorizes merges. The Captain never updates GitHub directly. All GitHub mutations flow through the agents.
+
+### How This Evolved
+
+The team model did not start here. In the early weeks, we ran a split-tool setup: dev agents in Claude Code (terminal), PM agents in Claude Desktop (GUI). The reasoning was that PM work - writing issues, reviewing PRs, verifying features - was more conversational and benefited from Desktop's chat interface, while dev work needed shell access.
+
+In practice, the split created friction. Claude Desktop could not run `gh` CLI commands, so PM agents had to route GitHub mutations through the Captain or wait for a dev agent. Verification that required terminal access - checking API responses, running database queries, inspecting build output - was impossible from Desktop. The PM agent would describe what it wanted to check, and someone else had to run the commands.
+
+When Claude Code matured enough to handle conversational workflows alongside terminal access, we consolidated. Every agent role now runs in the CLI. The PM agent can write an issue, verify a deployment, and run a database query in the same session. The advisor moved from the Gemini web interface to Gemini CLI for the same reason - terminal access to the codebase makes strategic advice more grounded in reality.
+
+The lesson: match your tools to your actual workflows, not to role labels. "PM work" sounded like it belonged in a GUI. It didn't. It belonged wherever the PM could actually execute the full verification loop without assistance.
 
 ### Why Role Boundaries Matter More with Agents
 
@@ -98,7 +108,7 @@ Labels also degrade gracefully. If an agent crashes mid-workflow, the label stay
 
 ## QA Grading: Not All Work Needs the Same Verification
 
-Early on, every PR went through the same verification process: PM agent opens a browser, navigates to the preview deployment, walks through every acceptance criterion, captures screenshots, submits a structured verdict. This was thorough but slow. A documentation fix and a new authentication flow got the same treatment.
+Early on, every PR went through the same verification process: the PM agent would walk through every acceptance criterion, capture evidence, and submit a structured verdict. When the PM ran in Claude Desktop, this sometimes meant browser-based verification with screenshots. This was thorough but slow. A documentation fix and a new authentication flow got the same treatment.
 
 QA grading fixes this by routing verification to the appropriate method based on the work type.
 
@@ -128,7 +138,7 @@ When a dev agent reports "PR ready for QA", it includes the QA grade in the hand
 - **Grade 2**: Tell PM agent to do a quick visual check
 - **Grade 3**: Tell PM agent to do full verification
 
-This eliminated the browser automation bottleneck. Before grading, every verification required Chrome automation, which was fragile and slow. Now, roughly half of PRs verify through CI or CLI alone.
+This eliminated the verification bottleneck. Before grading, every PR got the same heavyweight treatment regardless of risk level. Now, roughly half of PRs verify through CI or CLI alone.
 
 ---
 
@@ -233,4 +243,4 @@ The alternative - letting agents self-organize and hoping for the best - produce
 
 ---
 
-_This article describes a production team workflow coordinating AI dev agents (Claude Code), PM agents (Claude Desktop), an advisor (Gemini), and a human captain across multiple projects. The system has been in daily use since January 2026._
+_This article describes a production team workflow coordinating AI dev agents, PM agents, and an advisor - all running in CLI tools - with a human captain across multiple projects. The system has been in daily use since January 2026, evolving from a split GUI/CLI setup to an all-CLI model as the tools matured._

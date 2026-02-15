@@ -1,6 +1,6 @@
 ---
 title: '96% Token Reduction - Lazy-Loading Agent Context'
-date: 2026-02-15
+date: 2026-03-12
 description: 'How we cut session startup token consumption by 96% by switching from eager document loading to an index-and-fetch pattern.'
 author: 'Venture Crane'
 tags: ['performance', 'mcp', 'agent-context']

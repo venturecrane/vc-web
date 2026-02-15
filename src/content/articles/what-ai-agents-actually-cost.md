@@ -1,7 +1,7 @@
 ---
 title: 'What Running Multiple Ventures with AI Agents Actually Costs'
-date: 2026-02-15
-description: 'Transparent cost breakdown of running an AI-native dev lab across multiple projects. Most of the stack is free.'
+date: 2026-02-17
+description: 'Every line item for running an AI-native dev lab across multiple projects. Total: about $450 a month.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'costs', 'ai-agents']
 draft: true
@@ -9,9 +9,7 @@ draft: true
 
 Running multiple software ventures simultaneously with AI coding agents sounds expensive. It is not - at least, not in the ways you would expect. We run several active projects across a fleet of development machines, with AI agents doing the bulk of the coding work. Here is what it actually costs.
 
-**Total estimated monthly cost: $280-$800 [estimate]**, depending on AI usage intensity. The range is wide because the single largest variable - AI API and subscription costs - fluctuates based on how many agent sessions we run per day.
-
-The breakdown that follows covers every line item: infrastructure, secrets management, networking, AI costs, hardware, and domains. Where something runs on a free tier, we say so. Where we pay, we give the number.
+**Total monthly cost: roughly $450.** The breakdown that follows covers every line item: infrastructure, secrets management, networking, AI subscriptions, hardware, internet, and domains. Where something runs on a free tier, we say so. Where we pay, we give the number.
 
 ---
 
@@ -49,9 +47,9 @@ The key insight here is that Cloudflare's free tier is built for exactly this ki
 
 ---
 
-## Source Control: GitHub ($0/month)
+## Source Control: GitHub ($8/month)
 
-All repositories live in a single GitHub organization. The free tier for organizations includes unlimited public and private repositories with unlimited collaborators.
+All repositories live in a single GitHub organization on the Team plan ($4/user/month, 2 seats).
 
 What we use:
 
@@ -59,17 +57,18 @@ What we use:
 - GitHub Issues for work tracking (with label-based status workflows)
 - GitHub Actions for CI/CD (typecheck, lint, test, security scanning, doc sync)
 - Pull requests and code review
+- Org-wide branch protection rulesets
 
 **GitHub Actions free tier:**
 
 - 2,000 CI/CD minutes per month (for private repos; unlimited for public repos)
 - 500 MB of GitHub Packages storage
 
-Our CI runs are lightweight - TypeScript compilation, ESLint, Prettier formatting checks, and a small test suite. Each run finishes in under two minutes. We also run daily security scans (npm audit, Gitleaks) via scheduled workflows.
+Our CI runs are lightweight - TypeScript compilation, ESLint, Prettier formatting checks, and a small test suite. Each run finishes in under two minutes. We also run daily security scans (npm audit, Gitleaks) via scheduled workflows. Actions usage stays well within the free tier.
 
-**Monthly cost: $0**
+**Monthly cost: $8**
 
-One caveat: if you need features like required reviewers on pull requests or branch protection rules with enforcement, you need the Team plan at $4/user/month. We use a lightweight process that works within free tier constraints - the AI agents and a single human reviewer handle quality control through convention rather than enforced branch policies.
+The Team plan is worth the $8 for org-wide branch protection rulesets alone. Without them, you're relying on convention to prevent force-pushes to main across multiple repos. That works until it doesn't.
 
 ---
 
@@ -113,53 +112,49 @@ Tailscale replaces what would otherwise require a VPN server, dynamic DNS, port 
 
 ---
 
-## AI Costs: The Real Expense ($200-$600/month) [estimate]
+## AI Subscriptions: The Real Expense ($245/month)
 
-This is where the money goes. Everything else on this list is either free or a one-time hardware cost. AI API usage is the recurring operational expense.
+This is where the money goes. AI subscriptions are the single largest line item.
 
-We use Claude Code as the primary AI coding agent, accessed through Anthropic's subscription plans:
+We use three AI providers:
 
-**Anthropic subscription options:**
+| Provider  | Plan             | Monthly Cost | What It Covers                                  |
+| --------- | ---------------- | ------------ | ----------------------------------------------- |
+| Anthropic | Max 20x          | $200         | Claude Code (primary coding agent), Claude chat |
+| OpenAI    | Plus             | $20          | Codex CLI, GPT for second-opinion tasks         |
+| Google    | Workspace/Gemini | ~$25         | Gemini CLI, Google Workspace productivity suite |
+
+Claude Code through Anthropic's Max plan is the workhorse. On a typical day, we run 4-8 agent sessions, each lasting 30-90 minutes. The Max 20x tier at $200/month provides 20x the usage of the Pro plan ($20/month), which is necessary for heavy multi-venture development.
+
+Anthropic offers three subscription tiers for Claude Code:
 
 - Pro: $20/month (includes Claude Code access)
 - Max 5x: $100/month (5x Pro usage)
 - Max 20x: $200/month (20x Pro usage)
 
-For heavy daily usage across multiple ventures, we run the Max plan. On a typical day, we might run 4-8 agent sessions, each lasting 30-90 minutes. The Max 5x tier at $100/month handles moderate workloads. Heavy weeks with parallel agents across multiple projects push toward the Max 20x tier at $200/month.
+A single-founder operation with lighter usage could run on the Max 5x tier at $100/month, reducing the total AI cost to $145/month.
 
-**API pricing (for reference, if using the API directly):**
+The OpenAI and Google subscriptions provide access to alternative CLIs (Codex CLI, Gemini CLI) and general productivity tools. The launcher supports all three agent CLIs with a single command, making it practical to use the right tool for each task.
 
-- Claude Sonnet 4.5: $3 input / $15 output per million tokens
-- Claude Opus 4.6: $5 input / $25 output per million tokens
-- Prompt caching reduces input costs by up to 90% on cache hits
-- Batch API offers 50% discount for async workloads
-
-For a single-founder operation using Claude Code through a Max subscription, the monthly AI cost is predictable: $100-$200/month depending on which tier you need.
-
-If you are running agents via the API (for automation, background processing, or custom tooling), costs depend entirely on token volume. A single deep coding session can consume millions of tokens. The subscription model provides better cost predictability for interactive agent work.
-
-**Monthly cost: $100-$200 per seat [estimate]** (subscription) or variable (API)
-
-We also maintain API keys for other AI providers (for classification tasks and multi-CLI support), but those costs are negligible - typically under $5/month for light usage.
-
-**Estimated total AI cost: $200-$600/month [estimate]**
+**Monthly cost: $245**
 
 ---
 
-## Hardware: The Other Real Cost ($80-$200/month amortized) [estimate]
+## Hardware ($61/month amortized)
 
 AI agents need machines to run on. Our fleet includes a mix of Apple Silicon Macs and repurposed older hardware running Linux.
 
 **Current fleet:**
 
-| Machine                       | Role                   | Estimated Cost                 | Amortized (36 months) |
-| ----------------------------- | ---------------------- | ------------------------------ | --------------------- |
-| Mac Studio (Apple Silicon)    | Primary dev            | ~$2,000 [estimate]             | ~$56/month            |
-| MacBook Air M1 16GB           | Field/portable dev     | ~$700 (refurbished) [estimate] | ~$19/month            |
-| Mac Mini (Intel, repurposed)  | Always-on server       | ~$0 (already owned)            | $0/month              |
-| 2x Linux laptops (repurposed) | Secondary workstations | ~$0 (already owned)            | $0/month              |
+| Machine                            | Specs               | Role                  | Cost                           | Amortized (36 mo) |
+| ---------------------------------- | ------------------- | --------------------- | ------------------------------ | ----------------- |
+| MacBook Pro M1 Pro                 | 16GB, Apple Silicon | Primary dev           | ~$1,500 [estimate]             | ~$42/month        |
+| MacBook Air M1                     | 16GB, Apple Silicon | Field/portable dev    | ~$700 (refurbished) [estimate] | ~$19/month        |
+| Mac Mini (Intel i7-3615QM)         | 16GB, Ubuntu 24.04  | Always-on server      | $0 (repurposed)                | $0/month          |
+| MacBook Pro 2014 (Intel i7-4870HQ) | 16GB, Xubuntu 24.04 | Secondary workstation | $0 (repurposed)                | $0/month          |
+| ThinkPad (Intel i5-4300U)          | 8GB, Xubuntu 24.04  | Secondary workstation | $0 (repurposed)                | $0/month          |
 
-The two Apple Silicon machines are the only purpose-bought hardware. The rest of the fleet is repurposed hardware that was sitting in drawers - an old Intel Mac Mini and ThinkPads running Ubuntu. They work fine as secondary dev workstations and always-on servers for remote agent sessions.
+The two Apple Silicon machines are the only purpose-bought hardware. The rest of the fleet is repurposed hardware that was sitting in drawers - an old Mac Mini, a 2014 MacBook Pro, and a ThinkPad, all running Ubuntu/Xubuntu. They work fine as secondary dev workstations and always-on servers for remote agent sessions. The Mac Mini runs 24/7 as the fleet's always-on SSH target.
 
 **If you were building this from scratch today:**
 
@@ -169,44 +164,64 @@ A refurbished MacBook Air M1 with 16GB runs about $600-$800 [estimate]. Amortize
 
 You could run this entire setup on a single Mac Mini M4 for $499 up front - about $14/month amortized. Add a laptop for portability and you are at $30-$40/month for hardware.
 
-**Monthly hardware cost (amortized): $80-$200 [estimate]** for a multi-machine fleet, or as low as $14/month for a minimal single-machine setup.
+**Monthly hardware cost (amortized): ~$61/month** for our five-machine fleet, or as low as $14/month for a minimal single-machine setup.
 
 ---
 
-## Domains (~$30/year total) [estimate]
+## Internet Access ($130/month)
 
-Each venture that has a public presence needs a domain. A `.com` domain runs $10-$15/year for registration and renewal. With several active projects, this adds up to roughly $30-$50/year [estimate], or about $3-$4/month.
+Agent sessions need reliable bandwidth. Builds, git operations, API calls, and Cloudflare deployments all go over the wire. When working from the field, iPhone hotspot provides the connection for the portable setup.
+
+This line item is easy to overlook because you are paying it anyway. But it is a real cost of running this operation, and it would not be honest to exclude it.
+
+**Monthly cost: ~$130**
+
+---
+
+## Domains (~$7/month)
+
+Each venture that has a public presence needs a domain. Registration runs $14-$30/year per domain depending on the TLD. With several active ventures, this adds up.
 
 Cloudflare Registrar offers at-cost domain registration with no markup, which keeps renewal prices at the wholesale minimum.
 
-**Monthly cost: ~$3/month [estimate]**
+**Monthly cost: ~$7 [estimate]**
+
+---
+
+## Developer Tools ($2/month)
+
+**Blink Shell** ($20/year) is the iOS SSH/Mosh client that makes mobile access to the fleet possible. It supports SSH and Mosh natively, syncs keys and configs via iCloud, and handles Tailscale connections. Without it, the mobile access workflow described in our other articles would not exist.
+
+**Monthly cost: ~$2**
 
 ---
 
 ## The Full Picture
 
-| Category                | Monthly Cost             | Notes                                          |
-| ----------------------- | ------------------------ | ---------------------------------------------- |
-| Cloudflare Workers + D1 | $0                       | Free tier, not close to limits                 |
-| GitHub (org + Actions)  | $0                       | Free tier, private repos included              |
-| Infisical               | $0                       | Free tier, cloud-hosted                        |
-| Tailscale               | $0                       | Free Personal plan, 5 of 100 devices used      |
-| AI subscriptions + API  | $200-$600 [estimate]     | Max plan + minor API usage                     |
-| Hardware (amortized)    | $80-$200 [estimate]      | Multi-machine fleet, mix of new and repurposed |
-| Domains                 | ~$3 [estimate]           | Several .com domains at ~$12/year each         |
-| **Total**               | **$280-$800 [estimate]** |                                                |
+| Category                | Monthly Cost | Notes                                       |
+| ----------------------- | ------------ | ------------------------------------------- |
+| AI subscriptions        | $245         | Anthropic $200 + OpenAI $20 + Google ~$25   |
+| Internet access         | ~$130        | Home broadband + mobile hotspot             |
+| Hardware (amortized)    | ~$61         | 5-machine fleet, 2 purchased + 3 repurposed |
+| GitHub Team             | $8           | 2 seats at $4/user/month                    |
+| Domains                 | ~$7          | Several domains at $14-$30/year each        |
+| Blink Shell             | ~$2          | iOS SSH/Mosh client, $20/year               |
+| Cloudflare Workers + D1 | $0           | Free tier, not close to limits              |
+| Infisical               | $0           | Free tier, cloud-hosted                     |
+| Tailscale               | $0           | Free Personal plan, 5 of 100 devices used   |
+| **Total**               | **~$453**    |                                             |
 
-For a realistic middle estimate with moderate AI usage: **roughly $400-$500/month [estimate]**.
+The number that stands out is how much of the budget is AI subscriptions and internet - roughly 83% of the total. Everything else combined is under $80/month.
 
 ---
 
 ## What Surprised Us
 
-**The free tiers are not traps.** With most SaaS products, the free tier is a funnel designed to push you toward paid plans quickly. Cloudflare, GitHub, Tailscale, and Infisical all offer free tiers that genuinely cover small-team and solo-founder use cases without artificial friction. We have been running on these free tiers for months with no degradation and no pressure to upgrade.
+**The free tiers are not traps.** Cloudflare, Tailscale, and Infisical all offer free tiers that genuinely cover small-team and solo-founder use cases without artificial friction. We have been running on these free tiers for months with no degradation and no pressure to upgrade.
 
-**Hardware costs are front-loaded, not recurring.** Once you buy the machines, the monthly amortized cost is low. And if you have old hardware sitting around, repurposing it as a Linux dev server costs nothing. An old MacBook Pro with 16GB of RAM running Ubuntu is a perfectly capable remote agent host.
+**Hardware costs are front-loaded, not recurring.** Once you buy the machines, the monthly amortized cost is low. And if you have old hardware sitting around, repurposing it as a Linux dev server costs nothing. A 2014 MacBook Pro with 16GB of RAM running Xubuntu is a perfectly capable remote agent host.
 
-**AI tokens dominate the budget.** Strip out AI costs and the entire operation runs for under $100/month (mostly hardware amortization). AI API and subscription costs account for 60-80% of the total. This is the line item that scales with usage.
+**AI subscriptions and internet dominate the budget.** Strip out AI and internet costs and the entire operation runs for under $80/month. AI subscriptions alone account for over half the total. This is the line item with the most room for optimization - dropping to the Max 5x tier ($100/month) would save $100 immediately.
 
 **The infrastructure is simpler than it sounds.** "Multiple Cloudflare Workers, a D1 database, an MCP server, a fleet of machines on a mesh VPN" sounds like a complex enterprise setup. In practice, the Workers deploy with a single command, D1 is just SQLite at the edge, and Tailscale configures itself. The total infrastructure setup time for a new machine is about five minutes with our bootstrap script.
 
@@ -223,11 +238,11 @@ Here is what a minimal viable setup looks like:
 1. **One Mac Mini M4** ($499-$599) - your development machine and remote agent host
 2. **Claude Pro or Max subscription** ($20-$200/month) - your AI coding agent
 3. **Cloudflare free tier** - Workers, D1, and R2 for any backend services
-4. **GitHub free tier** - source control, issues, CI/CD
+4. **GitHub free tier** (or Team at $4/user/month for branch protection) - source control, issues, CI/CD
 5. **Tailscale free tier** - if you add a second machine or want mobile access
 6. **Infisical free tier** - secrets management from day one (do not hardcode keys)
 
-Total year-one cost for the minimal setup: roughly $600 for hardware plus $240-$2,400 for AI, depending on usage intensity. Call it **$850-$3,000 for the first year [estimate]** to run a multi-project AI-native development lab.
+Total year-one cost for the minimal setup: roughly $500 for hardware plus $240-$2,400 for AI, depending on usage intensity. Call it **$750-$3,000 for the first year** to run a multi-project AI-native development lab.
 
 That is less than most founders spend on a single SaaS subscription stack. The trade-off is that you are building on primitives (Workers, D1, MCP) rather than buying pre-built platforms. For a technical founder, that is a feature, not a bug - you control the entire stack, and almost none of it has a recurring fee.
 

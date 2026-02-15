@@ -1,6 +1,6 @@
 ---
 title: 'Sessions as First-Class Citizens - Heartbeats, Handoffs, and Abandoned Work'
-date: 2026-02-15
+date: 2026-03-05
 description: 'Why we gave AI agent sessions heartbeats, idempotent handoff storage, and a full lifecycle - the same reliability patterns used in distributed systems.'
 author: 'Venture Crane'
 tags: ['agent-context', 'distributed-systems', 'infrastructure']
@@ -148,7 +148,7 @@ The "mark abandoned, then create new" pattern is a deliberate design choice. We 
 
 When a session ends, it produces a handoff - a structured summary of what happened, what is in progress, and what comes next. The handoff serves as the bridge between sessions.
 
-We use a dual-write pattern: structured data goes to D1 (the edge database), and a human-readable markdown version goes to a git commit. These serve different audiences.
+We use a dual-write pattern: structured data goes to D1 (the edge database), and a human-readable markdown version goes to a git commit. These writes happen at different layers. The context API worker handles the D1 write. The MCP server on the agent's machine handles the git commit. The two are not transactionally coupled - they are coordinated by the end-of-day flow that triggers both.
 
 The D1 handoff is machine-optimized. It has typed fields (`summary`, `status_label`, `from_agent`, `to_agent`, `payload_json`) that can be queried, filtered, and rendered programmatically. The next agent's SOD call fetches the latest handoff automatically and injects it into the session context.
 
@@ -242,7 +242,7 @@ The 1-hour TTL is generous. Retry windows for transient failures are typically s
 
 When two agents work on the same project, they need to know about each other. Without this awareness, they pick the same issue, create conflicting branches, or overwrite each other's work.
 
-Session awareness is the first coordination layer. At SOD, the API returns all active sessions for the same project, filtered to exclude the current agent:
+Session awareness is the first coordination layer. The context API exposes a `GET /active` endpoint that returns all active sessions for a given venture. The MCP server's SOD tool queries this endpoint, filters out the current agent, and surfaces the results:
 
 ```typescript
 const activeSessions = (session.active_sessions || []).filter((s) => s.agent !== getAgentName())

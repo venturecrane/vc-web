@@ -1,6 +1,6 @@
 ---
 title: 'Building a Dark-Theme Design System with Tailwind v4'
-date: 2026-02-14
+date: 2026-03-17
 description: 'How we built a dark-first design system using CSS custom properties and Tailwind v4 theme configuration.'
 author: 'Venture Crane'
 tags: ['design-system', 'tailwind', 'css', 'dark-theme']

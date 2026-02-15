@@ -1,6 +1,6 @@
 ---
 title: 'Building an MCP Server for Workflow Orchestration'
-date: 2026-02-15
+date: 2026-03-03
 description: 'A practical walkthrough of building an MCP server that bridges an AI coding CLI to a custom backend API, with lessons on tool design and fleet deployment.'
 author: 'Venture Crane'
 tags: ['mcp', 'agent-tooling', 'infrastructure', 'typescript']
