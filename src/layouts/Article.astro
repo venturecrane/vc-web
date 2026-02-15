@@ -130,19 +130,27 @@ const articleSchema = {
     {
       (prevArticle || nextArticle) && (
         <nav
-          class="mt-12 flex justify-between border-t border-border pt-6 text-sm"
+          class="mt-12 grid grid-cols-1 gap-4 border-t border-border pt-6 text-sm sm:grid-cols-2"
           aria-label="Article navigation"
         >
           {prevArticle ? (
-            <a href={`/articles/${prevArticle.slug}/`} class="text-accent hover:text-accent-hover">
-              &larr; {prevArticle.title}
+            <a href={`/articles/${prevArticle.slug}/`} class="group no-underline">
+              <span class="text-xs uppercase tracking-wide text-vc-text-muted">
+                &larr; Previous
+              </span>
+              <span class="mt-1 block text-accent group-hover:text-accent-hover">
+                {prevArticle.title}
+              </span>
             </a>
           ) : (
             <span />
           )}
           {nextArticle ? (
-            <a href={`/articles/${nextArticle.slug}/`} class="text-accent hover:text-accent-hover">
-              {nextArticle.title} &rarr;
+            <a href={`/articles/${nextArticle.slug}/`} class="group text-right no-underline">
+              <span class="text-xs uppercase tracking-wide text-vc-text-muted">Next &rarr;</span>
+              <span class="mt-1 block text-accent group-hover:text-accent-hover">
+                {nextArticle.title}
+              </span>
             </a>
           ) : (
             <span />
