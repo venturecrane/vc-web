@@ -27,9 +27,11 @@ Every agent session follows the same structure, whether it's a thirty-minute bug
 
 ## See It in Practice
 
-The methodology produces the work. These articles show it in action:
+<!-- Curated list — review when new methodology articles publish -->
 
-- [Building a Dark-Theme Design System with Tailwind v4](/articles/building-dark-theme-design-system/) - A design system built through this workflow: agent implementation, human design judgment, automated quality enforcement.
+- [Kill Discipline for AI Agent Teams](/articles/kill-discipline-ai-agents/) — How we prevent agents from churning on unsolvable problems.
+- [Multi-Agent Team Protocols Without Chaos](/articles/multi-agent-team-protocols/) — How agents and humans coordinate without stepping on each other.
+- [Sessions as First-Class Citizens](/articles/sessions-heartbeats-handoffs/) — How sessions start, end, and recover across machines.
 
 ## Founder
 
