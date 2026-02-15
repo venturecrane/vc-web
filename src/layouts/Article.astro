@@ -10,12 +10,22 @@ interface Props {
   readingTime: number
   author: string
   updatedDate?: Date
+  sources?: string
   prevArticle?: { slug: string; title: string }
   nextArticle?: { slug: string; title: string }
 }
 
-const { title, description, date, readingTime, author, updatedDate, prevArticle, nextArticle } =
-  Astro.props
+const {
+  title,
+  description,
+  date,
+  readingTime,
+  author,
+  updatedDate,
+  sources,
+  prevArticle,
+  nextArticle,
+} = Astro.props
 ---
 
 <Base title={`${title} | Venture Crane`} description={description}>
@@ -34,7 +44,7 @@ const { title, description, date, readingTime, author, updatedDate, prevArticle,
       <slot />
     </div>
 
-    <AIDisclosure author={author} />
+    <AIDisclosure author={author} sources={sources} />
 
     {
       (prevArticle || nextArticle) && (

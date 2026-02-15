@@ -11,6 +11,7 @@ const articles = defineCollection({
     tags: z.array(z.string()).optional(),
     updatedDate: z.coerce.date().optional(),
     repo: z.string().url().optional(),
+    sources: z.string().optional(),
     draft: z.boolean().default(false),
     ogImage: z.string().optional(),
   }),
