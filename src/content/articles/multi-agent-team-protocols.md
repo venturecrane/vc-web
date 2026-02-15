@@ -60,7 +60,6 @@ An issue has exactly one status label at any time. This is enforced by conventio
 status:triage    New, needs prioritization
 status:ready     Approved, ready for development
 status:in-progress  Dev actively working
-status:review    PR open, code review needed
 status:qa        Under verification
 status:verified  QA passed, ready to merge
 status:done      Merged and deployed

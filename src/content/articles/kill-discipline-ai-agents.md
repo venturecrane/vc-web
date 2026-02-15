@@ -60,7 +60,7 @@ For example:
 ```
 BLOCKED: Cannot authenticate to the staging API
 TRIED: 1) Used the API key from project config 2) Tried the admin key from
-       environment variables 3) Checked the secrets manager for a staging-specific key
+       environment variables 3) Checked Infisical for a staging-specific key
 NEED: A valid API key for the staging environment, or confirmation that staging
       uses the same key as production
 ```

@@ -267,7 +267,7 @@ The schema also includes a track system - a numeric partition that can be assign
 
 The data model reflects several deliberate choices that are worth explaining.
 
-**ULID IDs, type-prefixed.** Every entity ID uses ULID format with a type prefix: `sess_01HQXV3NK8...` for sessions, `ho_01HQXV4NK8...` for handoffs, `note_01HQXV5NK8...` for notes. ULIDs are sortable (they embed a millisecond timestamp), globally unique (128-bit random component), and URL-safe. The type prefix makes IDs self-describing - you can look at an ID in a log line and immediately know what kind of entity it references without additional context.
+**ULID IDs, type-prefixed.** Every entity ID uses ULID format with a type prefix: `sess_01HQXV3NK8...` for sessions, `ho_01HQXV4NK8...` for handoffs, `note_01HQXV5NK8...` for notes. ULIDs are sortable (they embed a 48-bit millisecond timestamp), globally unique (80-bit random component), and URL-safe. The type prefix makes IDs self-describing - you can look at an ID in a log line and immediately know what kind of entity it references without additional context.
 
 **Actor key IDs.** Every record stores an `actor_key_id` - the first 16 hex characters of `SHA-256(api_key)`. This provides attribution without storing raw API keys. You can answer "who created this session?" and "is this the same actor who created that handoff?" without being able to recover the actual key. Changing a key changes the actor ID, but historical records remain traceable to the old key's identity.
 

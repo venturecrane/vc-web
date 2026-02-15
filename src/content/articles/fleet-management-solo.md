@@ -7,7 +7,7 @@ tags: ['infrastructure', 'fleet-management', 'devops', 'tailscale']
 draft: true
 ---
 
-A fleet of five development machines - two Apple Silicon Macs and three Linux boxes - runs AI agent sessions roughly 18 hours a day. One person manages all of it. No DevOps team. No IT department. Just scripts.
+A fleet of development machines - a mix of Apple Silicon Macs and Linux boxes - runs AI agent sessions roughly 18 hours a day. One person manages all of it. No DevOps team. No IT department. Just scripts.
 
 Every machine needs identical tooling - Node.js, GitHub CLI, Infisical, Claude Code, SSH keys, tmux, a custom MCP server, and a CLI launcher. They all need to talk to each other over SSH. They all need to be hardened against public networks.
 
@@ -117,8 +117,8 @@ Config fragments go to `~/.ssh/config.d/fleet-mesh`, never to `~/.ssh/config`. T
 
 ```
 Host server-1
-    HostName 100.105.134.85
-    User smdurgan
+    HostName 100.x.x.x
+    User devuser
     IdentityFile ~/.ssh/id_ed25519
     StrictHostKeyChecking accept-new
     ServerAliveInterval 60

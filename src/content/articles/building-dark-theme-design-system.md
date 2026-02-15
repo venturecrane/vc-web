@@ -79,25 +79,16 @@ The gold accent (`#dbb05c`) was chosen for its warmth and AAA-clearing contrast 
 
 ## Typography Decisions
 
-### The 18px Body Default
+### The Body Text Baseline
 
-We set body text to `1.125rem` (18px) with a `1.7` line height. This is larger than typical web defaults (16px) but maps to comfortable dark-mode reading.
+We set body text to `1rem` (16px) with a `1.6` line height. This matches the industry-standard base size but pairs it with a more generous line height than the browser default of 1.5, giving dark-mode reading room to breathe.
 
-Dark backgrounds demand slightly larger text. The same optical illusion that makes white text on black appear bolder than black text on white also makes small text harder to parse. At 18px with generous line height, sustained reading is comfortable without feeling oversized.
-
-On mobile (below 640px), we drop to `1rem` (16px) with a `1.6` line height. The reduced viewport makes 18px feel disproportionate.
+The same optical illusion that makes white text on black appear bolder than black text on white also makes tightly-spaced text harder to parse on dark backgrounds. At 16px with a 1.6 line height, sustained reading is comfortable without feeling oversized.
 
 ```css
 :root {
-  --vc-text-body: 1.125rem;
-  --vc-leading-body: 1.7;
-}
-
-@media (max-width: 640px) {
-  :root {
-    --vc-text-body: 1rem;
-    --vc-leading-body: 1.6;
-  }
+  --vc-text-body: 1rem;
+  --vc-leading-body: 1.6;
 }
 ```
 
@@ -116,10 +107,10 @@ We defined a five-step scale covering everything from page titles to metadata:
 
 | Element    | Size            | Line Height | Weight |
 | ---------- | --------------- | ----------- | ------ |
-| H1         | 2.25rem (36px)  | 1.2         | 700    |
-| H2         | 1.75rem (28px)  | 1.3         | 600    |
-| H3         | 1.375rem (22px) | 1.4         | 600    |
-| Body       | 1.125rem (18px) | 1.7         | 400    |
+| H1         | 2rem (32px)     | 1.2         | 700    |
+| H2         | 1.5rem (24px)   | 1.3         | 600    |
+| H3         | 1.25rem (20px)  | 1.4         | 600    |
+| Body       | 1rem (16px)     | 1.6         | 400    |
 | Small/Meta | 0.875rem (14px) | 1.5         | 400    |
 
 Each step is roughly a 1.25x ratio - not a mathematically perfect scale, but one tuned for readability at each individual level. Strict modular scales often produce awkward sizes at the extremes. We preferred each level looking right on its own.
@@ -134,7 +125,7 @@ All rendered markdown lives inside `.vc-prose`, which applies spacing, list styl
 
 The `.vc-prose` class handles:
 
-- Heading margins (`margin-top: 2em` for h2, `1.5em` for h3)
+- Heading margins (`margin-top: 2.5em` for h2, `1.5em` for h3)
 - Paragraph spacing (`margin-bottom: 1.25em`)
 - List indentation (`padding-left: 1.5em`)
 - Blockquote styling (accent-color left border, muted italic text)
@@ -143,13 +134,14 @@ The `.vc-prose` class handles:
 
 ### Code Block Overflow
 
-Code blocks need special treatment in constrained layouts. A 680px content width can't fit an 120-character line without overflow. We handle this with three layers:
+Code blocks need special treatment in constrained layouts. A 768px content column (roughly 660px of prose after card padding) can't fit a 120-character line without overflow. We handle this with two layers:
 
 1. `overflow-x: auto` on the `<pre>` element
 2. `tabindex="0"` added via a rehype plugin for keyboard scrollability
-3. A CSS `::after` pseudo-element creating a right-edge fade gradient
 
-The fade gradient is the subtlest detail. When a code block has horizontal overflow, the right edge just... ends. There's no visual signal that more content exists. The sticky pseudo-element creates a 2rem fade from transparent to the code background color, hinting at overflow without obscuring content:
+The first handles the visual overflow. The second is an accessibility detail that's easy to miss - without `tabindex="0"`, keyboard users can't scroll horizontally through long code blocks. Our rehype plugin adds it automatically during the Astro build.
+
+A technique we've been evaluating but haven't shipped yet: a CSS `::after` pseudo-element that creates a right-edge fade gradient hinting at overflow. The idea is a sticky pseudo-element that fades from transparent to the code background color:
 
 ```css
 pre::after {
@@ -165,7 +157,7 @@ pre::after {
 }
 ```
 
-No JavaScript. No intersection observers. Just CSS doing what CSS does well.
+No JavaScript, no intersection observers - just CSS. We haven't added it because the current `overflow-x: auto` approach works well enough, and the fade gradient introduces visual complexity on every code block regardless of whether it actually overflows. Sometimes the simpler solution is the right one.
 
 ### Table Scroll Shadows
 
@@ -201,7 +193,7 @@ We initially named our colors `--bg-dark`, `--bg-medium`, `--bg-light`. This fel
 
 ### Test at the Extremes
 
-Our reading comfort check isn't "does this look okay for 30 seconds." It's "can I read this for 5+ minutes without wanting to adjust brightness." Dark themes fail in sustained reading far more often than in quick glances. The combination of 18px text, 1.7 line height, and the `#242438` surface (slightly lighter than the chrome) was the result of iterating through seven background candidates.
+Our reading comfort check isn't "does this look okay for 30 seconds." It's "can I read this for 5+ minutes without wanting to adjust brightness." Dark themes fail in sustained reading far more often than in quick glances. The combination of 16px text, 1.6 line height, and the `#242438` surface (slightly lighter than the chrome) was the result of iterating through several background candidates.
 
 ### Don't Build What Astro Gives You
 

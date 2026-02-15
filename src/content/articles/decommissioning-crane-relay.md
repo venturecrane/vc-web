@@ -55,7 +55,7 @@ The relay worker was already dead. We just hadn't cleaned up the body.
 
 ## The Replacement Architecture
 
-The focused classifier worker that replaced the relay's webhook processing is roughly 400 lines of TypeScript (compared to 3,234). It has three HTTP routes:
+The focused classifier worker that replaced the relay's webhook processing is roughly 1,000 lines of TypeScript (compared to 3,234). It has three HTTP routes:
 
 - `GET /health` - health check
 - `POST /webhooks/github` - receive and classify issues
@@ -70,13 +70,13 @@ It has idempotency (both delivery-based and semantic, so re-delivered webhooks a
 The `wrangler.toml` tells the story of scope:
 
 ```toml
-name = "crane-classifier"
+name = "issue-classifier"
 main = "src/index.ts"
 compatibility_date = "2025-12-15"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "crane-classifier-db"
+database_name = "issue-classifier-db"
 ```
 
 One worker. One database. One binding. Compare that to the relay worker's configuration, which had a D1 binding, an R2 binding, multiple secret bindings for different auth mechanisms, and environment-specific overrides for staging versus production.
@@ -93,7 +93,7 @@ Decommissioning a worker is straightforward when you can prove nothing depends o
 
 2. **Check the secrets.** The missing production secrets were themselves evidence - if the worker had been needed, someone would have noticed the auth failures.
 
-3. **Delete the Cloudflare resources.** The worker (both production and staging deployments), the D1 database (`dfg-relay`), and the R2 bucket (`dfg-relay-evidence`).
+3. **Delete the Cloudflare resources.** The worker (both production and staging deployments), the D1 database, and the R2 evidence bucket.
 
 4. **Clean the monorepo.** Remove the worker directory, update `package.json`, remove references from CI workflows, security configurations, and documentation.
 

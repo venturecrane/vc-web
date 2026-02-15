@@ -55,7 +55,7 @@ The system is designed for a small team (1-5 humans) running multiple AI agent s
 │                                                            │
 │  ┌────────────────┐  ┌───────────────┐  ┌─────────────┐  │
 │  │  Context API    │  │  Knowledge    │  │  GitHub      │  │
-│  │  • Sessions     │  │  Store (VCMS)│  │  Classifier  │  │
+│  │  • Sessions     │  │  Store       │  │  Classifier  │  │
 │  │  • Handoffs     │  │  • Notes      │  │  • Webhooks  │  │
 │  │  • Heartbeats   │  │  • Tags       │  │  • Grading   │  │
 │  │  • Doc audit    │  │  • Scope      │  │  • Labels    │  │
@@ -508,7 +508,7 @@ Pre-commit hooks run Prettier formatting and ESLint fixes on staged files (via l
 
 **Parallel session awareness prevents duplicate work.** Simply showing "Agent X is working on Issue #87" at SOD time is enough. Agents check this and pick different work.
 
-**The launcher eliminated an entire class of setup errors.** Reducing session setup from "navigate to repo, set env vars, configure MCP, launch CLI" to `launch alpha` made it practical to run sessions on any machine in the fleet without troubleshooting.
+**The launcher eliminated an entire class of setup errors.** Reducing session setup from "navigate to repo, set env vars, configure MCP, launch CLI" to `launcher alpha` made it practical to run sessions on any machine in the fleet without troubleshooting.
 
 On the harder side:
 
@@ -719,12 +719,12 @@ This is configured in tmux (`set -g set-clipboard on`) and supported by Blink Sh
 
 A portable laptop serves as the primary development machine when traveling. An iPhone provides hotspot internet. The fleet's always-on servers remain accessible via Tailscale.
 
-| Scenario                                  | Target           | Method                                        |
-| ----------------------------------------- | ---------------- | --------------------------------------------- |
-| Quick thought from bed/couch              | Office server    | Mosh from Blink Shell via Tailscale           |
-| Sitting down for real work                | Laptop directly  | Open lid, local terminal + `launch <project>` |
-| Mid-session, stepping away                | Laptop via phone | Blink Shell to `laptop.local` over hotspot    |
-| First thing in the morning, laptop closed | Office server    | Mosh from Blink Shell (zero setup)            |
+| Scenario                                  | Target           | Method                                          |
+| ----------------------------------------- | ---------------- | ----------------------------------------------- |
+| Quick thought from bed/couch              | Office server    | Mosh from Blink Shell via Tailscale             |
+| Sitting down for real work                | Laptop directly  | Open lid, local terminal + `launcher <project>` |
+| Mid-session, stepping away                | Laptop via phone | Blink Shell to `laptop.local` over hotspot      |
+| First thing in the morning, laptop closed | Office server    | Mosh from Blink Shell (zero setup)              |
 
 When the phone creates a hotspot, the laptop and phone are on the same local network (172.20.10.x). The phone can SSH/Mosh to the laptop using mDNS/Bonjour (`laptop.local`) - no Tailscale needed, sub-millisecond latency.
 
@@ -757,7 +757,7 @@ Phone (iPhone)
 Laptop (MacBook)
 ├── Tailscale → same VPN mesh
 ├── Terminal (local) → primary dev experience
-├── launch <project> → full coding sessions
+├── launcher <project> → full coding sessions
 └── caffeinate → prevents sleep during Blink access
 
 Office (always-on servers)

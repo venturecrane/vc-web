@@ -29,7 +29,7 @@ Everything starts with `config/ventures.json`. This is the source of truth for t
       "capabilities": ["has_api", "has_database"],
       "portfolio": {
         "status": "building",
-        "tagline": "Product validation for founders",
+        "tagline": "Validation platform for early-stage teams",
         "techStack": ["Cloudflare Workers", "D1"]
       }
     },
@@ -40,7 +40,7 @@ Everything starts with `config/ventures.json`. This is the source of truth for t
       "capabilities": ["has_api", "has_database"],
       "portfolio": {
         "status": "building",
-        "tagline": "Expense tracking for co-parents",
+        "tagline": "Shared finance management for families",
         "techStack": ["Next.js", "Cloudflare Workers", "D1"]
       }
     },
@@ -122,15 +122,15 @@ function scanLocalRepos(): LocalRepo[] {
 }
 ```
 
-Then the launcher matches ventures to repos using a naming convention. Each venture's application repo follows the pattern `{code}-console` (with a special case for the infrastructure venture, which uses `crane-console` rather than `vc-console` for historical reasons):
+Then the launcher matches ventures to repos using a naming convention. Each venture's application repo follows the pattern `{code}-web` (with a special case for the infrastructure venture, which uses a legacy name for historical reasons):
 
 ```typescript
 function matchVentureToRepo(venture, repos) {
   return repos.find((r) => {
     if (r.org.toLowerCase() !== venture.org.toLowerCase()) return false
     return (
-      r.repoName === `${venture.code}-console` ||
-      (venture.code === 'vc' && r.repoName === 'crane-console')
+      r.repoName === `${venture.code}-web` ||
+      (venture.code === 'infra' && r.repoName === 'ops-console')
     )
   })
 }
@@ -180,9 +180,9 @@ $ launcher alpha
 3. Load venture config   → Read ventures.json, find "alpha"
 4. Discover local repo   → Scan ~/dev/, match org + repo name
 5. Fetch secrets         → infisical export --path /alpha --format json
-6. Validate secrets      → CRANE_CONTEXT_KEY exists
-7. Ensure MCP server     → crane-mcp binary on PATH, .mcp.json in repo
-8. Spawn agent           → cd ~/dev/alpha-console && claude
+6. Validate secrets      → Context API key exists
+7. Ensure MCP server     → MCP binary on PATH, .mcp.json in repo
+8. Spawn agent           → cd ~/dev/alpha-web && claude
 ```
 
 The launcher supports three agent CLIs (Claude Code, Gemini CLI, Codex CLI), each with its own MCP configuration format. Claude Code uses per-repo `.mcp.json` files. Gemini uses `.gemini/settings.json`. Codex uses `~/.codex/config.toml`. The launcher handles the format differences - the user just picks the agent with a flag.
@@ -228,8 +228,8 @@ Some secrets are needed by every venture. The context API key, for example, is t
 ```json
 {
   "sharedSecrets": {
-    "source": "/vc",
-    "keys": ["CRANE_CONTEXT_KEY", "CRANE_ADMIN_KEY"]
+    "source": "/infra",
+    "keys": ["CONTEXT_API_KEY", "ADMIN_KEY"]
   }
 }
 ```

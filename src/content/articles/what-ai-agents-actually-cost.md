@@ -1,7 +1,7 @@
 ---
 title: 'What Running Multiple Ventures with AI Agents Actually Costs'
 date: 2026-02-15
-description: 'Transparent cost breakdown of running an AI-native dev lab across multiple projects. Most of the stack is free. The real costs might surprise you.'
+description: 'Transparent cost breakdown of running an AI-native dev lab across multiple projects. Most of the stack is free.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'costs', 'ai-agents']
 draft: true
@@ -9,7 +9,7 @@ draft: true
 
 Running multiple software ventures simultaneously with AI coding agents sounds expensive. It is not - at least, not in the ways you would expect. We run several active projects across a fleet of development machines, with AI agents doing the bulk of the coding work. Here is what it actually costs.
 
-**Total estimated monthly cost: $250-$650 [estimate]**, depending on AI usage intensity. The range is wide because the single largest variable - AI API and subscription costs - fluctuates based on how many agent sessions we run per day.
+**Total estimated monthly cost: $280-$800 [estimate]**, depending on AI usage intensity. The range is wide because the single largest variable - AI API and subscription costs - fluctuates based on how many agent sessions we run per day.
 
 The breakdown that follows covers every line item: infrastructure, secrets management, networking, AI costs, hardware, and domains. Where something runs on a free tier, we say so. Where we pay, we give the number.
 
@@ -62,7 +62,7 @@ What we use:
 
 **GitHub Actions free tier:**
 
-- 2,000 CI/CD minutes per month (for public repos)
+- 2,000 CI/CD minutes per month (for private repos; unlimited for public repos)
 - 500 MB of GitHub Packages storage
 
 Our CI runs are lightweight - TypeScript compilation, ESLint, Prettier formatting checks, and a small test suite. Each run finishes in under two minutes. We also run daily security scans (npm audit, Gitleaks) via scheduled workflows.
@@ -81,7 +81,7 @@ We use Infisical's cloud-hosted free tier. All ventures share a single Infisical
 
 The free tier covers:
 
-- Unlimited secrets
+- Unlimited secrets (within 3 projects and 3 environments)
 - Basic access controls
 - CLI integration for runtime secret injection
 
@@ -159,7 +159,7 @@ AI agents need machines to run on. Our fleet includes a mix of Apple Silicon Mac
 | Mac Mini (Intel, repurposed)  | Always-on server       | ~$0 (already owned)            | $0/month              |
 | 2x Linux laptops (repurposed) | Secondary workstations | ~$0 (already owned)            | $0/month              |
 
-The two Apple Silicon machines are the only purpose-bought hardware. The rest of the fleet is repurposed hardware that was sitting in drawers - old MacBook Pros and ThinkPads running Ubuntu. They work fine as secondary dev workstations and always-on servers for remote agent sessions.
+The two Apple Silicon machines are the only purpose-bought hardware. The rest of the fleet is repurposed hardware that was sitting in drawers - an old Intel Mac Mini and ThinkPads running Ubuntu. They work fine as secondary dev workstations and always-on servers for remote agent sessions.
 
 **If you were building this from scratch today:**
 
@@ -227,7 +227,7 @@ Here is what a minimal viable setup looks like:
 5. **Tailscale free tier** - if you add a second machine or want mobile access
 6. **Infisical free tier** - secrets management from day one (do not hardcode keys)
 
-Total year-one cost for the minimal setup: roughly $600 for hardware plus $240-$2,400 for AI, depending on usage intensity. Call it **$1,000-$3,000 for the first year [estimate]** to run a multi-project AI-native development lab.
+Total year-one cost for the minimal setup: roughly $600 for hardware plus $240-$2,400 for AI, depending on usage intensity. Call it **$850-$3,000 for the first year [estimate]** to run a multi-project AI-native development lab.
 
 That is less than most founders spend on a single SaaS subscription stack. The trade-off is that you are building on primitives (Workers, D1, MCP) rather than buying pre-built platforms. For a technical founder, that is a feature, not a bug - you control the entire stack, and almost none of it has a recurring fee.
 

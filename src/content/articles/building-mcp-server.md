@@ -156,12 +156,12 @@ When something goes wrong, the tool tells the agent exactly what to do:
 if (!apiKey) {
   return {
     success: false,
-    message: 'CRANE_CONTEXT_KEY not found. Launch with: crane vc',
+    message: 'CRANE_CONTEXT_KEY not found. Launch with: launcher alpha',
   }
 }
 ```
 
-Not "authentication failed." Not an HTTP 401 status code. A concrete instruction: "Launch with: crane vc." The agent can relay this to the human verbatim, and the human knows exactly what command to run.
+Not "authentication failed." Not an HTTP 401 status code. A concrete instruction: "Launch with: launcher alpha." The agent can relay this to the human verbatim, and the human knows exactly what command to run.
 
 ### One tool per workflow step
 

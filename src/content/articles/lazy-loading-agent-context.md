@@ -29,7 +29,7 @@ This is the index-and-fetch pattern: deliver a lightweight metadata table at sta
 
 ## The Implementation
 
-The fix had two parts, both on the client side. The backend API already supported both formats - we just were not using the right one.
+The fix had three parts, all on the client side. The backend API already supported both formats - we just were not using the right one.
 
 ### Part 1: Documentation Index
 
@@ -61,7 +61,7 @@ The SOD output renders this as a compact table:
 
 ```
 ### Available Documentation (28 docs)
-Fetch any document with `crane_doc(scope, doc_name)`.
+Fetch any document with `doc(scope, doc_name)`.
 
 | Scope  | Document                    | Version |
 |--------|-----------------------------|---------|
@@ -85,7 +85,7 @@ export const docInputSchema = z.object({
 })
 ```
 
-The agent calls this tool mid-session when it encounters a task that requires specific documentation. A session working on API changes calls `crane_doc("alpha", "alpha-api-structure.md")`. A session updating team process calls `crane_doc("global", "team-workflow.md")`. Most sessions fetch zero to two documents rather than loading all 28-39.
+The agent calls this tool mid-session when it encounters a task that requires specific documentation. A session working on API changes calls `doc("alpha", "alpha-api-structure.md")`. A session updating team process calls `doc("global", "team-workflow.md")`. Most sessions fetch zero to two documents rather than loading all 28-39.
 
 The tool is a thin wrapper - it calls the context API's document endpoint, gets the full content for that single document, and returns it. The agent pays the token cost only for documents it actually reads.
 
