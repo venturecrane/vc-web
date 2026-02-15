@@ -1,0 +1,84 @@
+---
+import Base from '../../layouts/Base.astro'
+import ArticleCard from '../../components/ArticleCard.astro'
+import LogEntry from '../../components/LogEntry.astro'
+import { getCollection } from 'astro:content'
+
+export async function getStaticPaths() {
+  const articles = (await getCollection('articles')).filter((a) => !a.data.draft)
+  const logs = (await getCollection('logs')).filter((l) => !l.data.draft)
+
+  const allTags = new Set<string>()
+  for (const article of articles) {
+    for (const tag of article.data.tags) {
+      allTags.add(tag)
+    }
+  }
+  for (const log of logs) {
+    for (const tag of log.data.tags) {
+      allTags.add(tag)
+    }
+  }
+
+  return [...allTags].map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      articles: articles
+        .filter((a) => a.data.tags.includes(tag))
+        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+      logs: logs
+        .filter((l) => l.data.tags.includes(tag))
+        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+    },
+  }))
+}
+
+const { tag, articles, logs } = Astro.props
+---
+
+<Base title={`${tag} | Venture Crane`} description={`Content tagged "${tag}".`}>
+  <h1 class="mb-8">{tag}</h1>
+
+  {
+    articles.length > 0 && (
+      <section class="mb-12">
+        <h2 class="mb-4 text-xl font-semibold">Articles</h2>
+        <div class="flex flex-col gap-4">
+          {articles.map((article) => (
+            <ArticleCard
+              title={article.data.title}
+              date={article.data.date}
+              description={article.data.description}
+              readingTime={Math.ceil(article.body!.split(/\s+/).length / 225)}
+              slug={article.id}
+              tags={article.data.tags}
+            />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    logs.length > 0 && (
+      <section class="mb-12">
+        <h2 class="mb-4 text-xl font-semibold">Build Log</h2>
+        <div class="flex flex-col gap-2">
+          {logs.map((log) => (
+            <LogEntry
+              title={log.data.title}
+              date={log.data.date}
+              slug={log.id}
+              tags={log.data.tags}
+            />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <a href="/tags/" class="text-sm text-vc-text-muted no-underline hover:text-accent">
+    &larr; All tags
+  </a>
+</Base>

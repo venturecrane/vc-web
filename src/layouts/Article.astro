@@ -2,6 +2,7 @@
 import Base from './Base.astro'
 import ArticleMeta from '../components/ArticleMeta.astro'
 import AIDisclosure from '../components/AIDisclosure.astro'
+import TagList from '../components/TagList.astro'
 
 interface Heading {
   depth: number
@@ -16,6 +17,7 @@ interface Props {
   readingTime: number
   author: string
   updatedDate?: Date
+  tags?: string[]
   prevArticle?: { slug: string; title: string }
   nextArticle?: { slug: string; title: string }
   headings?: Heading[]
@@ -28,6 +30,7 @@ const {
   readingTime,
   author,
   updatedDate,
+  tags = [],
   prevArticle,
   nextArticle,
   headings = [],
@@ -45,6 +48,13 @@ const showToc = headings.length > 0
         author={author}
         updatedDate={updatedDate}
       />
+      {
+        tags.length > 0 && (
+          <div class="mt-3">
+            <TagList tags={tags} />
+          </div>
+        )
+      }
     </header>
 
     {

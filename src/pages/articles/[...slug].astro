@@ -36,6 +36,7 @@ const tocHeadings = readingTime > 10 ? headings.filter((h) => h.depth === 2) : [
   updatedDate={article.data.updatedDate}
   prevArticle={prevArticle}
   nextArticle={nextArticle}
+  tags={article.data.tags}
   headings={tocHeadings}
 >
   <Content />

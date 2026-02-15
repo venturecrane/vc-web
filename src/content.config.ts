@@ -8,7 +8,7 @@ const articles = defineCollection({
     date: z.coerce.date(),
     description: z.string().max(160),
     author: z.string().default('Venture Crane'),
-    tags: z.array(z.string()).optional(),
+    tags: z.array(z.string()).default([]),
     updatedDate: z.coerce.date().optional(),
     repo: z.string().url().optional(),
     draft: z.boolean().default(false),
@@ -21,7 +21,7 @@ const logs = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
-    tags: z.array(z.string()).optional(),
+    tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
   }),
 })

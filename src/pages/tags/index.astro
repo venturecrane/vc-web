@@ -1,0 +1,44 @@
+---
+import Base from '../../layouts/Base.astro'
+import { getCollection } from 'astro:content'
+
+const articles = (await getCollection('articles')).filter((a) => !a.data.draft)
+const logs = (await getCollection('logs')).filter((l) => !l.data.draft)
+
+const tagCounts = new Map<string, number>()
+
+for (const article of articles) {
+  for (const tag of article.data.tags) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1)
+  }
+}
+
+for (const log of logs) {
+  for (const tag of log.data.tags) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1)
+  }
+}
+
+const sortedTags = [...tagCounts.entries()].sort((a, b) => a[0].localeCompare(b[0]))
+---
+
+<Base title="Tags | Venture Crane" description="Browse content by topic.">
+  <h1 class="mb-8">Tags</h1>
+  {
+    sortedTags.length > 0 ? (
+      <div class="flex flex-wrap gap-3">
+        {sortedTags.map(([tag, count]) => (
+          <a
+            href={`/tags/${tag}/`}
+            class="rounded-lg bg-surface px-4 py-2 text-sm text-vc-text-muted no-underline transition-colors hover:bg-surface-raised hover:text-accent"
+          >
+            {tag}
+            <span class="ml-1.5 text-xs opacity-60">{count}</span>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <p class="text-vc-text-muted">No tags yet.</p>
+    )
+  }
+</Base>

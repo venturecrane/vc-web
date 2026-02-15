@@ -1,25 +1,33 @@
 ---
+import TagList from './TagList.astro'
+
 interface Props {
   title: string
   date: Date
   description: string
   readingTime: number
   slug: string
+  tags?: string[]
 }
 
-const { title, date, description, readingTime, slug } = Astro.props
+const { title, date, description, readingTime, slug, tags = [] } = Astro.props
 
 const formatDate = (d: Date) =>
   d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 ---
 
-<a
-  href={`/articles/${slug}/`}
-  class="group block rounded-lg bg-surface p-6 no-underline transition-colors hover:bg-surface-raised"
->
+<div class="group relative rounded-lg bg-surface p-6 transition-colors hover:bg-surface-raised">
+  <a href={`/articles/${slug}/`} class="absolute inset-0 z-0 rounded-lg" aria-label={title}></a>
   <h2 class="text-lg font-semibold text-vc-text group-hover:text-accent">{title}</h2>
   <div class="mt-1 text-sm text-vc-text-muted">
     {formatDate(date)} &middot; {readingTime} min read
   </div>
   <p class="mt-2 text-vc-text-muted">{description}</p>
-</a>
+  {
+    tags.length > 0 && (
+      <div class="relative z-10 mt-3">
+        <TagList tags={tags} />
+      </div>
+    )
+  }
+</div>

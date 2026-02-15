@@ -1,5 +1,6 @@
 ---
 import Base from './Base.astro'
+import TagList from '../components/TagList.astro'
 
 interface Props {
   title: string
@@ -7,7 +8,7 @@ interface Props {
   tags?: string[]
 }
 
-const { title, date, tags } = Astro.props
+const { title, date, tags = [] } = Astro.props
 
 const formatDate = (d: Date) =>
   d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -21,13 +22,9 @@ const formatDate = (d: Date) =>
         {formatDate(date)}
       </div>
       {
-        tags && tags.length > 0 && (
-          <div class="mt-2 flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <span class="rounded bg-surface-raised px-2 py-0.5 text-xs text-vc-text-muted">
-                {tag}
-              </span>
-            ))}
+        tags.length > 0 && (
+          <div class="mt-2">
+            <TagList tags={tags} />
           </div>
         )
       }

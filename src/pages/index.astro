@@ -54,6 +54,7 @@ const remainingArticles = articles.slice(1, 5)
                 description={article.data.description}
                 readingTime={Math.ceil(article.body!.split(/\s+/).length / 225)}
                 slug={article.id}
+                tags={article.data.tags}
               />
             ))}
           </div>
@@ -73,7 +74,12 @@ const remainingArticles = articles.slice(1, 5)
       logs.length > 0 ? (
         <div class="flex flex-col gap-2">
           {logs.map((log) => (
-            <LogEntry title={log.data.title} date={log.data.date} slug={log.id} />
+            <LogEntry
+              title={log.data.title}
+              date={log.data.date}
+              slug={log.id}
+              tags={log.data.tags}
+            />
           ))}
         </div>
       ) : (
