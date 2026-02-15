@@ -1,7 +1,10 @@
 ---
 import Base from '../layouts/Base.astro'
 import PortfolioCard from '../components/PortfolioCard.astro'
-import { sortedVentures } from '../data/ventures'
+import { sortedVentures, lastReviewed } from '../data/ventures'
+
+const reviewDate = new Date(lastReviewed + 'T00:00:00')
+const formattedDate = reviewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 ---
 
 <Base
@@ -17,5 +20,5 @@ import { sortedVentures } from '../data/ventures'
     {sortedVentures.map((venture) => <PortfolioCard venture={venture} />)}
   </div>
 
-  <p class="mt-8 text-sm text-vc-text-muted">Last updated February 2026</p>
+  <p class="mt-8 text-sm text-vc-text-muted">Last updated {formattedDate}</p>
 </Base>

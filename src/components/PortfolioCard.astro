@@ -8,24 +8,28 @@ interface Props {
 const { venture } = Astro.props
 
 const statusColors: Record<Venture['status'], string> = {
-  launched: 'bg-green-900/40 text-green-300 border-green-700/50',
-  active: 'bg-accent/10 text-accent border-accent/30',
-  'in-development': 'bg-yellow-900/40 text-yellow-300 border-yellow-700/50',
-  lab: 'bg-gray-700/40 text-gray-300 border-gray-600/50',
+  building: 'bg-gray-700/40 text-gray-300 border-gray-600/50',
+  beta: 'bg-yellow-900/40 text-yellow-300 border-yellow-700/50',
+  live: 'bg-green-900/40 text-green-300 border-green-700/50',
+  paused: 'bg-orange-900/40 text-orange-300 border-orange-700/50',
+  sunset: 'bg-gray-800/40 text-gray-400 border-gray-700/50',
+  internal: 'bg-blue-900/40 text-blue-300 border-blue-700/50',
 }
 
 const statusLabels: Record<Venture['status'], string> = {
-  launched: 'Launched',
-  active: 'Active',
-  'in-development': 'In Development',
-  lab: 'Lab',
+  building: 'Building',
+  beta: 'Beta',
+  live: 'Live',
+  paused: 'Paused',
+  sunset: 'Sunset',
+  internal: 'Internal',
 }
 
-const isLive = venture.status === 'launched' || venture.status === 'active'
+const isClickable = (venture.status === 'live' || venture.status === 'beta') && venture.url
 ---
 
 {
-  isLive && venture.url ? (
+  isClickable ? (
     <article class="group relative rounded-lg border border-border bg-surface p-6 transition-colors hover:border-accent hover:bg-surface-raised">
       <a
         href={venture.url}
