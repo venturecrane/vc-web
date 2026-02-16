@@ -33,4 +33,17 @@ Things where we don't know the right approach. These map to real limitations in 
 
 ---
 
-If any of these problems are ones you're working on too, we'd like to hear about it - whether that's a blog post about your approach, a conversation about what you've tried, or something more collaborative. [Get in touch](/contact/).
+<a id="work-with-us"></a>
+
+## Work With Us
+
+We're not building a community. We're running a development lab, and some of the problems above are ones other people are working on too. If you're operating agent teams and have approaches to any of these, we want to compare notes.
+
+What's useful to us:
+
+- **Joint experiments on shared problems.** Pick a problem above, bring your approach, and we'll run parallel tests. We publish what we find.
+- **Tool recommendations with context.** Not "try this library" - more like "we had the same context pressure problem and this specific pattern helped because..."
+- **Case studies from your own operation.** What does your agent workflow actually look like? What broke, what stuck? We'll publish guest field notes from teams running real workloads.
+- **Paired articles.** You write your version, we write ours. Readers get two perspectives on the same problem instead of one.
+
+If any of that sounds like your situation, [reach out](/contact/). A useful first message describes what you're building, which problem from this page you're dealing with, and what you've tried so far. We read everything.
