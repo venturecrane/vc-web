@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
+import Subscribe from '../components/Subscribe.astro'
 import { getEntry, render } from 'astro:content'
 
 const page = await getEntry('pages', 'guide')
@@ -21,6 +22,8 @@ const formatDate = (d: Date) =>
       <Content />
     </div>
 
+    <Subscribe variant="inline" />
+
     {
       page.data.updatedDate && (
         <div class="mt-8 text-sm text-vc-text-muted">
@@ -29,4 +32,5 @@ const formatDate = (d: Date) =>
       )
     }
   </div>
+  <script is:inline src="/js/subscribe.js"></script>
 </Base>

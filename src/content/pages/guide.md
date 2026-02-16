@@ -83,6 +83,5 @@ Short-form field notes published after each working session. Unpolished, timesta
 
 New articles publish roughly weekly. The build log updates more frequently.
 
-- [Subscribe to the newsletter](/contact/) for email updates
 - [RSS feed](/feed.xml) for feed readers
 - [Articles-only RSS](/feed/articles.xml) if you want to skip build logs
