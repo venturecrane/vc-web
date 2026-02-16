@@ -5,6 +5,7 @@ import AIDisclosure from '../components/AIDisclosure.astro'
 import TagList from '../components/TagList.astro'
 import ShareLinks from '../components/ShareLinks.astro'
 import Subscribe from '../components/Subscribe.astro'
+import RelatedContent from '../components/RelatedContent.astro'
 
 interface Heading {
   depth: number
@@ -13,6 +14,7 @@ interface Heading {
 }
 
 interface Props {
+  id: string
   title: string
   description: string
   date: Date
@@ -26,6 +28,7 @@ interface Props {
 }
 
 const {
+  id,
   title,
   description,
   date,
@@ -130,6 +133,8 @@ const articleSchema = {
     </aside>
 
     <Subscribe variant="inline" />
+
+    <RelatedContent currentId={id} currentTags={tags} />
 
     {
       (prevArticle || nextArticle) && (

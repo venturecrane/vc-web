@@ -2,14 +2,16 @@
 import Base from './Base.astro'
 import TagList from '../components/TagList.astro'
 import Subscribe from '../components/Subscribe.astro'
+import RelatedContent from '../components/RelatedContent.astro'
 
 interface Props {
+  id: string
   title: string
   date: Date
   tags?: string[]
 }
 
-const { title, date, tags = [] } = Astro.props
+const { id, title, date, tags = [] } = Astro.props
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
 const formatDate = (d: Date) =>
@@ -66,6 +68,8 @@ const blogPostingSchema = {
     </aside>
 
     <Subscribe variant="inline" />
+
+    <RelatedContent currentId={id} currentTags={tags} />
   </div>
 
   <script is:inline src="/js/subscribe.js"></script>

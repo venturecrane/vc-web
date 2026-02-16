@@ -1,0 +1,82 @@
+---
+import { getCollection } from 'astro:content'
+
+interface Props {
+  currentId: string
+  currentTags: string[]
+}
+
+const { currentId, currentTags } = Astro.props
+
+const allArticles = (await getCollection('articles')).filter((a) => !a.data.draft)
+const allLogs = (await getCollection('logs')).filter((l) => !l.data.draft)
+
+interface ScoredItem {
+  id: string
+  title: string
+  date: Date
+  description?: string
+  type: 'Article' | 'Build Log'
+  href: string
+  score: number
+}
+
+const allContent: ScoredItem[] = [
+  ...allArticles.map((a) => ({
+    id: a.id,
+    title: a.data.title,
+    date: a.data.date,
+    description: a.data.description,
+    type: 'Article' as const,
+    href: `/articles/${a.id}/`,
+    score: a.data.tags.filter((t) => currentTags.includes(t)).length,
+  })),
+  ...allLogs.map((l) => ({
+    id: l.id,
+    title: l.data.title,
+    date: l.data.date,
+    type: 'Build Log' as const,
+    href: `/log/${l.id}/`,
+    score: l.data.tags.filter((t) => currentTags.includes(t)).length,
+  })),
+].filter((item) => item.id !== currentId)
+
+// Sort by tag overlap (desc), then by date (desc) for ties
+allContent.sort((a, b) => b.score - a.score || b.date.getTime() - a.date.getTime())
+
+// Take top 3, but backfill with recent content if fewer than 2 have tag overlap
+let related = allContent.filter((item) => item.score > 0).slice(0, 3)
+if (related.length < 2) {
+  const ids = new Set(related.map((r) => r.id))
+  const backfill = allContent.filter((item) => !ids.has(item.id)).slice(0, 3 - related.length)
+  related = [...related, ...backfill]
+}
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+---
+
+{
+  related.length > 0 && (
+    <section class="mt-12 border-t border-border pt-6" aria-label="Related content">
+      <h2 class="mb-4 text-sm font-semibold uppercase tracking-wide text-vc-text-muted">Related</h2>
+      <div class="space-y-4">
+        {related.map((item) => (
+          <a
+            href={item.href}
+            class="group block rounded-md bg-surface-raised p-4 no-underline transition-colors hover:bg-accent/10"
+          >
+            <div class="flex items-baseline gap-2">
+              <span class="text-xs uppercase tracking-wide text-vc-text-muted">{item.type}</span>
+              <span class="text-xs text-vc-text-muted">{formatDate(item.date)}</span>
+            </div>
+            <div class="mt-1 text-accent group-hover:text-accent-hover">{item.title}</div>
+            {item.description && (
+              <div class="mt-1 text-sm text-vc-text-muted line-clamp-1">{item.description}</div>
+            )}
+          </a>
+        ))}
+      </div>
+    </section>
+  )
+}

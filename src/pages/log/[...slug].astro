@@ -15,6 +15,6 @@ const { log } = Astro.props
 const { Content } = await render(log)
 ---
 
-<Log title={log.data.title} date={log.data.date} tags={log.data.tags}>
+<Log id={log.id} title={log.data.title} date={log.data.date} tags={log.data.tags}>
   <Content />
 </Log>
