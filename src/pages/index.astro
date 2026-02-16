@@ -20,11 +20,19 @@ const remainingArticles = articles.slice(1, 5)
 
 <Base title="Venture Crane">
   <section class="pb-8 pt-6 sm:pb-12 sm:pt-8">
-    <h1 class="text-2xl font-bold sm:text-3xl">Reliable AI-Native Development for Small Teams</h1>
+    <h1 class="text-2xl font-bold sm:text-3xl">
+      Field Notes from Running AI Agent Teams in Production
+    </h1>
     <p class="mt-2 text-vc-text-muted">
-      Venture Crane is a solo-founder studio that builds products with AI agent teams. This site
-      publishes the operating system, the field notes, and the honest numbers from doing it in
-      production.
+      One studio, AI agent teams, real costs, honest failures. Most AI development content is vendor
+      marketing or tutorials. This is what it actually looks like to ship products with agents.
+    </p>
+    <p class="mt-3 text-sm text-vc-text-muted">
+      New here?
+      <a href="/start-here/" class="text-accent hover:text-accent-hover">Start Here</a> for curated reading
+      paths, or read
+      <a href="/the-system/" class="text-accent hover:text-accent-hover">The System</a> for the operating
+      model behind it.
     </p>
   </section>
 
@@ -91,20 +99,20 @@ const remainingArticles = articles.slice(1, 5)
 
   <section class="mb-16 border-t border-border pt-8">
     <h2 class="mb-4 text-sm font-semibold uppercase tracking-wider text-vc-text-muted">
-      What This Is
+      Go Deeper
     </h2>
-    <p class="text-vc-text-muted">
-      Most AI development content is vendor marketing or surface-level tutorials. This site
-      publishes field notes from a working operation - real costs, honest failures, the operating
-      system that makes multi-agent development reliable. Every pattern here was extracted from
-      production, not a demo.
-    </p>
-    <div class="mt-3 flex gap-4">
-      <a href="/start-here/" class="inline-block text-sm text-accent hover:text-accent-hover">
-        Start here &rarr;
+    <div class="flex flex-col gap-3 text-sm sm:flex-row sm:gap-6">
+      <a href="/the-system/" class="text-accent hover:text-accent-hover">
+        The System &rarr;
+        <span class="block text-vc-text-muted">Beliefs, primitives, session lifecycle</span>
       </a>
-      <a href="/the-system/" class="inline-block text-sm text-vc-text-muted hover:text-vc-text">
-        The system &rarr;
+      <a href="/start-here/" class="text-accent hover:text-accent-hover">
+        Start Here &rarr;
+        <span class="block text-vc-text-muted">Curated paths by audience</span>
+      </a>
+      <a href="/open-problems/" class="text-accent hover:text-accent-hover">
+        Open Problems &rarr;
+        <span class="block text-vc-text-muted">What we haven't solved yet</span>
       </a>
     </div>
   </section>
