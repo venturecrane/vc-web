@@ -12,10 +12,16 @@
 /rss  /feed.xml  301
 
 # Common WordPress page slugs (map to equivalents)
-/about/  /methodology/  301
-/about  /methodology/  301
+/about/  /the-system/  301
+/about  /the-system/  301
 /blog/  /articles/  301
 /blog  /articles/  301
+
+# Renamed pages
+/guide/        /start-here/   301
+/guide         /start-here/   301
+/methodology/  /the-system/   301
+/methodology   /the-system/   301
 
 # WordPress pagination
 /page/*  /  301

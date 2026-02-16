@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro'
+import { getEntry, render } from 'astro:content'
+
+const page = await getEntry('pages', 'open-problems')
+if (!page) throw new Error('Missing open-problems.md in pages collection')
+const { Content } = await render(page)
+
+const formatDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+---
+
+<Base
+  title="Open Problems | Venture Crane"
+  description="Hard problems in AI-native development we haven't solved yet. Current experiments and unsolved challenges."
+>
+  <div class="rounded-lg bg-surface p-6 sm:p-8">
+    <h1 class="mb-8 text-3xl font-bold">{page.data.title}</h1>
+
+    <div class="vc-prose">
+      <Content />
+    </div>
+
+    {
+      page.data.updatedDate && (
+        <div class="mt-8 text-sm text-vc-text-muted">
+          Last updated: {formatDate(page.data.updatedDate)}
+        </div>
+      )
+    }
+  </div>
+</Base>
