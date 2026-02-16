@@ -9,7 +9,7 @@ All written content on this site is the property of Venture Crane (SMDurgan, LLC
 
 ## Code
 
-Code snippets published in articles and build logs are provided as-is for educational purposes. Unless otherwise stated, code snippets are available under the MIT License.
+Code snippets published in articles and ship logs are provided as-is for educational purposes. Unless otherwise stated, code snippets are available under the MIT License.
 
 ## Disclaimer
 

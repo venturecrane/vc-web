@@ -1,9 +1,10 @@
 ---
 import Base from '../layouts/Base.astro'
+import Subscribe from '../components/Subscribe.astro'
 import { getEntry, render } from 'astro:content'
 
-const page = await getEntry('pages', 'about')
-if (!page) throw new Error('Missing about.md in pages collection')
+const page = await getEntry('pages', 'guide')
+if (!page) throw new Error('Missing guide.md in pages collection')
 const { Content } = await render(page)
 
 const formatDate = (d: Date) =>
@@ -11,8 +12,8 @@ const formatDate = (d: Date) =>
 ---
 
 <Base
-  title="How We Work | Venture Crane"
-  description="How one person runs a venture studio with AI agent teams."
+  title="Start Here | Venture Crane"
+  description="Where to start reading about AI-native development operations. Curated paths for solo founders, teams adopting AI tools, and anyone exploring the discipline."
 >
   <div class="rounded-lg bg-surface p-6 sm:p-8">
     <h1 class="mb-8 text-3xl font-bold">{page.data.title}</h1>
@@ -20,6 +21,8 @@ const formatDate = (d: Date) =>
     <div class="vc-prose">
       <Content />
     </div>
+
+    <Subscribe variant="inline" />
 
     {
       page.data.updatedDate && (
@@ -29,4 +32,5 @@ const formatDate = (d: Date) =>
       )
     }
   </div>
+  <script is:inline src="/js/subscribe.js"></script>
 </Base>

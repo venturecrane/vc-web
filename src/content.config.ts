@@ -23,6 +23,10 @@ const logs = defineCollection({
     date: z.coerce.date(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
+    shipped: z.string().optional(),
+    impact: z.string().optional(),
+    surprise: z.string().optional(),
+    nextConstraint: z.string().optional(),
   }),
 })
 

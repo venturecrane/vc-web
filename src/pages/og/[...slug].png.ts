@@ -13,7 +13,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     })),
     ...logs.map((l) => ({
       params: { slug: `log/${l.id}` },
-      props: { title: l.data.title, tags: l.data.tags, type: 'Build Log' as const },
+      props: { title: l.data.title, tags: l.data.tags, type: 'Ship Log' as const },
     })),
   ]
 }
@@ -22,7 +22,7 @@ export const GET: APIRoute = async ({ props }) => {
   const { title, tags, type } = props as {
     title: string
     tags: string[]
-    type: 'Article' | 'Build Log'
+    type: 'Article' | 'Ship Log'
   }
   const png = await generateOgImage({ title, tags, type })
 

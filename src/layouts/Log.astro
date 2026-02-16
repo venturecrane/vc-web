@@ -9,9 +9,13 @@ interface Props {
   title: string
   date: Date
   tags?: string[]
+  shipped?: string
+  impact?: string
+  surprise?: string
+  nextConstraint?: string
 }
 
-const { id, title, date, tags = [] } = Astro.props
+const { id, title, date, tags = [], shipped, impact, surprise, nextConstraint } = Astro.props
 const canonicalURL = new URL(Astro.url.pathname, Astro.site)
 
 const formatDate = (d: Date) =>
@@ -53,6 +57,33 @@ const blogPostingSchema = {
         )
       }
     </header>
+
+    {
+      (shipped || impact || surprise || nextConstraint) && (
+        <div class="mb-8 rounded border border-border bg-surface-raised p-4 text-sm">
+          {shipped && (
+            <div class="mb-2">
+              <strong>Shipped:</strong> {shipped}
+            </div>
+          )}
+          {impact && (
+            <div class="mb-2">
+              <strong>Impact:</strong> {impact}
+            </div>
+          )}
+          {surprise && (
+            <div class="mb-2">
+              <strong>Surprise:</strong> {surprise}
+            </div>
+          )}
+          {nextConstraint && (
+            <div>
+              <strong>Next constraint:</strong> {nextConstraint}
+            </div>
+          )}
+        </div>
+      )
+    }
 
     <div class="vc-prose">
       <slot />

@@ -21,7 +21,7 @@ const interBold = readFileSync(fontPath)
 interface OgImageOptions {
   title: string
   tags: string[]
-  type: 'Article' | 'Build Log'
+  type: 'Article' | 'Ship Log'
 }
 
 export async function generateOgImage(options: OgImageOptions): Promise<Uint8Array> {

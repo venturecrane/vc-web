@@ -16,7 +16,7 @@ interface ScoredItem {
   title: string
   date: Date
   description?: string
-  type: 'Article' | 'Build Log'
+  type: 'Article' | 'Ship Log'
   href: string
   score: number
 }
@@ -35,7 +35,7 @@ const allContent: ScoredItem[] = [
     id: l.id,
     title: l.data.title,
     date: l.data.date,
-    type: 'Build Log' as const,
+    type: 'Ship Log' as const,
     href: `/log/${l.id}/`,
     score: l.data.tags.filter((t) => currentTags.includes(t)).length,
   })),
