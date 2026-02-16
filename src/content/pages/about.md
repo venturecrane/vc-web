@@ -9,9 +9,7 @@ Venture Crane runs on a documented, repeatable operating system. One person, AI 
 
 The human handles judgment: what to build, what to kill, what to publish, what to fix. AI agents - Claude Code sessions running across a fleet of dev machines - handle implementation: writing code, running tests, opening pull requests, deploying.
 
-Every product in the portfolio runs on shared infrastructure. Same framework choices (Astro, Next.js), same backend stack (Cloudflare Workers, D1), same CI/CD pipeline (GitHub Actions). When the infrastructure improves, every product benefits. See the [portfolio](/portfolio/) for the current roster.
-
-This shared model enforces discipline. Agent hours are finite. Products that attract users earn more of them. Products that don't - after a meaningful evaluation window with real distribution - get shut down. The portfolio stays lean because the operating model demands it: one person can't afford to maintain software nobody uses.
+Every product in the portfolio runs on shared infrastructure. Same framework choices (Astro, Next.js), same backend stack (Cloudflare Workers, D1), same CI/CD pipeline (GitHub Actions). When the infrastructure improves, every product benefits. This shared model enforces discipline. Agent hours are finite. Products that attract users earn more of them. Products that don't - after a meaningful evaluation window with real distribution - get shut down. The portfolio stays lean because the operating model demands it: one person can't afford to maintain software nobody uses.
 
 ## Session Lifecycle
 
