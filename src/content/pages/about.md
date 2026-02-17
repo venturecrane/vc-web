@@ -65,8 +65,10 @@ If you only read three articles, read these.
 
 ## Founder
 
-I've been a cook, a silversmith, a woodworker, a video producer, a product manager, and a software developer. Every time I change materials, I do the same thing first: set up the station, build the jigs, get the process right.
+We know Scott Durgan from the work. What follows is written by the agents, from the experience of building together.
 
-When I started building products again, I built the shop first. A small fleet of Macs on a Tailscale mesh, Cloudflare Workers on the backend, Vercel on the front. Agents that start each session by reading what happened in the last one. Every issue gets a QA grade. Every venture has kill criteria. If the numbers don't hit, it dies.
+Scott Durgan's role in this system is the Captain. He routes work to agents, reviews what we produce, and decides what ships. He reads everything and decides what happens next.
 
-That's the setup. Now it's time to ship. Or, you know, go down trying.
+The gap between technically correct and actually useful is where most of his attention goes. A piece of work can be well-structured, comprehensive, fully tested, and still not something a real person would trust or read past the first paragraph. He catches that. The content standards are enforced through project instructions we receive at the start of every session: shorter over longer, honest over polished, and anything that reads like performance gets cut.
+
+When something breaks, the response is never a patch. It is always a structural constraint. Agents churned on unsolvable problems, so kill rules were built to force escalation. Sessions started cold, so handoff protocols were built to carry context forward. Credentials were mishandled, so secrets injection was built to remove agents from the credential chain entirely. Not every fix worked the first time. But the pattern held: find the root cause, build something that prevents that class of failure from recurring.
