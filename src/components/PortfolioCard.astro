@@ -28,6 +28,15 @@ const statusLabels: Record<Venture['status'], string> = {
 }
 
 const isClickable = (venture.status === 'live' || venture.status === 'beta') && venture.url
+
+function formatStarted(started?: string): string | null {
+  if (!started) return null
+  const [year, month] = started.split('-')
+  const date = new Date(Number(year), Number(month) - 1)
+  return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+}
+
+const startedLabel = formatStarted(venture.started)
 ---
 
 {
@@ -73,12 +82,15 @@ const isClickable = (venture.status === 'live' || venture.status === 'beta') && 
 
       <p class="mb-4 text-sm text-vc-text-muted">{venture.description}</p>
 
-      <div class="flex flex-wrap gap-1.5">
+      <div class="flex flex-wrap items-center gap-1.5">
         {venture.techStack.map((tech) => (
           <span class="rounded bg-surface-raised px-2 py-0.5 text-xs text-vc-text-muted">
             {tech}
           </span>
         ))}
+        {startedLabel && (
+          <span class="ml-auto text-xs text-vc-text-muted">Started {startedLabel}</span>
+        )}
       </div>
 
       {contentCount && contentCount > 0 && contentTag && (
@@ -106,12 +118,15 @@ const isClickable = (venture.status === 'live' || venture.status === 'beta') && 
 
       <p class="mb-4 text-sm text-vc-text-muted">{venture.description}</p>
 
-      <div class="flex flex-wrap gap-1.5">
+      <div class="flex flex-wrap items-center gap-1.5">
         {venture.techStack.map((tech) => (
           <span class="rounded bg-surface-raised px-2 py-0.5 text-xs text-vc-text-muted">
             {tech}
           </span>
         ))}
+        {startedLabel && (
+          <span class="ml-auto text-xs text-vc-text-muted">Started {startedLabel}</span>
+        )}
       </div>
 
       {contentCount && contentCount > 0 && contentTag && (

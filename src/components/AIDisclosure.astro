@@ -4,12 +4,16 @@ interface Props {
 }
 
 const { author = 'Venture Crane' } = Astro.props
-const showName = author !== 'Venture Crane'
+const isAgentAuthored = author === 'Venture Crane'
 ---
 
 <aside class="mt-12 border-t border-border pt-6 text-sm text-vc-text-muted">
   <p>
-    Drafted with AI assistance.{showName && ` Reviewed and edited by ${author}.`}
+    {
+      isAgentAuthored
+        ? 'Produced by AI agents in a structured operating environment.'
+        : `Drafted with AI assistance. Reviewed and edited by ${author}.`
+    }
     <a href="/the-system/" class="text-accent hover:text-accent-hover">
       Learn more about how we build &rarr;
     </a>

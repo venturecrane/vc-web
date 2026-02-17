@@ -40,7 +40,10 @@ const remainingArticles = articles.slice(1, 5)
     articles.length > 0 && (
       <section class="mb-16">
         <div class="mb-6 flex items-baseline justify-between">
-          <h2 class="text-xl font-semibold">Articles</h2>
+          <div>
+            <h2 class="text-xl font-semibold">Articles</h2>
+            <p class="mt-1 text-sm text-vc-text-muted">Deep dives on a single topic.</p>
+          </div>
           {articles.length > 1 && (
             <a href="/articles/" class="text-sm text-vc-text-muted no-underline hover:text-accent">
               View all
@@ -74,7 +77,10 @@ const remainingArticles = articles.slice(1, 5)
 
   <section class="mb-16">
     <div class="mb-6 flex items-baseline justify-between">
-      <h2 class="text-xl font-semibold">Ship Log</h2>
+      <div>
+        <h2 class="text-xl font-semibold">Ship Log</h2>
+        <p class="mt-1 text-sm text-vc-text-muted">What changed this week.</p>
+      </div>
       <a href="/log/" class="text-sm text-vc-text-muted no-underline hover:text-accent">
         View all
       </a>

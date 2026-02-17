@@ -6,6 +6,7 @@ export interface Venture {
   techStack: string[]
   url?: string
   contentTag?: string
+  started?: string
 }
 
 export const lastReviewed = '2026-02-15'
@@ -19,6 +20,7 @@ export const ventures: Venture[] = [
     status: 'building',
     techStack: ['Next.js', 'Cloudflare Workers', 'D1'],
     contentTag: 'kid-expenses',
+    started: '2026-01',
   },
   {
     name: 'Durgan Field Guide',
@@ -28,6 +30,7 @@ export const ventures: Venture[] = [
     status: 'building',
     techStack: ['Astro', 'Cloudflare Workers', 'D1'],
     contentTag: 'durgan-field-guide',
+    started: '2025-12',
   },
   {
     name: 'Draft Crane',
@@ -37,6 +40,7 @@ export const ventures: Venture[] = [
     status: 'building',
     techStack: ['Astro', 'Cloudflare Workers'],
     contentTag: 'draft-crane',
+    started: '2026-02',
   },
   {
     name: 'Silicon Crane',
@@ -46,6 +50,7 @@ export const ventures: Venture[] = [
     status: 'building',
     techStack: ['Cloudflare Workers', 'D1'],
     contentTag: 'silicon-crane',
+    started: '2026-01',
   },
 ]
 
