@@ -1,6 +1,6 @@
 ---
 title: 'Decomposing agent instructions into a routing table'
-date: 2026-02-16
+date: 2026-02-16T10:00:00
 tags: ['agent-architecture', 'infrastructure']
 draft: false
 ---
