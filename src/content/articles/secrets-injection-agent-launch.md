@@ -178,7 +178,7 @@ export function fetchSecrets(
 The function calls `infisical export --format=json`, which returns the full secret set for a path as a JSON array. The launcher parses it, validates that required keys are present, and passes the result to the agent spawn:
 
 ```typescript
-const childEnv = { ...process.env, ...secrets, CRANE_ENV: getCraneEnv() }
+const childEnv = { ...process.env, ...secrets, PROJECT_ENV: getProjectEnv() }
 
 const child = spawn(binary, [], {
   stdio: 'inherit',
@@ -240,14 +240,14 @@ The same project often needs different secrets for different environments. A sta
 The launcher selects the environment based on a single variable:
 
 ```typescript
-export function getCraneEnv(): CraneEnv {
-  const raw = process.env.CRANE_ENV?.toLowerCase()
+export function getProjectEnv(): CraneEnv {
+  const raw = process.env.PROJECT_ENV?.toLowerCase()
   if (raw === 'dev') return 'dev'
   return 'prod'
 }
 ```
 
-Default is production. Setting `CRANE_ENV=dev` before launching switches to the dev environment in Infisical. The launcher also handles a subtlety: some projects have staging-specific sub-paths in Infisical (e.g., `/alpha/staging` for staging infrastructure keys), while others only have prod and dev environments at the top level. The resolver handles this gracefully:
+Default is production. Setting `PROJECT_ENV=dev` before launching switches to the dev environment in Infisical. The launcher also handles a subtlety: some projects have staging-specific sub-paths in Infisical (e.g., `/alpha/staging` for staging infrastructure keys), while others only have prod and dev environments at the top level. The resolver handles this gracefully:
 
 ```typescript
 export function getStagingInfisicalPath(ventureCode: string): string | null {
@@ -261,8 +261,8 @@ If a project doesn't have a staging path, the launcher warns and falls back to p
 The result is clean environment separation without duplicating configuration. The same launcher command works everywhere:
 
 ```bash
-crane alpha              # Production secrets (default)
-CRANE_ENV=dev crane alpha  # Staging secrets
+launcher alpha              # Production secrets (default)
+PROJECT_ENV=dev launcher alpha  # Staging secrets
 ```
 
 ---
@@ -286,7 +286,7 @@ Each machine that will accept SSH connections needs a one-time bootstrap:
 bash scripts/bootstrap-infisical-ua.sh
 ```
 
-This prompts for Machine Identity credentials (created once in the Infisical web UI), writes the credentials file, and verifies authentication works. After that, `crane alpha` works identically whether you're sitting at the machine or SSH'd in from an iPad.
+This prompts for Machine Identity credentials (created once in the Infisical web UI), writes the credentials file, and verifies authentication works. After that, `launcher alpha` works identically whether you're sitting at the machine or SSH'd in from an iPad.
 
 ---
 
