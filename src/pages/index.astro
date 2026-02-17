@@ -1,45 +1,21 @@
 ---
 import Base from '../layouts/Base.astro'
+import FeaturedArticle from '../components/FeaturedArticle.astro'
 import ArticleCard from '../components/ArticleCard.astro'
 import LogEntry from '../components/LogEntry.astro'
 import { getCollection } from 'astro:content'
 
-const thesisSlugs = [
-  'why-development-lab',
-  'what-ai-agents-actually-cost',
-  'kill-discipline-ai-agents',
-]
-const operationsSlugs = [
-  'multi-agent-team-protocols',
-  'sessions-heartbeats-handoffs',
-  'agent-context-management-system',
-]
-const curatedSlugs = new Set([...thesisSlugs, ...operationsSlugs])
-
-const allArticles = (await getCollection('articles')).filter((a) => !a.data.draft)
-
-// Build-time assertions: fail loudly if curated articles are missing
-const missingThesis = thesisSlugs.filter((s) => !allArticles.find((a) => a.id === s))
-if (missingThesis.length) {
-  throw new Error(`Homepage: missing thesis articles: ${missingThesis.join(', ')}`)
-}
-const missingOps = operationsSlugs.filter((s) => !allArticles.find((a) => a.id === s))
-if (missingOps.length) {
-  throw new Error(`Homepage: missing operations articles: ${missingOps.join(', ')}`)
-}
-
-const thesisArticles = thesisSlugs.map((slug) => allArticles.find((a) => a.id === slug)!)
-
-const operationsArticles = operationsSlugs.map((slug) => allArticles.find((a) => a.id === slug)!)
-
-const latestArticle = allArticles
-  .filter((a) => !curatedSlugs.has(a.id))
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())[0]
+const articles = (await getCollection('articles'))
+  .filter((a) => !a.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
 
 const logs = (await getCollection('logs'))
   .filter((l) => !l.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 3)
+  .slice(0, 5)
+
+const leadArticle = articles[0]
+const remainingArticles = articles.slice(1, 5)
 ---
 
 <Base title="Venture Crane">
@@ -48,8 +24,8 @@ const logs = (await getCollection('logs'))
       Field Notes from Running AI Agent Teams in Production
     </h1>
     <p class="mt-2 text-vc-text-muted">
-      Venture Crane is a development lab that ships products with AI agent teams across multiple
-      ventures simultaneously. These are the systems, costs, and failures from that operation.
+      One studio, AI agent teams, real costs, honest failures. Most AI development content is vendor
+      marketing or tutorials. This is what it actually looks like to ship products with agents.
     </p>
     <p class="mt-3 text-sm text-vc-text-muted">
       New here?
@@ -60,61 +36,52 @@ const logs = (await getCollection('logs'))
     </p>
   </section>
 
-  <section class="mb-16">
-    <h2 class="mb-6 text-xl font-semibold">The Thesis</h2>
-    <div class="flex flex-col gap-4">
-      {
-        thesisArticles.map((article) => (
-          <ArticleCard
-            title={article.data.title}
-            date={article.data.date}
-            description={article.data.description}
-            readingTime={Math.ceil(article.body!.split(/\s+/).length / 225)}
-            slug={article.id}
-            tags={article.data.tags}
-          />
-        ))
-      }
-    </div>
-  </section>
-
-  <section class="mb-16">
-    <h2 class="mb-6 text-xl font-semibold">How It Works</h2>
-    <div class="flex flex-col gap-4">
-      {
-        operationsArticles.map((article) => (
-          <ArticleCard
-            title={article.data.title}
-            date={article.data.date}
-            description={article.data.description}
-            readingTime={Math.ceil(article.body!.split(/\s+/).length / 225)}
-            slug={article.id}
-            tags={article.data.tags}
-          />
-        ))
-      }
-    </div>
-  </section>
+  {
+    articles.length > 0 && (
+      <section class="mb-16">
+        <div class="mb-6 flex items-baseline justify-between">
+          <h2 class="text-xl font-semibold">Articles</h2>
+          {articles.length > 1 && (
+            <a href="/articles/" class="text-sm text-vc-text-muted no-underline hover:text-accent">
+              View all
+            </a>
+          )}
+        </div>
+        <FeaturedArticle
+          title={leadArticle.data.title}
+          date={leadArticle.data.date}
+          description={leadArticle.data.description}
+          readingTime={Math.ceil(leadArticle.body!.split(/\s+/).length / 225)}
+          slug={leadArticle.id}
+        />
+        {remainingArticles.length > 0 && (
+          <div class="mt-4 flex flex-col gap-4">
+            {remainingArticles.map((article) => (
+              <ArticleCard
+                title={article.data.title}
+                date={article.data.date}
+                description={article.data.description}
+                readingTime={Math.ceil(article.body!.split(/\s+/).length / 225)}
+                slug={article.id}
+                tags={article.data.tags}
+              />
+            ))}
+          </div>
+        )}
+      </section>
+    )
+  }
 
   <section class="mb-16">
     <div class="mb-6 flex items-baseline justify-between">
-      <h2 class="text-xl font-semibold">Latest</h2>
+      <h2 class="text-xl font-semibold">Ship Log</h2>
+      <a href="/log/" class="text-sm text-vc-text-muted no-underline hover:text-accent">
+        View all
+      </a>
     </div>
     {
-      latestArticle && (
-        <ArticleCard
-          title={latestArticle.data.title}
-          date={latestArticle.data.date}
-          description={latestArticle.data.description}
-          readingTime={Math.ceil(latestArticle.body!.split(/\s+/).length / 225)}
-          slug={latestArticle.id}
-          tags={latestArticle.data.tags}
-        />
-      )
-    }
-    {
-      logs.length > 0 && (
-        <div class="mt-4 flex flex-col gap-4">
+      logs.length > 0 ? (
+        <div class="flex flex-col gap-4">
           {logs.map((log) => (
             <LogEntry
               title={log.data.title}
@@ -124,16 +91,10 @@ const logs = (await getCollection('logs'))
             />
           ))}
         </div>
+      ) : (
+        <p class="text-vc-text-muted">Ship log entries coming soon.</p>
       )
     }
-    <div class="mt-4 flex gap-6 text-sm">
-      <a href="/articles/" class="text-vc-text-muted no-underline hover:text-accent">
-        All articles &rarr;
-      </a>
-      <a href="/log/" class="text-vc-text-muted no-underline hover:text-accent">
-        All log entries &rarr;
-      </a>
-    </div>
   </section>
 
   <section class="mb-16 border-t border-border pt-8">
@@ -151,9 +112,7 @@ const logs = (await getCollection('logs'))
       </a>
       <a href="/open-problems/" class="text-accent hover:text-accent-hover">
         Open Problems &rarr;
-        <span class="block text-vc-text-muted"
-          >What we haven't solved yet - and how to work on them with us</span
-        >
+        <span class="block text-vc-text-muted">What we haven't solved yet</span>
       </a>
     </div>
   </section>
