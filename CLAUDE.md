@@ -6,6 +6,19 @@ This file provides guidance for Claude Code agents working in this repository.
 
 Venture Crane marketing website (venturecrane.com). Static site built with Astro 5, Tailwind CSS, deployed to Cloudflare Pages. Zero JavaScript. Dark theme.
 
+## Session Start
+
+This repo does not currently have Crane MCP integration. Enterprise rules apply manually. See crane-console for the full module system.
+
+## Enterprise Rules
+
+- **All changes through PRs.** Never push directly to main. Branch, PR, CI, QA, merge.
+- **Never echo secret values.** Transcripts persist in ~/.claude/ and are sent to API providers. Pipe from Infisical, never inline.
+- **Verify secret VALUES, not just key existence.** Agents have stored descriptions as values before.
+- **Never auto-save to VCMS** without explicit Captain approval.
+- **Scope discipline.** Discover additional work mid-task - finish current scope, file a new issue.
+- **Escalation triggers.** Credential not found in 2 min, same error 3 times, blocked >30 min - stop and escalate.
+
 ## Build Commands
 
 ```bash
