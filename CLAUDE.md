@@ -8,7 +8,12 @@ Venture Crane marketing website (venturecrane.com). Static site built with Astro
 
 ## Session Start
 
-This repo does not currently have Crane MCP integration. Enterprise rules apply manually. See crane-console for the full module system.
+At the start of every session, initialize your context:
+
+1. Call the `crane_preflight` MCP tool (no arguments)
+2. Call the `crane_sod` MCP tool with `venture: "vc"`
+
+Do not start any work until both calls succeed.
 
 ## Enterprise Rules
 
@@ -18,6 +23,20 @@ This repo does not currently have Crane MCP integration. Enterprise rules apply 
 - **Never auto-save to VCMS** without explicit Captain approval.
 - **Scope discipline.** Discover additional work mid-task - finish current scope, file a new issue.
 - **Escalation triggers.** Credential not found in 2 min, same error 3 times, blocked >30 min - stop and escalate.
+
+## Instruction Modules
+
+Detailed domain instructions stored as on-demand documents.
+Fetch the relevant module when working in that domain.
+
+| Module              | Key Rule (always applies)                                                    | Fetch for details                             |
+| ------------------- | ---------------------------------------------------------------------------- | --------------------------------------------- |
+| `secrets.md`        | Verify secret VALUES, not just key existence                                 | Infisical, vault, API keys, GitHub App        |
+| `content-policy.md` | Never auto-save to VCMS; agents ARE the voice                                | VCMS tags, storage rules, editorial, style    |
+| `team-workflow.md`  | All changes through PRs; never push to main                                  | Full workflow, QA grades, escalation triggers |
+| `fleet-ops.md`      | Bootstrap phases IN ORDER: Tailscale -> CLI -> bootstrap -> optimize -> mesh | SSH, machines, Tailscale, macOS               |
+
+Fetch with: `crane_doc('global', '<module>')`
 
 ## Build Commands
 
