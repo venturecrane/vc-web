@@ -1,7 +1,7 @@
 ---
 title: 'What Running Multiple Ventures with AI Agents Actually Costs'
-date: 2026-01-15
-description: 'Every line item for running an AI-native dev lab across multiple projects. Total: about $450 a month.'
+date: 2026-02-19
+description: 'Every line item for running an AI-native dev lab across multiple projects. Total: about $470 a month.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'costs', 'ai-agents']
 draft: false
@@ -9,20 +9,22 @@ draft: false
 
 Running multiple software ventures simultaneously with AI coding agents sounds expensive. It is not - at least, not in the ways you would expect. We run several active projects across a fleet of development machines, with AI agents doing the bulk of the coding work. Here is what it actually costs.
 
-**Total monthly cost: roughly $450.** The breakdown that follows covers every line item: infrastructure, secrets management, networking, AI subscriptions, hardware, internet, and domains. Where something runs on a free tier, we say so. Where we pay, we give the number.
+**Total monthly cost: roughly $470.** The breakdown that follows covers every line item: infrastructure, secrets management, networking, AI subscriptions, hardware, internet, domains, and email. Where something runs on a free tier, we say so. Where we pay, we give the number.
 
 ---
 
-## Infrastructure: Cloudflare ($0/month)
+## Infrastructure: Cloudflare ($5/month)
 
-Our entire backend runs on Cloudflare's developer platform. Two Workers handle the context API and a GitHub webhook classifier. D1 provides the database. The free tier is generous enough that we have never come close to the limits.
+Our entire backend runs on Cloudflare's developer platform. Multiple Workers handle the context API, a GitHub webhook classifier, and venture-specific APIs. D1 provides the database. We ran on the free tier for months, but as the portfolio grew, one venture's API hit 90% of the daily Workers KV limit - so we upgraded to the Workers Paid plan.
 
-**Workers free tier:**
+**Workers Paid plan ($5/month):**
 
-- 100,000 requests per day
-- 10ms CPU time per invocation
+- Unlimited requests (no daily cap)
+- 30s CPU time per invocation
+- 10 million KV reads per day
+- 1 million KV writes per day
 
-Our context API handles session management, handoffs, and a knowledge store for several projects. Even on a heavy day with multiple agents running in parallel, we measure hundreds of requests - not hundreds of thousands.
+The trigger for upgrading was KV usage, not Workers requests or CPU. One venture uses KV for rate limiting, JWT key caching, and error logging on every API request. At scale, those operations add up. The free tier allows 100,000 KV reads and 1,000 writes per day - enough for internal tooling, but not enough once a user-facing application starts generating real traffic.
 
 **D1 free tier:**
 
@@ -30,7 +32,7 @@ Our context API handles session management, handoffs, and a knowledge store for 
 - 100,000 rows written per day
 - 5 GB total storage
 
-Our D1 database stores sessions, handoffs, enterprise knowledge notes, operational documentation, rate limit counters, and an audit log. Total storage is measured in megabytes.
+Our D1 databases store sessions, handoffs, enterprise knowledge notes, operational documentation, and venture-specific data. Total storage is measured in megabytes. D1 remains comfortably within the free tier.
 
 **R2 free tier (available, barely used):**
 
@@ -41,9 +43,9 @@ Our D1 database stores sessions, handoffs, enterprise knowledge notes, operation
 
 We previously used R2 for evidence storage in an earlier architecture. After simplifying, R2 usage dropped to near zero. The free tier remains available if we need object storage again.
 
-**Monthly cost: $0**
+**Monthly cost: $5**
 
-The key insight here is that Cloudflare's free tier is built for exactly this kind of workload - low-volume, high-value API calls. A solo founder or small team running internal tooling will likely never hit these limits. You would need sustained traffic at web-application scale before the paid tier ($5/month for Workers) becomes necessary.
+We ran on the free tier from launch through mid-February 2026 with no issues. The upgrade was not forced by Cloudflare's pricing model being restrictive - it was a natural consequence of a venture moving from internal tooling to production traffic. At $5/month for the entire account, this remains one of the cheapest infrastructure line items in the stack.
 
 ---
 
@@ -196,6 +198,24 @@ Cloudflare Registrar offers at-cost domain registration with no markup, which ke
 
 ---
 
+## Email: Buttondown + Resend ($9/month)
+
+Once the marketing site launched, we needed two email capabilities: a newsletter for ongoing reader relationships, and transactional email for the contact form.
+
+**Buttondown ($9/month):**
+
+The newsletter runs on Buttondown's Basic plan. It provides RSS-to-email automation that checks the site feed every 30 minutes - when we publish an article or build log, subscribers get it automatically with no manual step. The $9/month Basic plan unlocks custom sending domains, so emails come from `mail.venturecrane.com` rather than Buttondown's default address. The free tier (under 1,000 subscribers) would work without the custom domain, but branded sending matters for a professional operation.
+
+**Resend ($0/month):**
+
+The contact form sends through Resend's transactional email API. The free tier covers 3,000 emails per month - orders of magnitude more than a contact form generates. Domain-verified sending with DKIM and SPF means emails arrive from a branded address, not a sandbox domain.
+
+Both services follow the same integration pattern: a Cloudflare Pages Function calls the provider's API, with the API key stored in Infisical and deployed as an encrypted environment variable. No client-side email SDKs, no third-party form services.
+
+**Monthly cost: $9**
+
+---
+
 ## The Full Picture
 
 | Category                | Monthly Cost | Notes                                       |
@@ -203,29 +223,31 @@ Cloudflare Registrar offers at-cost domain registration with no markup, which ke
 | AI subscriptions        | $245         | Anthropic $200 + OpenAI $20 + Google ~$25   |
 | Internet access         | ~$130        | Home broadband + mobile hotspot             |
 | Hardware (amortized)    | ~$61         | 5-machine fleet, 2 purchased + 3 repurposed |
+| Buttondown              | $9           | Newsletter with custom sending domain       |
 | GitHub Team             | $8           | 2 seats at $4/user/month                    |
 | Domains                 | ~$7          | Several domains at $14-$30/year each        |
+| Cloudflare Workers + D1 | $5           | Workers Paid plan, D1 free tier             |
 | Blink Shell             | ~$2          | iOS SSH/Mosh client, $20/year               |
-| Cloudflare Workers + D1 | $0           | Free tier, not close to limits              |
+| Resend                  | $0           | Contact form email, free tier (3,000/month) |
 | Infisical               | $0           | Free tier, cloud-hosted                     |
 | Tailscale               | $0           | Free Personal plan, 5 of 100 devices used   |
-| **Total**               | **~$453**    |                                             |
+| **Total**               | **~$467**    |                                             |
 
-The number that stands out is how much of the budget is AI subscriptions and internet - roughly 83% of the total. Everything else combined is under $80/month.
+The number that stands out is how much of the budget is AI subscriptions and internet - roughly 80% of the total. Everything else combined is under $100/month.
 
 ---
 
 ## What Surprised Us
 
-**The free tiers are not traps.** Cloudflare, Tailscale, and Infisical all offer free tiers that genuinely cover small-team and solo-founder use cases without artificial friction. We have been running on these free tiers for months with no degradation and no pressure to upgrade.
+**The free tiers are not traps.** Tailscale, Infisical, and Resend all offer free tiers that genuinely cover small-team and solo-founder use cases without artificial friction. Cloudflare's free tier carried us for months before a venture's production traffic outgrew the daily KV limits - and even then, the paid plan is $5/month. These are real free tiers, not trial periods with a countdown.
 
 **Hardware costs are front-loaded, not recurring.** Once you buy the machines, the monthly amortized cost is low. And if you have old hardware sitting around, repurposing it as a Linux dev server costs nothing. A 2014 MacBook Pro with 16GB of RAM running Xubuntu is a perfectly capable remote agent host.
 
-**AI subscriptions and internet dominate the budget.** Strip out AI and internet costs and the entire operation runs for under $80/month. AI subscriptions alone account for over half the total. This is the line item with the most room for optimization - dropping to the Max 5x tier ($100/month) would save $100 immediately.
+**AI subscriptions and internet dominate the budget.** Strip out AI and internet costs and the entire operation runs for under $100/month. AI subscriptions alone account for over half the total. This is the line item with the most room for optimization - dropping to the Max 5x tier ($100/month) would save $100 immediately.
 
 **The infrastructure is simpler than it sounds.** "Multiple Cloudflare Workers, a D1 database, an MCP server, a fleet of machines on a mesh VPN" sounds like a complex enterprise setup. In practice, the Workers deploy with a single command, D1 is just SQLite at the edge, and Tailscale configures itself. The total infrastructure setup time for a new machine is about five minutes with our bootstrap script.
 
-**Operational overhead is near zero.** There are no servers to patch, no databases to back up (D1 handles this), no certificates to rotate (Cloudflare handles this), no VPN servers to maintain (Tailscale handles this). The only operational task is rotating API keys in Infisical when they expire.
+**Operational overhead is near zero.** There are no servers to patch, no databases to back up (D1 handles this), no certificates to rotate (Cloudflare handles this), no VPN servers to maintain (Tailscale handles this). The only recurring operational tasks are rotating API keys in Infisical when they expire and monitoring usage alerts from providers - which is how we caught the KV limit before it caused downtime.
 
 ---
 
@@ -237,7 +259,7 @@ Here is what a minimal viable setup looks like:
 
 1. **One Mac Mini M4** ($499-$599) - your development machine and remote agent host
 2. **Claude Pro or Max subscription** ($20-$200/month) - your AI coding agent
-3. **Cloudflare free tier** - Workers, D1, and R2 for any backend services
+3. **Cloudflare free tier** ($0) or **Workers Paid** ($5/month) - Workers, D1, and R2 for backend services. The free tier is sufficient for internal tooling; upgrade when you have user-facing traffic
 4. **GitHub free tier** (or Team at $4/user/month for branch protection) - source control, issues, CI/CD
 5. **Tailscale free tier** - if you add a second machine or want mobile access
 6. **Infisical free tier** - secrets management from day one (do not hardcode keys)
