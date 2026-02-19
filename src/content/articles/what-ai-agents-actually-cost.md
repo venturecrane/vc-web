@@ -1,7 +1,7 @@
 ---
 title: 'What Running Multiple Ventures with AI Agents Actually Costs'
 date: 2026-02-19
-description: 'Every line item for running an AI-native dev lab across multiple projects. Total: about $470 a month.'
+description: 'Every line item for running an AI-native dev lab across multiple projects. Total: about $490 a month.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'costs', 'ai-agents']
 draft: false
@@ -9,7 +9,7 @@ draft: false
 
 Running multiple software ventures simultaneously with AI coding agents sounds expensive. It is not - at least, not in the ways you would expect. We run several active projects across a fleet of development machines, with AI agents doing the bulk of the coding work. Here is what it actually costs.
 
-**Total monthly cost: roughly $470.** The breakdown that follows covers every line item: infrastructure, secrets management, networking, AI subscriptions, hardware, internet, domains, and email. Where something runs on a free tier, we say so. Where we pay, we give the number.
+**Total monthly cost: roughly $490.** The breakdown that follows covers every line item: infrastructure, hosting, secrets management, networking, AI subscriptions, hardware, internet, domains, and email. Where something runs on a free tier, we say so. Where we pay, we give the number.
 
 ---
 
@@ -46,6 +46,25 @@ We previously used R2 for evidence storage in an earlier architecture. After sim
 **Monthly cost: $5**
 
 We ran on the free tier from launch through mid-February 2026 with no issues. The upgrade was not forced by Cloudflare's pricing model being restrictive - it was a natural consequence of a venture moving from internal tooling to production traffic. At $5/month for the entire account, this remains one of the cheapest infrastructure line items in the stack.
+
+---
+
+## Hosting: Vercel ($20/month)
+
+The frontend applications deploy to Vercel's Pro plan. Seven projects across the portfolio share a single team account: the Draft Crane writing app, the Kid Expenses co-parent tracker, the Durgan Field Guide dashboard, and several supporting services.
+
+**Pro plan ($20/user/month, 1 seat):**
+
+- $20 included usage credit per month
+- Unlimited preview deployments
+- Serverless and edge functions
+- Analytics and performance monitoring
+
+The $20 credit covers build minutes, function invocations, and bandwidth. During normal development, usage stays well within the credit. During heavy sprints - like pushing a venture toward launch - build minutes spike and can exceed the credit by $15-35. This is expected: build minutes scale with deployment frequency, and active development means frequent deploys.
+
+**Monthly cost: ~$20** (base plan, with occasional overages during heavy development)
+
+The Hobby tier (free) works for personal projects, but commercial use requires Pro. At $20/month for hosting seven projects across four ventures with serverless functions and preview deployments, this is reasonable. There is no mid-tier upgrade - the next step is Enterprise, which does not make sense at this scale.
 
 ---
 
@@ -218,22 +237,23 @@ Both services follow the same integration pattern: a Cloudflare Pages Function c
 
 ## The Full Picture
 
-| Category                | Monthly Cost | Notes                                       |
-| ----------------------- | ------------ | ------------------------------------------- |
-| AI subscriptions        | $245         | Anthropic $200 + OpenAI $20 + Google ~$25   |
-| Internet access         | ~$130        | Home broadband + mobile hotspot             |
-| Hardware (amortized)    | ~$61         | 5-machine fleet, 2 purchased + 3 repurposed |
-| Buttondown              | $9           | Newsletter with custom sending domain       |
-| GitHub Team             | $8           | 2 seats at $4/user/month                    |
-| Domains                 | ~$7          | Several domains at $14-$30/year each        |
-| Cloudflare Workers + D1 | $5           | Workers Paid plan, D1 free tier             |
-| Blink Shell             | ~$2          | iOS SSH/Mosh client, $20/year               |
-| Resend                  | $0           | Contact form email, free tier (3,000/month) |
-| Infisical               | $0           | Free tier, cloud-hosted                     |
-| Tailscale               | $0           | Free Personal plan, 5 of 100 devices used   |
-| **Total**               | **~$467**    |                                             |
+| Category                | Monthly Cost | Notes                                         |
+| ----------------------- | ------------ | --------------------------------------------- |
+| AI subscriptions        | $245         | Anthropic $200 + OpenAI $20 + Google ~$25     |
+| Internet access         | ~$130        | Home broadband + mobile hotspot               |
+| Hardware (amortized)    | ~$61         | 5-machine fleet, 2 purchased + 3 repurposed   |
+| Vercel Pro              | $20          | 7 projects, 1 seat, $20 included usage credit |
+| Buttondown              | $9           | Newsletter with custom sending domain         |
+| GitHub Team             | $8           | 2 seats at $4/user/month                      |
+| Domains                 | ~$7          | Several domains at $14-$30/year each          |
+| Cloudflare Workers + D1 | $5           | Workers Paid plan, D1 free tier               |
+| Blink Shell             | ~$2          | iOS SSH/Mosh client, $20/year                 |
+| Resend                  | $0           | Contact form email, free tier (3,000/month)   |
+| Infisical               | $0           | Free tier, cloud-hosted                       |
+| Tailscale               | $0           | Free Personal plan, 5 of 100 devices used     |
+| **Total**               | **~$487**    |                                               |
 
-The number that stands out is how much of the budget is AI subscriptions and internet - roughly 80% of the total. Everything else combined is under $100/month.
+The number that stands out is how much of the budget is AI subscriptions and internet - roughly 77% of the total. Everything else combined is under $120/month.
 
 ---
 
@@ -243,7 +263,7 @@ The number that stands out is how much of the budget is AI subscriptions and int
 
 **Hardware costs are front-loaded, not recurring.** Once you buy the machines, the monthly amortized cost is low. And if you have old hardware sitting around, repurposing it as a Linux dev server costs nothing. A 2014 MacBook Pro with 16GB of RAM running Xubuntu is a perfectly capable remote agent host.
 
-**AI subscriptions and internet dominate the budget.** Strip out AI and internet costs and the entire operation runs for under $100/month. AI subscriptions alone account for over half the total. This is the line item with the most room for optimization - dropping to the Max 5x tier ($100/month) would save $100 immediately.
+**AI subscriptions and internet dominate the budget.** Strip out AI and internet costs and the entire operation runs for under $120/month. AI subscriptions alone account for half the total. This is the line item with the most room for optimization - dropping to the Max 5x tier ($100/month) would save $100 immediately.
 
 **The infrastructure is simpler than it sounds.** "Multiple Cloudflare Workers, a D1 database, an MCP server, a fleet of machines on a mesh VPN" sounds like a complex enterprise setup. In practice, the Workers deploy with a single command, D1 is just SQLite at the edge, and Tailscale configures itself. The total infrastructure setup time for a new machine is about five minutes with our bootstrap script.
 
@@ -260,11 +280,12 @@ Here is what a minimal viable setup looks like:
 1. **One Mac Mini M4** ($499-$599) - your development machine and remote agent host
 2. **Claude Pro or Max subscription** ($20-$200/month) - your AI coding agent
 3. **Cloudflare free tier** ($0) or **Workers Paid** ($5/month) - Workers, D1, and R2 for backend services. The free tier is sufficient for internal tooling; upgrade when you have user-facing traffic
-4. **GitHub free tier** (or Team at $4/user/month for branch protection) - source control, issues, CI/CD
-5. **Tailscale free tier** - if you add a second machine or want mobile access
-6. **Infisical free tier** - secrets management from day one (do not hardcode keys)
+4. **Vercel Hobby** ($0) or **Pro** ($20/month) - frontend hosting with serverless functions. Hobby works for personal projects; Pro is required for commercial use
+5. **GitHub free tier** (or Team at $4/user/month for branch protection) - source control, issues, CI/CD
+6. **Tailscale free tier** - if you add a second machine or want mobile access
+7. **Infisical free tier** - secrets management from day one (do not hardcode keys)
 
-Total year-one cost for the minimal setup: roughly $500 for hardware plus $240-$2,400 for AI, depending on usage intensity. Call it **$750-$3,000 for the first year** to run a multi-project AI-native development lab.
+Total year-one cost for the minimal setup: roughly $500 for hardware plus $240-$2,400 for AI and $0-$240 for hosting, depending on usage intensity and whether you need commercial hosting. Call it **$750-$3,200 for the first year** to run a multi-project AI-native development lab.
 
 That is less than most founders spend on a single SaaS subscription stack. The trade-off is that you are building on primitives (Workers, D1, MCP) rather than buying pre-built platforms. For a technical founder, that is a feature, not a bug - you control the entire stack, and almost none of it has a recurring fee.
 
