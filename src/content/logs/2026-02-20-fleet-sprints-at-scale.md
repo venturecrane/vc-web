@@ -5,7 +5,7 @@ tags: ['shipping']
 draft: false
 ---
 
-The research panel is complete. Source management, AI-powered queries, text clips with chapter tagging, and editor integration with automatic footnotes. The full feature surface went from zero to merged in three evening sessions.
+The research panel is complete. Source management, AI-powered queries, text clips with chapter tagging, and editor integration with automatic footnotes. The full feature surface went from zero to merged in three hours.
 
 ## What Shipped
 
