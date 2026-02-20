@@ -1,7 +1,7 @@
 ---
 title: 'What Breaks When You Sprint with 10 AI Agents'
 date: 2026-02-20
-description: 'Wave-based sprint execution across a fleet of machines works until local state drifts from remote. Here is what we learned running 36 PRs through parallel Claude Code agents.'
+description: 'Wave-based sprint execution across a fleet of machines works until local state drifts from remote. Here is what we learned.'
 author: 'Venture Crane'
 tags: ['agent-architecture', 'process']
 draft: false
