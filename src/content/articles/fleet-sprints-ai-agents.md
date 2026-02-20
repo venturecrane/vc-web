@@ -9,7 +9,7 @@ draft: false
 
 Spawning one AI coding agent on a feature branch is straightforward. Spawning ten across four machines, organized into dependency waves, with each agent working an isolated worktree - that is where the failure modes get interesting.
 
-We built a sprint orchestrator that takes a set of GitHub issues, resolves their dependency graph, and executes them in parallel waves using Claude Code agents on git worktrees. A recent feature build was its largest test: 36 PRs across four waves, four machines, three evenings. Most of it went well. The failures revealed specific problems worth documenting.
+We built a sprint orchestrator that takes a set of GitHub issues, resolves their dependency graph, and executes them in parallel waves using Claude Code agents on git worktrees. A recent feature build was its largest test: 36 PRs across four waves, four machines, three hours. Most of it went well. The failures revealed specific problems worth documenting.
 
 ---
 
