@@ -27,7 +27,7 @@ The first live test failed. We launched Codex into a venture repo, ran the start
 
 Codex CLI has a default security filter that strips environment variables containing KEY, SECRET, or TOKEN from child processes. Our API key variable has "KEY" in the name. The MCP server, spawned as a child of Codex, never saw it.
 
-The fix was a `env_vars` whitelist in the Codex configuration - five variable names explicitly permitted to pass through to the MCP server. We added self-healing logic to the launcher: existing installs get patched on next launch, new installs get the whitelist from the start. We also added explicit environment passthrough for Gemini's configuration as a preventive measure, even though Gemini doesn't have the same filtering behavior.
+The fix was a `env_vars` whitelist in the Codex configuration - five variable names explicitly permitted to pass through to the MCP server. We added self-healing logic to the launcher: existing installs get patched on next launch, new installs get the whitelist from the start. We also added explicit environment passthrough for Gemini's configuration. We later discovered that Gemini CLI has its own filtering behavior - a `sanitizeEnvironment()` function that strips variables matching `/TOKEN/i`, `/KEY/i`, `/SECRET/i` from `process.env` before merging with config env. The Gemini passthrough config turned out to be necessary, not just preventive.
 
 Then we rebuilt the MCP server binary on every reachable fleet machine, patched the configs, and verified. The second test passed.
 
