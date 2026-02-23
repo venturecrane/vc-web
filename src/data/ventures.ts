@@ -9,7 +9,7 @@ export interface Venture {
   started?: string
 }
 
-export const lastReviewed = '2026-02-15'
+export const lastReviewed = '2026-02-23'
 
 export const ventures: Venture[] = [
   {
@@ -36,9 +36,9 @@ export const ventures: Venture[] = [
     name: 'Draft Crane',
     slug: 'dc',
     description:
-      'Consultants, coaches, and subject-matter experts want to write a book but stay stuck in scattered docs and half-finished drafts. Draft Crane is a focused writing environment with AI assistance that turns expertise into publishable nonfiction.',
+      'Draft Crane is a structured writing environment for consultants, coaches, and subject-matter experts who want to turn their expertise into a publishable nonfiction book. AI-assisted outlining, drafting, and revision with a workflow designed around how nonfiction gets written - not how chatbots generate text.',
     status: 'building',
-    techStack: ['Astro', 'Cloudflare Workers'],
+    techStack: ['Astro', 'Cloudflare Workers', 'D1'],
     contentTag: 'draft-crane',
     started: '2026-02',
   },
