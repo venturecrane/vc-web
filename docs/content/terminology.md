@@ -75,7 +75,7 @@ Genericization uses three tiers based on what actually needs protecting:
 
 These are always genericized regardless of content type or tags:
 
-- Stealth ventures (not on the portfolio page / `showInPortfolio: false` in `config/ventures.json`) - completely hidden
+- Stealth ventures (`showInPortfolio: false` in `config/ventures.json` - set to `true` only by the `/go-live` process) - completely hidden
 - Venture codes in prose (ke, dfg, sc, dc, vc) - internal identifiers, not reader-facing
 - Internal infrastructure names per the table below
 - Specific venture counts ("5 ventures") - use "multiple ventures" or "several projects"
@@ -88,7 +88,7 @@ These are always genericized regardless of content type or tags:
 
 #### Allowed
 
-- Public venture names in venture-specific content (content whose frontmatter `tags` include that venture's name tag, e.g., `kid-expenses`)
+- Public venture names in content tagged with that venture's name tag (e.g., `kid-expenses`), only after the venture has passed `/go-live` (which sets `showInPortfolio: true`)
 - "Venture Crane" in prose (company name, always allowed)
 
 **Mechanical rule for editorial agents:** Check the content's frontmatter `tags` for a venture-name tag (e.g., `kid-expenses`, `silicon-crane`, `durgan-field-guide`, `draft-crane`).
@@ -111,7 +111,7 @@ These are always genericized regardless of content type or tags:
 
 `config/ventures.json` (mirrored from `~/dev/vc-web/src/data/ventures.ts`) is the authoritative list. If a venture has `showInPortfolio: true`, it is public and nameable in tagged content.
 
-**Permanent publicity rule:** Once a venture name has appeared in a published article, it stays public for content purposes regardless of future portfolio changes. A killed venture is a better story named than anonymized.
+**Reversible go-live gate:** Once `showInPortfolio` is set to `true` by `/go-live`, existing published content retains the venture name. New content follows the current `showInPortfolio` value. If a venture must revert to stealth post-launch (trademark, pivot, etc.), set `showInPortfolio: false` and editorial agents will genericize in new content only.
 
 ### Exceptions
 

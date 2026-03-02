@@ -11,48 +11,7 @@ export interface Venture {
 
 export const lastReviewed = '2026-02-23'
 
-export const ventures: Venture[] = [
-  {
-    name: 'Kid Expenses',
-    slug: 'ke',
-    description:
-      'Shared custody means shared costs and shared disagreements about money. Kid Expenses gives divorced and separated parents a structured way to log, split, and settle child-related expenses without the conflict.',
-    status: 'building',
-    techStack: ['Next.js', 'Cloudflare Workers', 'D1'],
-    contentTag: 'kid-expenses',
-    started: '2026-01',
-  },
-  {
-    name: 'Durgan Field Guide',
-    slug: 'dfg',
-    description:
-      'Solo resellers spend hours scanning auction listings by hand, missing good deals and overpaying on bad ones. Durgan Field Guide automates the scouting - scraping auction platforms, running AI-powered profit analysis, and surfacing buy-or-pass recommendations.',
-    status: 'building',
-    techStack: ['Astro', 'Cloudflare Workers', 'D1'],
-    contentTag: 'durgan-field-guide',
-    started: '2025-12',
-  },
-  {
-    name: 'Draft Crane',
-    slug: 'dc',
-    description:
-      'Draft Crane is a structured writing environment for consultants, coaches, and subject-matter experts who want to turn their expertise into a publishable nonfiction book. AI-assisted outlining, drafting, and revision with a workflow designed around how nonfiction gets written - not how chatbots generate text.',
-    status: 'building',
-    techStack: ['Astro', 'Cloudflare Workers', 'D1'],
-    contentTag: 'draft-crane',
-    started: '2026-02',
-  },
-  {
-    name: 'Silicon Crane',
-    slug: 'sc',
-    description:
-      'Most product ideas fail because teams build before validating. Silicon Crane helps founders and product teams test assumptions through structured experiments - landing pages, user interviews, and prototypes - before committing to a full build.',
-    status: 'building',
-    techStack: ['Cloudflare Workers', 'D1'],
-    contentTag: 'silicon-crane',
-    started: '2026-01',
-  },
-]
+export const ventures: Venture[] = []
 
 const statusOrder = { live: 0, beta: 1, building: 2, paused: 3, sunset: 4, internal: 5 }
 export const sortedVentures = [...ventures].sort(
