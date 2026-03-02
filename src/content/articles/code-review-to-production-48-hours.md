@@ -3,13 +3,13 @@ title: 'From Code Review to Production in 48 Hours'
 date: 2026-02-22
 description: 'How AI agents executed a full product sprint - from code review through production deploy - in 48 hours for a writing app.'
 author: 'Venture Crane'
-tags: ['sprint', 'agent-workflow', 'draft-crane', 'code-quality']
+tags: ['sprint', 'agent-workflow', 'code-quality']
 draft: false
 ---
 
 A code review graded a codebase at C. Forty-eight hours later, the same codebase was in production with security hardening, a rich text editor, Google Drive integration, PDF and EPUB export, progressive AI features, and 179 tests across frontend and backend. Thirty-one pull requests merged across two days.
 
-The codebase was Draft Crane, an iPad-first writing app for nonfiction authors. It had an existing foundation - authentication, basic editor, chapter structure - but the code review exposed real problems. A D in testing. Cs in security, architecture, and code quality. Drive query injection vectors in the Google Drive integration. A monolithic page component north of 1,200 lines. Near-zero test coverage on critical paths.
+The codebase was an iPad-first writing app for nonfiction authors. It had an existing foundation - authentication, basic editor, chapter structure - but the code review exposed real problems. A D in testing. Cs in security, architecture, and code quality. Drive query injection vectors in the Google Drive integration. A monolithic page component north of 1,200 lines. Near-zero test coverage on critical paths.
 
 What happened next was not a hackathon. It was a structured sprint where the code review findings became the work queue, ordered by severity, and AI agents worked through it systematically.
 
@@ -97,7 +97,7 @@ The app was functional after Day 1. Day 2 was about making it production-ready -
 
 ### PWA Support
 
-Draft Crane is an iPad-first app distributed as a Progressive Web App. Users add it to their home screen from Safari and it launches like a native app - full screen, no browser chrome, its own icon in the app switcher.
+The app is an iPad-first product distributed as a Progressive Web App. Users add it to their home screen from Safari and it launches like a native app - full screen, no browser chrome, its own icon in the app switcher.
 
 PWA support required a service worker for offline capability and asset caching, configured via Serwist (a modern service worker toolkit). The service worker pre-caches the app shell and fonts, caches API responses for offline reading, and handles the install prompt flow. The web manifest defines the app name, icons, theme color, and display mode.
 
@@ -180,4 +180,4 @@ The interesting question is not whether AI agents can do this. They just did. Th
 
 ---
 
-_Draft Crane went from a C code review to production in 48 hours. AI agents executed the sprint, merging 31 PRs across two days and producing 179 tests across frontend and backend. The code review rubric served as the sprint plan, with the testing D and security C addressed before feature work. The app is in production as a Progressive Web App._
+_The writing app went from a C code review to production in 48 hours. AI agents executed the sprint, merging 31 PRs across two days and producing 179 tests across frontend and backend. The code review rubric served as the sprint plan, with the testing D and security C addressed before feature work. The app is in production as a Progressive Web App._

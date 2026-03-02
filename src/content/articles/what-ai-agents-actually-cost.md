@@ -51,7 +51,7 @@ We ran on the free tier from launch through mid-February 2026 with no issues. Th
 
 ## Hosting: Vercel ($20/month)
 
-The frontend applications deploy to Vercel's Pro plan. Seven projects across the portfolio share a single team account: the Draft Crane writing app, the Kid Expenses co-parent tracker, the Durgan Field Guide dashboard, and several supporting services.
+The frontend applications deploy to Vercel's Pro plan. Seven projects across the portfolio share a single team account: a writing app, an expense tracker, an auction intelligence dashboard, and several supporting services.
 
 **Pro plan ($20/user/month, 1 seat):**
 

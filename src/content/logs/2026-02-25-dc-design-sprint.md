@@ -1,11 +1,11 @@
 ---
-title: 'Draft Crane: design sprint and editor panel'
+title: 'Writing app design sprint and editor panel'
 date: 2026-02-25
-tags: ['draft-crane', 'design']
+tags: ['design']
 draft: false
 ---
 
-Draft Crane shipped a major design sprint: 30+ PRs merged, 25+ issues closed across Feb 24-25. The big pieces were the editor panel, design token system, author/editor metaphor revision, deep analysis pipeline, and accessibility polish.
+The writing app shipped a major design sprint: 30+ PRs merged, 25+ issues closed across Feb 24-25. The big pieces were the editor panel, design token system, author/editor metaphor revision, deep analysis pipeline, and accessibility polish.
 
 ## What We Did
 
