@@ -3,13 +3,13 @@ title: 'Finding Four Auth Vulnerabilities in One Code Review'
 date: 2026-02-20
 description: 'How AI-generated prototype code accumulates auth debt and how one code review session catches it systematically.'
 author: 'Venture Crane'
-tags: ['security', 'code-quality', 'kid-expenses', 'agent-workflow']
+tags: ['security', 'code-quality', 'agent-workflow']
 draft: false
 ---
 
 Four authentication vulnerabilities, all in production, all exploitable, all introduced during prototyping, all found in a single code review session. None of them were bugs in the traditional sense. The code worked. The tests passed. Every endpoint returned the right data for the right requests. The problem was that they also returned the right data for the wrong requests.
 
-Kid Expenses is a family expense tracking app for shared custody situations. It was built rapidly with AI agent assistance - functional prototype to working API in days, not weeks. That speed came with a cost we did not discover until we sat down to review the auth layer systematically.
+The app is a family expense tracker for shared custody situations. It was built rapidly with AI agent assistance - functional prototype to working API in days, not weeks. That speed came with a cost we did not discover until we sat down to review the auth layer systematically.
 
 The cost was not one vulnerability. It was a pattern.
 
@@ -38,9 +38,9 @@ The fix in PR #141 was straightforward: remove the fallback entirely. An `X-User
 
 The JWT verification function checked two things: signature validity and token expiry. It did not check who issued the token.
 
-This matters because Kid Expenses uses Clerk for authentication. Clerk applications share a signing key infrastructure. A valid JWT from a different Clerk application - one that has nothing to do with Kid Expenses - could pass signature verification and be treated as an authenticated session.
+This matters because the app uses Clerk for authentication. Clerk applications share a signing key infrastructure. A valid JWT from a different Clerk application - one that has nothing to do with this app - could pass signature verification and be treated as an authenticated session.
 
-The attack surface is narrow but real. Anyone running their own Clerk application could generate JWTs that Kid Expenses would accept. The signature is valid (same key pool), the token is not expired, and the middleware has no way to distinguish "this token was issued for Kid Expenses" from "this token was issued for a completely different app."
+The attack surface is narrow but real. Anyone running their own Clerk application could generate JWTs that the app would accept. The signature is valid (same key pool), the token is not expired, and the middleware has no way to distinguish "this token was issued for our app" from "this token was issued for a completely different app."
 
 The root cause: during initial auth implementation, signature and expiry felt like sufficient validation. The `iss` claim was not checked because "we only have one Clerk app" - which was true at the time but is not a security invariant.
 
@@ -71,9 +71,9 @@ PR #139 added auth middleware to the endpoint. More importantly, it changed the 
 
 ## Vulnerability 4: CORS for Everyone on Vercel
 
-CORS was configured with this origin pattern: `*.vercel.app`. Any application deployed on Vercel could make authenticated cross-origin requests to the Kid Expenses API.
+CORS was configured with this origin pattern: `*.vercel.app`. Any application deployed on Vercel could make authenticated cross-origin requests to the app's API.
 
-Vercel is one of the most popular deployment platforms in the JavaScript ecosystem. Millions of applications are deployed there. Every single one of them was an allowed origin for authenticated API requests to Kid Expenses.
+Vercel is one of the most popular deployment platforms in the JavaScript ecosystem. Millions of applications are deployed there. Every single one of them was an allowed origin for authenticated API requests to the app.
 
 The root cause: preview deploys. During development, every PR gets a unique Vercel preview URL. The wildcard pattern ensured that preview deploys could hit the API without CORS errors. It worked perfectly for development. It also worked perfectly for any other application on Vercel.
 
@@ -177,7 +177,7 @@ The fix is not slower prototyping. The fix is a dedicated security review pass b
 4. **For CORS**: does the origin pattern match only your domains, or does it match an entire platform?
 5. **For error responses**: what information reaches the client? Stack traces and internal paths should never leave the server.
 
-This checklist found four vulnerabilities in Kid Expenses. We would bet it finds at least two in any AI-scaffolded API that has not had a dedicated security review.
+This checklist found four vulnerabilities in a single codebase. We would bet it finds at least two in any AI-scaffolded API that has not had a dedicated security review.
 
 The speed of AI-assisted prototyping is genuine. The risk is also genuine. The solution is not to choose between speed and security. It is to build the security review into the pipeline as a distinct phase, run it before the prototype becomes the product, and treat every prototyping convenience as a line item that must be explicitly resolved - kept with justification or removed.
 
@@ -185,4 +185,4 @@ Prototype fast. Review thoroughly. Ship with both.
 
 ---
 
-_Kid Expenses is a family expense tracking app built with AI agent assistance. A single code review session found four authentication vulnerabilities - all prototyping shortcuts that survived into production. PRs #132 through #144 fixed the auth layer, added 34 negative test cases, and sanitized 39 error handlers. All four vulnerabilities followed the same pattern: a convenience that was reasonable during development and exploitable in production._
+_The app is a family expense tracker built with AI agent assistance. A single code review session found four authentication vulnerabilities - all prototyping shortcuts that survived into production. PRs #132 through #144 fixed the auth layer, added 34 negative test cases, and sanitized 39 error handlers. All four vulnerabilities followed the same pattern: a convenience that was reasonable during development and exploitable in production._

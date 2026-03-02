@@ -3,7 +3,7 @@ title: 'PWA vs Native App - When to Skip the App Store'
 date: 2026-02-18
 description: 'A decision framework for choosing PWA over native when you have not validated product-market fit yet.'
 author: 'Venture Crane'
-tags: ['pwa', 'architecture', 'draft-crane', 'product-decisions']
+tags: ['pwa', 'architecture', 'product-decisions']
 draft: false
 ---
 
@@ -11,7 +11,7 @@ Shipping an iPad app through the App Store costs $99/year, a week of App Store R
 
 We chose the PWA. Not because we are opposed to native apps, but because we had not yet proven that anyone wanted the product.
 
-Draft Crane is a writing app for nonfiction authors, built for iPad-first use. Rich text editing, AI-powered rewrite suggestions, Google Drive sync, PDF and EPUB export. The kind of app that sounds like it should be native. It is not, and the reasons are worth examining.
+The case study is a writing app for nonfiction authors, built for iPad-first use. Rich text editing, AI-powered rewrite suggestions, Google Drive sync, PDF and EPUB export. The kind of app that sounds like it should be native. It is not, and the reasons are worth examining.
 
 ---
 
@@ -31,7 +31,7 @@ None of this is unreasonable for a validated product. All of it is premature for
 
 ---
 
-## What Draft Crane Actually Uses
+## What the App Actually Uses
 
 Before deciding on distribution, we listed every technical capability the app requires:
 
@@ -56,8 +56,8 @@ The technical implementation is straightforward enough to describe in a few para
 
 ```json
 {
-  "name": "Draft Crane",
-  "short_name": "Draft Crane",
+  "name": "Your App Name",
+  "short_name": "App Name",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
@@ -111,7 +111,7 @@ A PWA release: push to `main`, CI deploys to your hosting provider, users get th
 
 For a product that has not found product-market fit, this iteration speed is the entire game. You need to ship changes, observe behavior, and ship again. A 3-day feedback loop through App Store Review is workable for a mature product. It is fatal for a product that is still figuring out what it is.
 
-We deployed 14 changes to Draft Crane in the first two weeks after launch. Some were bug fixes. Some were feature experiments. Some were UI adjustments based on watching real usage patterns. Every one of those shipped within minutes of merge. In the App Store model, that would have been 14 review cycles, or more realistically, we would have batched changes into 2-3 releases and shipped less frequently, learning slower.
+We deployed 14 changes in the first two weeks after launch. Some were bug fixes. Some were feature experiments. Some were UI adjustments based on watching real usage patterns. Every one of those shipped within minutes of merge. In the App Store model, that would have been 14 review cycles, or more realistically, we would have batched changes into 2-3 releases and shipped less frequently, learning slower.
 
 ---
 
@@ -151,7 +151,7 @@ Our answer: when you have evidence that users want the product AND you have iden
 
 Evidence is not "we think people will want this." Evidence is measurable:
 
-- **Active users performing the core action.** For Draft Crane, that means users writing chapters. Not visiting the landing page, not creating an account - writing. The core action is the only metric that matters for validation.
+- **Active users performing the core action.** For a writing app, that means users writing chapters. Not visiting the landing page, not creating an account - writing. The core action is the only metric that matters for validation.
 - **Retention.** Users coming back. A burst of signups followed by abandonment is not validation. Users returning to write their second chapter, their fifth, their twentieth - that is validation.
 - **Explicit requests for native features.** Users asking for things PWA cannot deliver. "I want to use Apple Pencil pressure sensitivity." "I need Siri Shortcuts integration." "I want to sync via iCloud." These requests are the signal that native distribution would unlock value the PWA cannot.
 
@@ -165,7 +165,7 @@ You cannot un-build a native app. Once you have an App Store listing, TestFlight
 
 ## Cross-Project Application
 
-The PWA pattern started with Draft Crane, then extended to all portfolio projects in the same session. Each project had different functionality, but the PWA layer was identical.
+The PWA pattern started with the writing app, then extended to all portfolio projects in the same session. Each project had different functionality, but the PWA layer was identical.
 
 The implementation for each project was mechanical:
 
@@ -195,7 +195,7 @@ Honesty about limitations matters more than enthusiasm about capabilities.
 
 **Safari-specific quirks.** Apple's PWA support, while functional, lags behind Chrome's. Features like declarative link capturing, window controls overlay, and some manifest properties that work on Android and desktop do not work on iOS. You are building for the subset of PWA capabilities that Safari supports, which is smaller than the full specification.
 
-These limitations are real. They are also irrelevant if your product does not need the capabilities that are missing. Draft Crane does not need App Store discovery (it has its own site), does not need background processing (writing is a foreground activity), and does not need hardware access (it is a text editor). The limitations exist. They do not apply.
+These limitations are real. They are also irrelevant if your product does not need the capabilities that are missing. The writing app does not need App Store discovery (it has its own site), does not need background processing (writing is a foreground activity), and does not need hardware access (it is a text editor). The limitations exist. They do not apply.
 
 ---
 
@@ -207,10 +207,10 @@ Building a native app means allocating engineering time to platform-specific too
 
 For an unvalidated product, that investment is a bet placed before the evidence is in. You are spending engineering capital on distribution before you know whether anyone wants what you are distributing. The rational move is to minimize distribution overhead, maximize iteration speed, and defer the native investment until the product itself justifies it.
 
-PWA is not a compromise. It is the correct architecture for the stage of the product. When Draft Crane has a thousand active writers returning weekly, we will revisit the native question with data instead of assumptions. Until then, the app ships on deploy, updates in minutes, and runs full-screen on every iPad that opens it.
+PWA is not a compromise. It is the correct architecture for the stage of the product. When the app has a thousand active writers returning weekly, we will revisit the native question with data instead of assumptions. Until then, the app ships on deploy, updates in minutes, and runs full-screen on every iPad that opens it.
 
 The App Store will still be there when we are ready for it.
 
 ---
 
-_Draft Crane is an iPad-first writing app for nonfiction authors, shipped as a Progressive Web App using Next.js, Serwist, and Safari's standalone display mode. The PWA pattern applied to all portfolio projects in the same session, confirming the implementation is mechanical once the pattern is established. No native app will be built until active usage data justifies the investment._
+_The case study is an iPad-first writing app for nonfiction authors, shipped as a Progressive Web App using Next.js, Serwist, and Safari's standalone display mode. The PWA pattern applied to all portfolio projects in the same session, confirming the implementation is mechanical once the pattern is established. No native app will be built until active usage data justifies the investment._
