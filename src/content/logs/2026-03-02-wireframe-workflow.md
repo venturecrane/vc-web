@@ -1,7 +1,7 @@
 ---
-title: 'Adding wireframes to the PM workflow for UI-facing stories'
-date: 2026-03-01
-tags: ['process', 'design']
+title: 'Wireframes and design specs in the agent workflow'
+date: 2026-03-02
+tags: ['process', 'design', 'design-system']
 draft: false
 ---
 
@@ -17,8 +17,22 @@ We updated three persona briefs: Dev must reference the wireframe during impleme
 
 New venture setup tooling (the bootstrap script and checklist) now includes a `docs/wireframes/` directory. The setup script creates this directory structure during new venture initialization.
 
-## What surprised us
+## What we found
 
 The friction point wasn't generating the wireframe - any Claude agent handles that well with the right prompt template. Analysis revealed how often "non-UI stories" actually had UI implications. An API endpoint story might be purely backend, but the moment you add request validation or error messages, there's a user-facing component. We ended up clarifying the UI-facing definition: if the story touches anything a user sees or interacts with (UI, CLI output, error messages, confirmation prompts), it needs a wireframe. Pure data layer or infrastructure changes don't.
 
 The freeze rule proved critical to scope discipline. Without it, PM would update the wireframe mid-implementation when the dev agent asked clarifying questions, creating a moving target. The freeze forces those questions to either (a) get resolved within the existing wireframe's constraints, or (b) get filed as a new story if they're actually scope expansion. That discipline keeps stories shippable.
+
+## Design standardization
+
+Wireframes solved the layout and interaction problem but introduced a new gap: visual consistency. Agents generating wireframes had no reference for what a given venture's UI should look like - what colors to use, what surfaces to stack, what typography to apply. Each wireframe started from scratch with generic styling.
+
+We created per-venture design specs - structured documents containing color tokens, typography scales, surface hierarchies, component patterns, and accessibility requirements. Each spec is accessible through the context API, so agents load it before generating a wireframe or implementing UI code.
+
+The specs follow a common naming pattern (`--{prefix}-{category}-{variant}`) but each venture defines its own tokens and values. Some ventures have dark-only themes, some light-only, some support both. The specs capture this along with WCAG contrast ratios for every color pairing.
+
+Not every venture has a mature design system. We classified them into three tiers: enterprise (complete token systems with documented components), established (basic tokens that need formalization), and greenfield (proposed tokens or minimal foundation). The tier determines agent behavior - enterprise ventures use what exists and extend it, greenfield ventures propose new tokens in the PR for review.
+
+An extraction script reads CSS custom properties from a venture's production stylesheet and generates the token tables in the spec. This keeps specs current as the CSS evolves, without manual transcription.
+
+The wireframe guidelines now require loading the design spec before generating any wireframe. The agent uses the venture's actual tokens, surfaces, and component patterns rather than inventing a visual language for each prototype. The result is wireframes that look like the venture they belong to, not generic HTML mockups.
