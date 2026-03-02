@@ -1,10 +1,10 @@
 ---
 title: 'Finding Four Auth Vulnerabilities in One Code Review'
-date: 2026-02-17
+date: 2026-02-20
 description: 'How AI-generated prototype code accumulates auth debt and how one code review session catches it systematically.'
 author: 'Venture Crane'
 tags: ['security', 'code-quality', 'kid-expenses', 'agent-workflow']
-draft: true
+draft: false
 ---
 
 Four authentication vulnerabilities, all in production, all exploitable, all introduced during prototyping, all found in a single code review session. None of them were bugs in the traditional sense. The code worked. The tests passed. Every endpoint returned the right data for the right requests. The problem was that they also returned the right data for the wrong requests.
