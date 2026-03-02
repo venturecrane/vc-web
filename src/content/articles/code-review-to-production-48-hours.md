@@ -1,10 +1,10 @@
 ---
 title: 'From Code Review to Production in 48 Hours'
-date: 2026-02-17
+date: 2026-02-22
 description: 'How AI agents executed a full product sprint - from code review through production deploy - in 48 hours for a writing app.'
 author: 'Venture Crane'
 tags: ['sprint', 'agent-workflow', 'draft-crane', 'code-quality']
-draft: true
+draft: false
 ---
 
 A code review graded a codebase at C. Forty-eight hours later, the same codebase was in production with security hardening, a rich text editor, Google Drive integration, PDF and EPUB export, progressive AI features, and 179 tests across frontend and backend. Thirty-one pull requests merged across two days.
