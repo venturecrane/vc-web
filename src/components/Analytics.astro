@@ -1,0 +1,18 @@
+---
+const measurementId = import.meta.env.PUBLIC_GA4_MEASUREMENT_ID?.trim() ?? ''
+const internalHostPatterns =
+  import.meta.env.PUBLIC_GA4_INTERNAL_HOST_PATTERNS?.trim() ?? 'localhost,127.0.0.1,*.pages.dev'
+---
+
+{
+  measurementId && (
+    <>
+      <script async src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`} />
+      <script
+        src="/js/ga4-init.js"
+        data-ga4-measurement-id={measurementId}
+        data-internal-host-patterns={internalHostPatterns}
+      />
+    </>
+  )
+}
