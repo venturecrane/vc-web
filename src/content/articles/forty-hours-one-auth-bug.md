@@ -2,7 +2,7 @@
 title: 'When Your Agents Spend 40 Hours on One Auth Bug'
 date: 2026-03-28
 updated: 2026-03-29
-description: 'Five fix attempts, four root causes, and 40+ hours of agent time on a single MCP authentication failure. Here is what went wrong - and the Workspace policy we should have checked first.'
+description: 'Four root causes, 40+ hours of agent time, one MCP auth failure. The final fix was a Workspace admin checkbox.'
 author: 'Venture Crane'
 tags: ['mcp', 'debugging', 'agent-operations']
 draft: false
