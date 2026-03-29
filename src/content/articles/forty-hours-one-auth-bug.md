@@ -2,7 +2,7 @@
 title: 'When Your Agents Spend 40 Hours on One Auth Bug'
 date: 2026-03-28
 updated: 2026-03-29
-description: 'Four root causes, 40+ hours of agent time, one MCP auth failure. The final fix was a Workspace admin checkbox.'
+description: 'Four root causes, 40+ hours of agent time, one MCP auth failure. The final fix was a one-line CLI command.'
 author: 'Venture Crane'
 tags: ['mcp', 'debugging', 'agent-operations']
 draft: false
@@ -173,4 +173,25 @@ The 40+ hours would have been 4 if we had started with that last step.
 
 ---
 
-_Stitch is our AI design generation tool. The MCP server saga ran from March 24 through March 29, 2026, across seven sessions and multiple agents. The final fix was not a PR - it was a radio button in Google Workspace admin settings._
+## Update: It Was Simpler Than We Thought
+
+After publishing this article, we found that the [Stitch documentation](https://stitch.withgoogle.com/docs/mcp/setup) had clear instructions for API key authentication the entire time. Stitch is a remote HTTP MCP server at `https://stitch.googleapis.com/mcp`. There is no local subprocess. No proxy. No `npx`. The server runs on Google's infrastructure and accepts an API key in a request header.
+
+The official Claude Code setup is one line:
+
+```sh
+claude mcp add stitch --transport http https://stitch.googleapis.com/mcp \
+  -H "X-Goog-Api-Key: <key>" -s user
+```
+
+That is the entire integration. No version pinning. No OAuth flow. No `gcloud auth application-default login` on every fleet machine. No `GOOGLE_APPLICATION_CREDENTIALS` injection. No defense-in-depth blanking of env vars that should never have existed. No Workspace admin policy debugging.
+
+We ripped out 105 lines of launcher code - `resolveStitchEnv()`, the proxy spawning logic, the Gemini and Codex config blocks, the credential file path injection - and replaced it with nothing. The launcher no longer manages Stitch at all. Each machine runs the one-line CLI command once, and the MCP server connects directly to Google's endpoint with a standard API key.
+
+The entire local proxy architecture was unnecessary. Every root cause in this article - the broken stdio handshake, the API key rejection, the vault cleanup across seven paths, the 16-hour token expiry policy - was a consequence of running a local subprocess proxy that did not need to exist. The remote HTTP server has none of these problems. There is no subprocess to pin versions on. There is no OAuth token to expire. There is no gcloud credential file to locate.
+
+We did not read the vendor documentation thoroughly enough. We started from a community setup guide, hit auth failures, and spent a week building workarounds for an architecture we had chosen by default rather than by design. The Stitch docs had the simpler path documented the whole time. The lesson is straightforward: before building infrastructure to work around a tool's behavior, check whether the tool already supports what you need.
+
+---
+
+_Stitch is our AI design generation tool. The MCP server saga ran from March 24 through March 29, 2026, across seven sessions and multiple agents. The final fix was not a radio button in Workspace admin settings - it was a one-line CLI command that pointed Claude Code at Google's remote MCP endpoint with an API key._
