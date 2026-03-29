@@ -1,15 +1,18 @@
 ---
 title: 'When Your Agents Spend 40 Hours on One Auth Bug'
 date: 2026-03-28
-description: 'Five fix attempts, three root causes, and 40 hours of agent time on a single MCP authentication failure. Here is what went wrong.'
+updated: 2026-03-29
+description: 'Four root causes, 40+ hours of agent time, one MCP auth failure. The final fix was a Workspace admin checkbox.'
 author: 'Venture Crane'
 tags: ['mcp', 'debugging', 'agent-operations']
 draft: false
 ---
 
-40 hours. 11 PRs. 6 sessions across multiple agents and machines. One MCP authentication failure that kept coming back.
+40+ hours. 12 PRs. 7 sessions across multiple agents and machines. One MCP authentication failure that kept coming back.
 
-The bug was in the Stitch MCP server. Stitch connects to Google's design generation API over MCP - a subprocess that Claude Code launches at startup. Getting that subprocess to authenticate correctly cost us more agent time than the original Stitch integration itself. The failure was not complicated. But it had three separate root causes, each one hiding the next, and each fix we shipped addressed exactly one of them.
+The bug was in the Stitch MCP server. Stitch connects to Google's design generation API over MCP - a subprocess that Claude Code launches at startup. Getting that subprocess to authenticate correctly cost us more agent time than the original Stitch integration itself. The failure was not complicated. But it had four separate root causes, each one hiding the next, and each fix we shipped addressed exactly one of them.
+
+The final root cause was a single checkbox in Google Workspace admin settings. It took a week to find.
 
 ---
 
@@ -23,9 +26,9 @@ This made every failed fix expensive. A wrong diagnosis costs one session. The c
 
 ---
 
-## The Three Root Causes
+## The Four Root Causes
 
-The bug looked like one thing for five PRs. It was actually three distinct problems layered on top of each other.
+The bug looked like one thing for five PRs. It was actually four distinct problems layered on top of each other.
 
 ### Root Cause 1: A version with a broken stdio handshake
 
@@ -60,15 +63,35 @@ The fifth fix path (#383, #384, #385) went in the wrong direction entirely - it 
 
 The actual fix required:
 
-1. Deleting `STITCH_API_KEY` from Infisical at every venture path (`/vc`, `/ke`, `/dc`, `/sc`, `/dfg`, and two others)
+1. Deleting `STITCH_API_KEY` from Infisical at every venture path (seven paths total)
 2. Removing all code in `launch-lib.ts` that referenced the key: the `resolveStitchEnv()` function, the process env injection, the Gemini config block, the Codex config block
 3. Adding `GOOGLE_APPLICATION_CREDENTIALS` injection so the MCP proxy could find the ADC credentials file (#388)
 
-That was 28 test file updates and a full verification pass. PR #392 added a defense-in-depth measure: the launcher now explicitly blanks `STITCH_API_KEY` in `resolveStitchEnv()` so that even if the key resurfaces in the vault, it cannot reach the MCP server.
+That was a full verification pass across the test suite. PR #392 added a defense-in-depth measure: the launcher now explicitly blanks `STITCH_API_KEY` in `resolveStitchEnv()` so that even if the key resurfaces in the vault, it cannot reach the MCP server.
+
+We thought we were done.
+
+### Root Cause 4: A Workspace policy was killing tokens every 16 hours
+
+The day after we declared the bug fixed, an agent ran Stitch successfully for several hours - generating screens, shipping PRs, real productive work. Then the agent ran a routine end-of-session handoff, cleared the conversation, and started a new session. Stitch was dead.
+
+The diagnosis was familiar: `STITCH_API_KEY` found in the shell environment. But that key had been in the environment the entire time the agent was successfully using Stitch. Something else had changed.
+
+The gcloud ADC token had expired. Not the short-lived access token - those refresh automatically. The refresh token itself was dead. `gcloud auth application-default print-access-token` returned "Reauthentication failed."
+
+The ADC credentials file had been created the day before. Refresh tokens should last months. Something was actively revoking them.
+
+The answer was in Google Workspace admin settings, under Security, in a section called "Google Cloud session control." It had a single configuration: **Require reauthentication every 16 hours.** This policy applies to all apps requesting Cloud Platform scope - including `gcloud auth application-default login`.
+
+Every agent session that ran longer than 16 hours would lose its ADC credentials. Every session that launched after the token expired would fail to authenticate. The previous three root causes had masked this because we were constantly re-authenticating while debugging the other issues. Once those were fixed and sessions started running long enough for the token to expire, root cause 4 revealed itself.
+
+PR #394 added another defense layer - deleting `STITCH_API_KEY` from the shell environment entirely before spawning child processes, so even if the key leaks from any source, it cannot reach the MCP server on reconnection. But the actual fix was a single radio button: changing the reauthentication policy from "Require reauthentication" to "Never require reauthentication."
+
+A Workspace admin setting, not code. Not a vault issue. Not a version issue. A policy checkbox.
 
 ---
 
-## The 11 PRs
+## The 12 PRs
 
 | PR   | What it did                                                | Did it fix the problem?                              |
 | ---- | ---------------------------------------------------------- | ---------------------------------------------------- |
@@ -83,14 +106,15 @@ That was 28 test file updates and a full verification pass. PR #392 added a defe
 | #386 | Pin stitch-mcp to v0.5.0, remove key from .mcp.json        | Fixed handshake                                      |
 | #388 | Inject GOOGLE_APPLICATION_CREDENTIALS                      | Fixed credential path                                |
 | #392 | Blank STITCH_API_KEY in launcher as defense-in-depth       | Defense-in-depth                                     |
+| #394 | Strip STITCH_API_KEY from shell env before spawn           | Defense-in-depth                                     |
 
-The cleanup PRs (#389-#391) removed `STITCH_API_KEY` from all venture Infisical paths and stripped the key from every code path in the launcher.
+The cleanup work between #386 and #392 removed `STITCH_API_KEY` from all venture Infisical paths and stripped the key from every code path in the launcher.
 
 ---
 
 ## Why the Diagnosis Kept Slipping
 
-Three things made this bug resilient to repeated fix attempts.
+Four things made this bug resilient to repeated fix attempts.
 
 **The failure mode was generic.** "MCP tools unavailable" covers every possible launch failure: wrong version, bad credentials, missing env var, network error, broken stdio. Without distinguishing these modes, every fix attempt was a guess.
 
@@ -98,21 +122,25 @@ Three things made this bug resilient to repeated fix attempts.
 
 **The launchctl ghost.** One session discovered that `STITCH_API_KEY` had been persisted to the macOS launchctl environment - the persistent environment store that survives shell restarts. Even after removing the key from Infisical and the launcher, it was still being injected from `launchctl`. A fourth location for the same bad key. The fix was `launchctl unsetenv STITCH_API_KEY`, but this was discovered mid-session. The MCP server had already launched without the key fix in place, and the tools were still unavailable for that session.
 
+**Infrastructure masking infrastructure.** The constant re-authentication from debugging root causes 1-3 kept the ADC token fresh. The 16-hour Workspace policy never triggered because no session ran long enough on a stable Stitch setup to hit the limit. Root cause 4 only became visible after root causes 1-3 were fixed - the debugging process itself was hiding the deepest problem.
+
 The MCP startup constraint turned every discovery into a one-session delay.
 
 ---
 
 ## What We Changed Going Forward
 
+**Check the platform before the code.** The final root cause was not in our code, our vault, or our dependencies. It was a Workspace admin policy. When authentication tokens expire faster than they should, check the policy layer before building workarounds in code. Google Workspace session control, OAuth consent screen publishing status, and GCP org policies all impose token lifetime limits that no amount of code-side fixing will solve.
+
 **The Infisical path is the allowlist.** If a secret should not reach the MCP server, do not put it in Infisical. Do not put it in Infisical and try to filter it out in code. Remove it from the source. Code-side filters compensate for vault hygiene problems and create the illusion that the problem is solved.
 
-**Delete from all paths, not just one.** We had deleted `STITCH_API_KEY` from `/vc` weeks before this saga. It was still present in `/dc`, `/ke`, `/sc`, `/dfg`, and two others. Infisical shared folder imports do not cascade deletes. When you remove a secret, you have to check every venture path individually. We now verify with:
+**Delete from all paths, not just one.** We had deleted `STITCH_API_KEY` from one venture path weeks before this saga. It was still present in six others. Infisical shared folder imports do not cascade deletes. When you remove a secret, you have to check every venture path individually. We now verify with:
 
 ```sh
 infisical secrets --path /{code} --env prod | grep STITCH_API_KEY
 ```
 
-Run that for every venture code. If any of them returns a result, the key is still active.
+Run that for every project path. If any of them returns a result, the key is still active.
 
 **Pin MCP server versions.** `npx` resolves to the latest version by default. Latest is not always correct. Pin the version in `.mcp.json` and treat upgrades as deliberate decisions that require testing the stdio handshake.
 
@@ -135,13 +163,14 @@ This changes how you should treat MCP environment configuration. It is not appli
 
 For anyone building multi-agent systems with MCP:
 
-- Know all the layers that compose a subprocess environment before you start debugging
+- Know all the layers that compose a subprocess environment before you start debugging - including the platform and admin policies above your code
 - The vault is the source of truth; code-side filtering is not a substitute for vault hygiene
 - Version-pin every MCP server and test the handshake before fleet deployment
 - When a bug survives multiple fix attempts across sessions, stop and enumerate every possible source of the problem before shipping another fix
+- When tokens expire faster than documented, check the admin policy layer before writing code workarounds
 
-The 40 hours would have been 4 if we had started with that last step.
+The 40+ hours would have been 4 if we had started with that last step.
 
 ---
 
-_Stitch is our AI design generation tool. The MCP server saga ran from March 24 through March 28, 2026, across six sessions and multiple agents. PRs #386 and #392 are the ones that mattered._
+_Stitch is our AI design generation tool. The MCP server saga ran from March 24 through March 29, 2026, across seven sessions and multiple agents. The final fix was not a PR - it was a radio button in Google Workspace admin settings._
