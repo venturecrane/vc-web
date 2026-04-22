@@ -29,7 +29,7 @@ Six named concepts make the system work.
 
 **Context.** Context is the information an agent needs to do useful work. It includes handoff state, the work queue, enterprise knowledge, and operational documentation. The system delivers context at session startup through an MCP server that lazy-loads only what's needed. See [Agent Context Management](/articles/agent-context-management-system/) and [96% Token Reduction](/articles/lazy-loading-agent-context/).
 
-**Tools.** Tools are the interfaces agents use to interact with external systems - GitHub issues, CI pipelines, documentation stores, deployment targets. Tools are typed, validated, and delivered through MCP. See [Building an MCP Server](/articles/building-mcp-server/).
+**Tools.** Tools are the interfaces agents use to interact with external systems - GitHub issues, CI pipelines, documentation stores, deployment targets. Tools are typed, validated, and delivered through MCP. The agent workforce runs on Claude Code - Anthropic's CLI harness - with Claude as the foundation model. See [Building an MCP Server](/articles/building-mcp-server/).
 
 **Environments.** Every agent runs on a physical machine in a managed fleet. Environments are bootstrapped identically: same CLI tools, same SSH mesh, same secrets injection. Adding a machine takes minutes. See [Fleet Management for One Person](/articles/fleet-management-solo/).
 
@@ -55,7 +55,7 @@ Every agent session follows the same structure, whether it's a thirty-minute bug
 
 If you only read three articles, read these.
 
-<!-- Curated list — review when new methodology articles publish -->
+<!-- Curated list - review when new methodology articles publish -->
 
 - [Kill Discipline for AI Agent Teams](/articles/kill-discipline-ai-agents/) - Five mandatory stop rules that force agents to escalate instead of spiral. The most important operational pattern we've found.
 - [Multi-Agent Team Protocols Without Chaos](/articles/multi-agent-team-protocols/) - How agents and humans coordinate without stepping on each other.

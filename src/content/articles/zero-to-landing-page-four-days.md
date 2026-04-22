@@ -7,7 +7,7 @@ tags: ['venture-scaffolding', 'astro', 'agent-workflow']
 draft: false
 ---
 
-On 2026-03-24, we added a venture code to a registry file. On 2026-03-28, we wired a Calendly booking link into production CTA buttons on a live Astro site. Forty-six merged PRs and four days in between.
+On 2026-03-24, we added a venture code to a registry file. On 2026-03-28, we wired a Calendly booking link into production CTA buttons on a live Astro site. Forty-six merged PRs and four days in between. The agent sessions that produced this output ran through Claude Code - the CLI harness - with the venture registry and Infisical secrets injected at launch.
 
 The venture is an operations consulting firm serving small businesses in the Phoenix area. The target client is 5-50 employees, dealing with undocumented processes, leaky lead pipelines, and no financial visibility. Fixed-price engagements, clear deliverables, no open-ended retainers.
 

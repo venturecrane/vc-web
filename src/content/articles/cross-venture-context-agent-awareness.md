@@ -7,7 +7,7 @@ tags: ['agent-context', 'multi-tenant', 'agent-operations']
 draft: false
 ---
 
-We run multiple ventures across multiple repos on multiple machines. Each venture has its own repo, its own Infisical secrets path, its own design system, its own cadence, and its own content space. Agents work in one venture at a time - or they're supposed to.
+We run multiple ventures across multiple repos on multiple machines. Each venture has its own repo, its own Infisical secrets path, its own design system, its own cadence, and its own content space. Agents work in one venture at a time - or they're supposed to. Every agent session runs through Claude Code, which means the Start of Session briefing is the primary lever for establishing spatial context before any work begins.
 
 Agents don't have spatial awareness by default. They know what they're doing. They don't inherently know where they are, what that boundary means, or what lives outside it. When we started running multi-venture workloads, that gap produced a specific set of failures: wrong repos targeted, cadence items bleeding across ventures, secrets leaking through shared paths. Each was solvable in isolation. Together they pointed to an infrastructure gap we had to close.
 

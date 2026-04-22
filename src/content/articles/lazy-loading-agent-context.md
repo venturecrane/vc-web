@@ -7,7 +7,7 @@ tags: ['performance', 'mcp', 'agent-context']
 draft: false
 ---
 
-Our session startup routine was consuming 45,000 to 71,000 tokens before the agent did any useful work. On a ~200K context window, that is 22-35% of available capacity gone on initialization alone. We cut it to roughly 3,000 tokens - a 93-96% reduction - without changing the backend API.
+Our session startup routine was consuming 45,000 to 71,000 tokens before the agent did any useful work. On a ~200K context window, that is 22-35% of available capacity gone on initialization alone. We cut it to roughly 3,000 tokens - a 93-96% reduction - without changing the backend API. The agent in every session is Claude Code, so context window capacity is a direct cost: every token spent on unread documentation is a token unavailable for reasoning and code work.
 
 ## The Problem: Eager Loading
 

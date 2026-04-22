@@ -9,7 +9,7 @@ draft: false
 
 Four authentication vulnerabilities, all in production, all exploitable, all introduced during prototyping, all found in a single code review session. None of them were bugs in the traditional sense. The code worked. The tests passed. Every endpoint returned the right data for the right requests. The problem was that they also returned the right data for the wrong requests.
 
-The app is a family expense tracker for shared custody situations. It was built rapidly with AI agent assistance - functional prototype to working API in days, not weeks. That speed came with a cost we did not discover until we sat down to review the auth layer systematically.
+The app is a family expense tracker for shared custody situations. It was built rapidly with Claude Code agents - functional prototype to working API in days, not weeks. That speed came with a cost we did not discover until we sat down to review the auth layer systematically.
 
 The cost was not one vulnerability. It was a pattern.
 

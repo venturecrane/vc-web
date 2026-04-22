@@ -31,7 +31,7 @@ The result is that adding a new venture takes minutes, not days. The coordinatio
 
 ## The AI Agent Angle
 
-Shared infrastructure is not a new idea. Monorepos, platform teams, and internal developer platforms all address the same problem. What makes the development lab model different is that AI coding agents change the economics of how many codebases a small team can maintain.
+Shared infrastructure is not a new idea. Monorepos, platform teams, and internal developer platforms all address the same problem. What makes the development lab model different is that AI coding agents change the economics of how many codebases a small team can maintain. The agent workforce runs on Claude Code - Anthropic's CLI harness - as the primary interface for every development session across the portfolio.
 
 A solo founder without AI agents can realistically maintain one codebase at production quality. Maybe two if they're related. The bottleneck is human attention - context switching between unrelated codebases is expensive, and each one demands ongoing maintenance even when you're not actively building features.
 

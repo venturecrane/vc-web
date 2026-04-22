@@ -7,7 +7,7 @@ tags: ['infrastructure', 'cloudflare-workers', 'ci-cd', 'staging']
 draft: false
 ---
 
-An AI agent running `npx wrangler deploy` during a development session just pushed to production. There was no staging environment. No gate. No confirmation prompt. The agent did exactly what it was told to do, and that was the problem.
+A Claude Code agent running `npx wrangler deploy` during a development session just pushed to production. There was no staging environment. No gate. No confirmation prompt. The agent did exactly what it was told to do, and that was the problem.
 
 When your deployment tooling has a single target and your "developers" are AI agents that execute commands literally, you get production deployments by default. A human developer might hesitate - "wait, is this production?" - and check the target before running the command. An agent runs the command. That is what agents do.
 

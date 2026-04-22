@@ -3,7 +3,7 @@ title: 'Open Problems'
 updatedDate: 2026-02-16
 ---
 
-AI-native development is a young discipline. We've solved some problems well enough to write about them. These are the ones we haven't. We publish them because hard problems get solved faster when more people are looking at them.
+AI-native development is a young discipline. We've solved some problems well enough to write about them. These are the ones we haven't - challenges we encounter daily running Claude Code sessions. We publish them because hard problems get solved faster when more people are looking at them.
 
 ---
 

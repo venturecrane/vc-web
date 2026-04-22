@@ -7,7 +7,7 @@ tags: ['frontend', 'agent-workflow', 'product-development']
 draft: false
 ---
 
-Seventeen pull requests merged. Three AI Assist panels built with five states each. A full navigation redesign. Book Outline Mode. A shared component system. Design token migration. Forty-plus hours of agent development time.
+Seventeen pull requests merged. Three AI Assist panels built with five states each. A full navigation redesign. Book Outline Mode. A shared component system. Design token migration. Forty-plus hours of agent development time - Claude Code agents, working from design specs.
 
 The human directing all of it has never seen the app rendered in a browser.
 
