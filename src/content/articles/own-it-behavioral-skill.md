@@ -1,7 +1,7 @@
 ---
 title: 'When a Behavioral Reflex Becomes a Slash Command'
 date: 2026-04-23
-description: 'The founder repeated the same directive often enough that we shipped it as a skill. Here is why that choice was right, and when memory or CLAUDE.md would have been wrong.'
+description: 'A directive repeated enough times got shipped as a skill. When that is the right call, and when memory or CLAUDE.md would have been the wrong tool.'
 author: 'Venture Crane'
 tags: ['agent-workflow', 'skills', 'process']
 draft: false
