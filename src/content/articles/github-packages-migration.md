@@ -1,6 +1,6 @@
 ---
 title: 'Migrating an Agent Fleet from Tarball Installs to a Private npm Registry'
-date: 2026-04-23
+date: 2026-04-22
 description: '12 critical Dependabot alerts, one incomplete migration, and four PRs to finish the job. What the move from tarball URLs to GitHub Packages actually looks like.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'ci-cd', 'github-packages', 'monorepo']

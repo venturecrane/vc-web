@@ -1,6 +1,6 @@
 ---
 title: 'Pursuing Partner Network Status as a Solo Operator with an AI Agent Team'
-date: 2026-04-23
+date: 2026-04-22
 description: 'A solo operator with an AI agent team applies to a partner program built for services firms. Transparent framing is the strategy, not the liability.'
 author: 'Venture Crane'
 tags: ['anthropic', 'claude-code', 'partnership', 'strategy']

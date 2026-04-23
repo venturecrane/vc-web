@@ -1,6 +1,6 @@
 ---
 title: 'Killing Skills on Purpose: A 32-to-24 Retirement Cascade'
-date: 2026-04-23
+date: 2026-04-22
 description: 'How a full-day audit cut a 32-skill catalog to 24 - and the operational tests that determined what earned retirement vs. what earned a stay.'
 author: 'Venture Crane'
 tags: ['agent-tooling', 'process', 'agent-operations']
