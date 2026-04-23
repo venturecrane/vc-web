@@ -1,7 +1,7 @@
 ---
 title: 'Shipping a Cultural Directive Your Agents Read at Session Start'
 date: 2026-04-23
-description: 'The Captain had a standing order. Agents kept forgetting it. The fix was committing it to a file they read at every session start - and learning what kind of text belongs there.'
+description: "Captain's standing order kept getting forgotten. The fix: commit it to a file agents read at session start - and learn what text belongs there."
 author: 'Venture Crane'
 tags: ['agent-context', 'agent-operations', 'process']
 draft: false
