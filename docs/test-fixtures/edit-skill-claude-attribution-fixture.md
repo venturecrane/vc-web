@@ -26,12 +26,12 @@ Expected finding: BLOCKING. Per the venture-to-integration mapping in terminolog
 
 ## Violation 3 - Generic AI-agent language in clear CC CLI context (ADVISORY)
 
-Before any agent session begins, the AI coding CLI loads the CLAUDE.md file at the repo root and every `.claude/rules/` match for the files the session will touch. The agent then reads the venture registry and joins the fleet via crane-mcp.
+Before any agent session begins, the AI coding CLI loads the CLAUDE.md file at the repo root and every `.claude/rules/` match for the files the session will touch. The agent then reads the venture registry and joins the fleet via the MCP server.
 
-Expected finding: ADVISORY. The paragraph describes concrete Claude Code work (CLAUDE.md, `.claude/rules/`, crane-mcp integration). The retrofit heuristic in terminology.md Section 4 does not apply: this fixture's title contains "Claude Attribution" so heuristic question 1 answers YES (a Claude-specific framing). Suggestion: "the AI coding CLI" -> "Claude Code." Not auto-fixed.
+Expected finding: ADVISORY. The paragraph describes concrete Claude Code work (CLAUDE.md, `.claude/rules/`, MCP integration). The retrofit heuristic in terminology.md Section 4 does not apply: this fixture's title contains "Claude Attribution" so heuristic question 1 answers YES (a Claude-specific framing). Suggestion: "the AI coding CLI" -> "Claude Code." Not auto-fixed.
 
 ## Control passage (no findings expected)
 
-Our development layer runs on Claude Code across every venture. The pattern is consistent: a Claude Code session reads CLAUDE.md, loads path-scoped rules, and dispatches to fleet machines via crane-mcp. When we need production-scale inference outside the development layer, we call the Claude API directly from Cloudflare Workers cron jobs.
+Our development layer runs on Claude Code across every venture. The pattern is consistent: a Claude Code session reads CLAUDE.md, loads path-scoped rules, and dispatches to fleet machines via the MCP server. When we need production-scale inference outside the development layer, we call the Claude API directly from Cloudflare Workers.
 
 Expected: no findings. Accurate attribution throughout; canonical tool terms for each layer.
