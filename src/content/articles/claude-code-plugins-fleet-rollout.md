@@ -1,7 +1,7 @@
 ---
 title: 'Rolling Out Six Claude Code Plugins Across a Fleet'
 date: 2026-04-23
-description: 'Anthropic shipped a plugin marketplace for Claude Code. We picked six, defined precise trigger conditions for each, and pushed them to every machine in the fleet in one session.'
+description: 'Anthropic shipped a Claude Code plugin marketplace. We picked six, set precise triggers for each, and pushed them across the fleet in one session.'
 author: 'Venture Crane'
 tags: ['claude-code', 'plugins', 'agent-tooling', 'fleet-management']
 draft: false
