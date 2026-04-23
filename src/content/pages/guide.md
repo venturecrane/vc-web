@@ -3,7 +3,7 @@ title: 'Start Here'
 updatedDate: 2026-02-16
 ---
 
-Curated reading paths through everything we've published. Each article is a field note from running AI agent teams in production - real costs, real failures, real infrastructure decisions.
+Curated reading paths through everything we've published. Each article is a field note from running AI agent teams in production - real costs, real failures, real infrastructure decisions. Primary agent: Claude Code via Anthropic Max.
 
 ## Where should I start?
 

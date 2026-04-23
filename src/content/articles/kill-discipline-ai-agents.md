@@ -105,7 +105,7 @@ This seems bureaucratic until you have been burned by an issue that was closed a
 
 ## Kill Discipline as a Cultural Practice
 
-The most important thing about kill discipline is that it does not emerge naturally. You have to codify it explicitly and enforce it consistently. Without explicit rules in project instructions, every AI agent will default to optimistic persistence - trying one more thing, one more time, one more variation.
+The most important thing about kill discipline is that it does not emerge naturally. You have to codify it explicitly and enforce it consistently. Without explicit rules in project instructions, every AI agent will default to optimistic persistence - trying one more thing, one more time, one more variation. This applies directly to Claude Code sessions, where the rules are loaded fresh at session start and enforced throughout.
 
 Here is how we implement it in practice.
 

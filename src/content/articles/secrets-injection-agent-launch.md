@@ -18,7 +18,7 @@ The standard approach - `.env` files checked into repos or copied between machin
 - **Secrets in git history.** Accidentally commit a `.env` file. Remove it. It's still in the history. Now you're rotating keys and scrubbing refs.
 - **Agent exposure.** AI agents can accidentally include environment variable values in commit messages, PR descriptions, or tool call arguments. The blast radius of a secret in an agent's environment is larger than in a traditional dev setup.
 
-We built a CLI launcher that eliminates all of these failure modes. One command fetches the right secrets for the right project from Infisical (our centralized secrets manager), injects them into the agent process as environment variables, and spawns the session. No files on disk. No copy-paste. No guessing which `.env` is current.
+We built a CLI launcher that eliminates all of these failure modes. One command fetches the right secrets for the right project from Infisical (our centralized secrets manager), injects them into the agent process as environment variables, and spawns the session - typically a Claude Code session. No files on disk. No copy-paste. No guessing which `.env` is current.
 
 ---
 

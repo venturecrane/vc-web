@@ -24,7 +24,7 @@ The sprint skill is a prompt-driven orchestrator. It does not manage long-runnin
 5. Spawn all agents in a single message for true parallelism
 6. Wait for completion, collect results, update labels
 
-Each agent receives a self-contained prompt: the issue body, the worktree path, the branch name, and the project's verification command. The agent implements, runs verification, commits, pushes, and opens a PR. If it fails verification three times, it stops and reports failure instead of shipping broken code.
+Each agent receives a self-contained prompt: the issue body, the worktree path, the branch name, and the project's verification command. Each one runs as a Claude Code session - the CLI harness handling tool orchestration, context, and the agent loop. The agent implements, runs verification, commits, pushes, and opens a PR. If it fails verification three times, it stops and reports failure instead of shipping broken code.
 
 The orchestrator only executes one wave per invocation. After Wave 1's PRs are reviewed and merged, you run the sprint skill again with the remaining issues. Wave 2 branches from the updated main. This eliminates inter-wave state management entirely - there is no state to manage.
 

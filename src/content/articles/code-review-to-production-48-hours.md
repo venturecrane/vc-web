@@ -11,7 +11,7 @@ A code review graded a codebase at C. Forty-eight hours later, the same codebase
 
 The codebase was an iPad-first writing app for nonfiction authors. It had an existing foundation - authentication, basic editor, chapter structure - but the code review exposed real problems. A D in testing. Cs in security, architecture, and code quality. Drive query injection vectors in the Google Drive integration. A monolithic page component north of 1,200 lines. Near-zero test coverage on critical paths.
 
-What happened next was not a hackathon. It was a structured sprint where the code review findings became the work queue, ordered by severity, and AI agents worked through it systematically.
+What happened next was not a hackathon. It was a structured sprint where the code review findings became the work queue, ordered by severity, and Claude Code agents worked through it systematically.
 
 ---
 

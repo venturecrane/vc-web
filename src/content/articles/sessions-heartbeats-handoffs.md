@@ -9,7 +9,7 @@ draft: false
 
 An AI coding agent is a process. It starts, does work, and eventually stops. Sometimes it stops gracefully. Sometimes it crashes. Sometimes the human closes the laptop and walks away. If you are running multiple agents across multiple machines, you need answers to the same questions you would ask about any distributed system process: Is it still alive? What was it working on? Did it finish? Can another process safely pick up where it left off?
 
-We built a session management system for AI agents that borrows directly from distributed systems infrastructure - liveness detection via heartbeats, crash recovery via idempotent handoffs, and coordination via session awareness. This article goes deep on the design of each layer.
+We built a session management system for AI agents that borrows directly from distributed systems infrastructure - liveness detection via heartbeats, crash recovery via idempotent handoffs, and coordination via session awareness. Every session in this system is a Claude Code session: the CLI harness that orchestrates tools, context, memory, and sub-agents across machines. This article goes deep on the design of each layer.
 
 ---
 

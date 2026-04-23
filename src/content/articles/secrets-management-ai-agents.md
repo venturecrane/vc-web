@@ -7,7 +7,7 @@ tags: ['secrets', 'infrastructure', 'agent-workflow', 'infisical']
 draft: false
 ---
 
-The threat model for AI agents is not the same as the threat model for human developers.
+The threat model for AI agents is not the same as the threat model for human developers. Our agent workforce runs on Claude Code - the CLI harness - which means every environment variable in scope at session launch is visible and referenceable by the agent for the duration of that session.
 
 A human developer might accidentally commit a `.env` file. That's bad. An AI agent might include an API key in a commit message, echo a secret into a tool call argument, or store a credential value in a knowledge system instead of a secrets manager - all while believing it completed the task correctly. Agents operate autonomously, often across multiple projects and machines, with every environment variable visible and referenceable. The blast radius of a secret in an agent's environment is wider than in a traditional development setup, and the failure modes are different.
 

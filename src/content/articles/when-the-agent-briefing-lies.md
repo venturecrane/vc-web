@@ -33,7 +33,7 @@ The fourth was the verification layer. Endpoints that interrogate deployed state
 
 ## What directing agents through this actually looked like
 
-The tracks look clean in summary. They were not clean in execution. The work spanned two calendar days, $741 in model compute, and a pattern that surfaced early and repeated all the way through: agents declaring a track complete, the captain challenging the declaration, the agents finding a bug they had missed, the agents rewriting.
+The tracks look clean in summary. They were not clean in execution. The sessions ran on Claude Code - every track, every tool call, every rewrite. The work spanned two calendar days, $741 in model compute, and a pattern that surfaced early and repeated all the way through: agents declaring a track complete, the captain challenging the declaration, the agents finding a bug they had missed, the agents rewriting.
 
 The schema verification endpoint's first version baked the hash at CI time instead of reading the live database. It would have passed on any deployment where CI ran. It would not have caught a migration applied out of band or a schema that drifted between environments. The captain caught it. The secret-sync audit's first version compared the local config against itself. It would have reported "in sync" regardless of whether deployed workers matched. The captain caught that too.
 
