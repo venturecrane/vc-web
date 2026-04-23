@@ -17,6 +17,77 @@ Read this before drafting any content for venturecrane.com. These are the canoni
 | Infisical        | "secrets manager" alone                             | Name the tool. "Infisical" on first reference, "secrets manager" acceptable in subsequent references within the same article. |
 | GitHub App       | "the bot", "the integration"                        | The venturecrane-github app (App ID 2619905).                                                                                 |
 
+## Claude Attribution
+
+Editorial checks for content that describes VC's Claude / Anthropic relationship and tooling. The `/edit-article` and `/edit-log` skills enforce these before publish.
+
+### 1. Partnership Relationship - Canonical Form
+
+The only approved characterizations of the VC-Anthropic partnership relationship are:
+
+- "in the Claude Partner Network" (adjective / prepositional use)
+- "pursuing Partner Network status" (verb form)
+- "applied to the Claude Partner Network" (past-action verb form)
+
+Any other characterization of the relationship is BLOCKING. Examples of forms that must be flagged and rewritten:
+
+- "Claude Certified Partner" | misstates certification (we are not certified)
+- "Anthropic Certified" | misstates certification
+- "Claude Partner Network Member" | implies full membership (we are in pipeline)
+- "Official Claude Partner" | implies finalized status
+- "Claude Partner" standalone | ambiguous, reads as claim
+
+Editor-agent rule: check each sentence that characterizes the Anthropic relationship. If the characterization matches a canonical form verbatim, pass. Otherwise, flag BLOCKING and propose a rewrite toward the closest canonical form. Do NOT auto-fix; rewrites are human-review only because surrounding context shapes which canonical form fits.
+
+### 2. Tool Attribution Lexicon
+
+| Term                      | What it means                                                                        | When to use                                                       |
+| ------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------- |
+| Claude Code (also CC CLI) | The command-line agent harness (interactive sessions, CLAUDE.md, skills, MCP client) | Content describing agent sessions, CLI workflow, interactive work |
+| Claude API                | Direct HTTP inference via `https://api.anthropic.com/v1/messages`                    | Content describing production workers, batch jobs, cron pipelines |
+| MCP                       | Model Context Protocol (wire-level tool / resource exposure). Not itself an agent.   | Content describing tool integration, resource surfaces            |
+| Agent SDK                 | The framework for building custom agent harnesses. Distinct from Claude Code.        | Content describing custom harness development                     |
+| Claude Managed Agents     | Anthropic's managed agent infrastructure (launched 2026-04-08)                       | Content describing managed autonomous deployment                  |
+| claude.ai                 | Anthropic's web chat interface                                                       | Content describing web-based Claude use                           |
+| Anthropic Academy         | The training curriculum (courses)                                                    | Content describing Partner Network training path                  |
+| Claude alone              | The model family (`claude-sonnet-4-6`, Haiku, etc.)                                  | When the specific integration point does not matter               |
+
+### 3. Venture-to-Integration Mapping
+
+Editor agents use this mapping to distinguish correct tool attribution from conflation:
+
+| Venture / component                                     | Current shipping integration              | Development layer |
+| ------------------------------------------------------- | ----------------------------------------- | ----------------- |
+| SS pipelines (review-mining, job-monitor, new-business) | Claude API (direct HTTP)                  | Claude Code       |
+| DFG analyst worker                                      | Claude API (direct HTTP)                  | Claude Code       |
+| crane-mcp, crane-mcp-remote                             | MCP infrastructure (protocol, not agent)  | Claude Code       |
+| DC, KE, SC product code                                 | None at product layer (Claude in backlog) | Claude Code       |
+| All ventures                                            | N/A                                       | Claude Code       |
+
+Conflation rules (all BLOCKING):
+
+- "Claude" used when the sentence describes a specific SS or DFG pipeline call -> fix to "the Claude API"
+- "Claude Code" used when the sentence describes a direct HTTP API call -> fix to "the Claude API"
+- "MCP" used as if it were the agent itself -> fix to "Claude Code" or "the agent"
+- "Claude Code" used when describing development-layer work on any venture -> passes (always accurate)
+
+Auto-fix rule: apply fix only when the venture-to-integration mapping yields an unambiguous target. If a sentence is ambiguous (mentions both layers, or references "our AI" without grounding), flag for human review.
+
+### 4. Generic AI-Agent Language Advisory + Retrofit Heuristic
+
+Content that describes concrete Claude Code work (CLAUDE.md references, session management, CC CLI commands, MCP tools, fleet dispatch, agent-session orchestration) should name Claude Code rather than using "AI agent" / "AI coding CLI" generically.
+
+**Retrofit-risk exception via mechanical two-question heuristic:**
+
+1. Does the article's title or H1 describe a Claude Code capability, workflow, or session? If YES, the retrofit exception does NOT apply (flag as advisory).
+2. Does the content already name Claude Code at least once? If YES, the retrofit exception does NOT apply (additional specific attribution is consistent with original scope; flag as advisory).
+
+Only if both answers are NO does the retrofit exception apply (suppress the finding entirely). This makes the exception a checklist step, not a judgment call.
+
+Advisory only. Not auto-fixed.
+
+See `~/dev/crane-console/docs/anthropic-partnership/briefs/venturecrane-site-positioning-pattern.md` for canonical framings and page-type playbook used by Phase 2 editors of the April 2026 site pivot. The pattern doc is a snapshot; this terminology.md section is the living registry.
+
 ## Self-Reference Style
 
 - **Articles**: Third-person ("Venture Crane uses...") or first-person plural ("We built..."). Never "I" in articles.
