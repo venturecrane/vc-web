@@ -21,7 +21,7 @@ jobs:
             const prBody = context.payload.pull_request.body || '';
             const branchName = context.payload.pull_request.head.ref || '';
             const bodyMatch = prBody.match(/(?:fixes|closes|resolves|ref|references?)?\s*#(\d+)/i);
-            const branchMatch = branchName.match(/(\d+)/);
+            const branchMatch = branchName.match(/#(\d+)/);
             let issueNumber = null;
             if (bodyMatch) {
               issueNumber = parseInt(bodyMatch[1]);
@@ -44,17 +44,27 @@ jobs:
         with:
           script: |
             const issueNumber = ${{ steps.get-issue.outputs.issue_number }};
-            const { data: issue } = await github.rest.issues.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: issueNumber,
-            });
-            const labels = issue.labels.map(l => l.name);
-            console.log(`Issue #${issueNumber} labels: ${labels.join(', ')}`);
-            const hasTestRequired = labels.includes('test:required');
-            const hasTestExempt = labels.includes('test:exempt');
-            core.setOutput('test_required', hasTestRequired ? 'true' : 'false');
-            core.setOutput('test_exempt', hasTestExempt ? 'true' : 'false');
+            try {
+              const { data: issue } = await github.rest.issues.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+              });
+              const labels = issue.labels.map(l => l.name);
+              console.log(`Issue #${issueNumber} labels: ${labels.join(', ')}`);
+              const hasTestRequired = labels.includes('test:required');
+              const hasTestExempt = labels.includes('test:exempt');
+              core.setOutput('test_required', hasTestRequired ? 'true' : 'false');
+              core.setOutput('test_exempt', hasTestExempt ? 'true' : 'false');
+            } catch (error) {
+              if (error.status === 404) {
+                console.log(`Issue #${issueNumber} not found in this repo — treating as no linked issue (likely a cross-repo reference or date digits in branch name).`);
+                core.setOutput('test_required', 'false');
+                core.setOutput('test_exempt', 'false');
+                return;
+              }
+              throw error;
+            }
 
       - name: Check for test file changes
         id: check-tests
