@@ -15,7 +15,7 @@ Before shipping anything we ran `parallel-isolation-metrics.sh` against session 
 | ----------- | -------- | -------------------------------- | ----------------- |
 | Console A   | 20       | 18                               | 5                 |
 | Console B   | 12       | 7                                | 4                 |
-| Other repos | —        | 0                                | 0                 |
+| Other repos | 0        | 0                                | 0                 |
 
 Five collision pairs per day at peak, across two repos. Other repos had zero overlap because they see single-session usage. Post-launch we expect both active repos to drop near zero. Clone-fallback rate is the canary: if APFS detection regresses, the rate will show it before the install-time penalty becomes invisible.
 
@@ -52,11 +52,11 @@ Sharp edge discovered during the spike: `cp -c` on non-APFS volumes exits 0 and 
 
 | Machine | OS    | Filesystem              | Clone path                             |
 | ------- | ----- | ----------------------- | -------------------------------------- |
-| m16     | macOS | APFS                    | `cp -c -R`                             |
-| mac23   | macOS | APFS (sealed/journaled) | `cp -c -R` (verified, separate inodes) |
-| mini    | Linux | ext4                    | `npm ci` fallback                      |
-| mbp27   | Linux | ext4                    | `npm ci` fallback                      |
-| think   | Linux | ext4                    | `npm ci` fallback                      |
+| macOS-1 | macOS | APFS                    | `cp -c -R`                             |
+| macOS-2 | macOS | APFS (sealed/journaled) | `cp -c -R` (verified, separate inodes) |
+| linux-1 | Linux | ext4                    | `npm ci` fallback                      |
+| linux-2 | Linux | ext4                    | `npm ci` fallback                      |
+| linux-3 | Linux | ext4                    | `npm ci` fallback                      |
 
 Two macOS workstations use `cp -c -R`. Three Linux fleet machines fall back to `npm ci`. The fallback is explicit and deterministic - not a silent degradation path, but a named branch in the provisioning script.
 
