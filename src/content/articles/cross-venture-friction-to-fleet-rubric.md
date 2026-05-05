@@ -19,7 +19,7 @@ Diagnosing the friction surfaced three independent causes. Fixing them produced 
 
 The agent was hitting the wall repeatedly because three separate systems were contributing:
 
-**Branch protection `strict=true`.** When `required_status_checks.strict` is `true`, any time `main` moves, the PR's checks have to run again after another rebase. A dry run against the live org showed 6 of 7 venture repos enforcing this via a GitHub ruleset - not classic branch protection, rulesets. That's a fleet-wide tax paid on every PR in every active repo.
+**Branch protection `strict=true`.** When `required_status_checks.strict` is `true`, any time `main` moves, the PR's checks have to run again after another rebase. A dry run against the live org showed most venture repos enforcing this via a GitHub ruleset - not classic branch protection, rulesets. That's a fleet-wide tax paid on every PR in every active repo.
 
 **Bare `--force` warnings conflated with `--force-with-lease`.** The warning text in the guardrails didn't distinguish the two operations. `--force-with-lease` is safe - it fails if the remote has diverged since you last fetched. Bare `--force` is not safe - it overwrites unconditionally. The agent was reading the force-push warning and pausing even on `--force-with-lease` flows.
 
@@ -57,7 +57,7 @@ Hard blocks survived unchanged: bare `--force`, force-push to `main`, `reset --h
 
 A new `scripts/fleet-branch-protection.sh` handles both the classic-protection PATCH path and the rulesets PUT path. The script defaults to dry-run; `--apply` requires an explicit flag.
 
-Dry-run output against the live org confirmed the 6-repo scope. The canonical branch protection JSON was updated to set `strict=false`. The script wires into new-venture setup so future ventures inherit the profile automatically.
+Dry-run output against the live org confirmed the affected repos. The canonical branch protection JSON was updated to set `strict=false`. The script wires into new-venture setup so future ventures inherit the profile automatically.
 
 The apply step is Captain-confirmed because it modifies shared infrastructure across production repos. The risk accepted: with `strict=false`, two PRs that each pass CI on their own snapshots can both merge and break main if their changes conflict. The backstop is the fleet health audit's existing `ci-failed` finding type, which surfaces a red main within 24 hours. Velocity profile - Dependabot-dominated, low parallel concurrency - makes the failure mode rare enough to accept.
 
