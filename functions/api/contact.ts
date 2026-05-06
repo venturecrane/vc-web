@@ -48,63 +48,35 @@ function escapeHtml(str: string): string {
     .replace(/"/g, '&quot;')
 }
 
-export const onRequestPost: PagesFunction<Env> = async (context) => {
-  const { request, env } = context
+function jsonResponse(payload: unknown, status: number): Response {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  })
+}
 
-  // Origin check
-  const origin = request.headers.get('Origin')
-  if (origin && !ALLOWED_ORIGINS.includes(origin)) {
-    return new Response(JSON.stringify({ error: 'Forbidden' }), {
-      status: 403,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
-
-  const contentType = request.headers.get('Content-Type') || ''
-  const isJson = contentType.includes('application/json')
-  const isForm = contentType.includes('application/x-www-form-urlencoded')
-
-  if (!isJson && !isForm) {
-    return new Response(JSON.stringify({ error: 'Unsupported content type' }), {
-      status: 415,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
-
-  let data: ContactPayload
+async function readPayload(
+  request: Request,
+  isJson: boolean
+): Promise<ContactPayload | { error: 'parse' }> {
   try {
     const raw = await request.text()
     if (isJson) {
-      data = JSON.parse(raw) as ContactPayload
-    } else {
-      const parsed = parseFormData(raw)
-      data = {
-        name: parsed.name || '',
-        email: parsed.email || '',
-        message: parsed.message || '',
-        website: parsed.website || '',
-      }
+      return JSON.parse(raw) as ContactPayload
+    }
+    const parsed = parseFormData(raw)
+    return {
+      name: parsed.name || '',
+      email: parsed.email || '',
+      message: parsed.message || '',
+      website: parsed.website || '',
     }
   } catch {
-    return isForm
-      ? Response.redirect(new URL('/contact/?error=validation', request.url).toString(), 303)
-      : new Response(JSON.stringify({ error: 'Invalid request body' }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        })
+    return { error: 'parse' }
   }
+}
 
-  // Honeypot - silently succeed if bot filled the hidden field
-  if (data.website) {
-    return isForm
-      ? Response.redirect(new URL('/contact/?sent=1', request.url).toString(), 303)
-      : new Response(JSON.stringify({ ok: true }), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-        })
-  }
-
-  // Validation
+function validate(data: ContactPayload): Record<string, string> {
   const errors: Record<string, string> = {}
 
   if (!data.name || data.name.trim().length === 0) {
@@ -132,59 +104,106 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     errors.message = 'Message contains invalid characters'
   }
 
-  if (Object.keys(errors).length > 0) {
-    return isForm
-      ? Response.redirect(new URL('/contact/?error=validation', request.url).toString(), 303)
-      : new Response(JSON.stringify({ error: 'Validation failed', fields: errors }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        })
-  }
+  return errors
+}
 
-  // Send email via Resend
+async function sendEmail(env: Env, data: ContactPayload): Promise<void> {
   const name = data.name.trim()
   const email = data.email.trim()
   const message = data.message.trim()
 
-  try {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${env.RESEND_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: FROM_EMAIL,
-        to: TO_EMAIL,
-        reply_to: email,
-        subject: `Contact form: ${name}`,
-        html: `<p><strong>From:</strong> ${escapeHtml(name)} &lt;${escapeHtml(email)}&gt;</p><hr><p>${escapeHtml(message).replace(/\n/g, '<br>')}</p>`,
-      }),
-    })
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: FROM_EMAIL,
+      to: TO_EMAIL,
+      reply_to: email,
+      subject: `Contact form: ${name}`,
+      html: `<p><strong>From:</strong> ${escapeHtml(name)} &lt;${escapeHtml(email)}&gt;</p><hr><p>${escapeHtml(message).replace(/\n/g, '<br>')}</p>`,
+    }),
+  })
 
-    if (!res.ok) {
-      const body = await res.text()
-      console.error('Resend API error:', res.status, body)
-      throw new Error(`Resend API returned ${res.status}`)
-    }
-  } catch (err) {
-    console.error('Failed to send email:', err)
-    return isForm
-      ? Response.redirect(new URL('/contact/?error=server', request.url).toString(), 303)
-      : new Response(
-          JSON.stringify({
-            error: 'Failed to send message. Please email smdurgan@venturecrane.com directly.',
-          }),
-          { status: 500, headers: { 'Content-Type': 'application/json' } }
-        )
+  if (!res.ok) {
+    const body = await res.text()
+    console.error('Resend API error:', res.status, body)
+    throw new Error(`Resend API returned ${res.status}`)
+  }
+}
+
+function redirectOrJson(
+  isForm: boolean,
+  request: Request,
+  formPath: string,
+  jsonPayload: unknown,
+  jsonStatus: number
+): Response {
+  if (isForm) {
+    return Response.redirect(new URL(formPath, request.url).toString(), 303)
+  }
+  return jsonResponse(jsonPayload, jsonStatus)
+}
+
+export const onRequestPost: PagesFunction<Env> = async (context) => {
+  const { request, env } = context
+
+  const origin = request.headers.get('Origin')
+  if (origin && !ALLOWED_ORIGINS.includes(origin)) {
+    return jsonResponse({ error: 'Forbidden' }, 403)
   }
 
-  return isForm
-    ? Response.redirect(new URL('/contact/?sent=1', request.url).toString(), 303)
-    : new Response(JSON.stringify({ ok: true }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      })
+  const contentType = request.headers.get('Content-Type') || ''
+  const isJson = contentType.includes('application/json')
+  const isForm = contentType.includes('application/x-www-form-urlencoded')
+
+  if (!isJson && !isForm) {
+    return jsonResponse({ error: 'Unsupported content type' }, 415)
+  }
+
+  const parsed = await readPayload(request, isJson)
+  if ('error' in parsed) {
+    return redirectOrJson(
+      isForm,
+      request,
+      '/contact/?error=validation',
+      { error: 'Invalid request body' },
+      400
+    )
+  }
+
+  // Honeypot - silently succeed if bot filled the hidden field
+  if (parsed.website) {
+    return redirectOrJson(isForm, request, '/contact/?sent=1', { ok: true }, 200)
+  }
+
+  const errors = validate(parsed)
+  if (Object.keys(errors).length > 0) {
+    return redirectOrJson(
+      isForm,
+      request,
+      '/contact/?error=validation',
+      { error: 'Validation failed', fields: errors },
+      400
+    )
+  }
+
+  try {
+    await sendEmail(env, parsed)
+  } catch (err) {
+    console.error('Failed to send email:', err)
+    return redirectOrJson(
+      isForm,
+      request,
+      '/contact/?error=server',
+      { error: 'Failed to send message. Please email smdurgan@venturecrane.com directly.' },
+      500
+    )
+  }
+
+  return redirectOrJson(isForm, request, '/contact/?sent=1', { ok: true }, 200)
 }
 
 // Reject non-POST

@@ -1,40 +1,30 @@
-import js from '@eslint/js'
-import tseslint from 'typescript-eslint'
-import globals from 'globals'
+import { venturecraneEslintConfig } from '@venturecrane/eslint-config'
 import eslintPluginAstro from 'eslint-plugin-astro'
+import globals from 'globals'
+import { fileURLToPath } from 'node:url'
+import { dirname } from 'node:path'
 
-export default tseslint.config(
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-  ...eslintPluginAstro.configs.recommended,
-  {
-    languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.browser,
+const tsconfigRootDir = dirname(fileURLToPath(import.meta.url))
+
+export default venturecraneEslintConfig({
+  tsconfigRootDir,
+  additional: [
+    ...eslintPluginAstro.configs.recommended,
+    {
+      languageOptions: {
+        globals: {
+          ...globals.browser,
+        },
       },
     },
-    rules: {
-      '@typescript-eslint/no-unused-vars': [
-        'warn',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '.*',
-          ignoreRestSiblings: true,
-        },
+    {
+      ignores: [
+        '**/dist/**',
+        '**/node_modules/**',
+        '**/.wrangler/**',
+        '**/.astro/**',
+        '**/.claude/**',
       ],
-      '@typescript-eslint/no-require-imports': 'warn',
-      '@typescript-eslint/no-explicit-any': 'warn',
     },
-  },
-  {
-    files: ['**/*.js'],
-    rules: {
-      '@typescript-eslint/no-require-imports': 'off',
-    },
-  },
-  {
-    ignores: ['**/dist/**', '**/node_modules/**', '**/.wrangler/**', '**/.astro/**'],
-  }
-)
+  ],
+})
