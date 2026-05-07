@@ -31,16 +31,78 @@ function parseFormData(body: string): Record<string, string> {
   return result
 }
 
+function jsonResponse(payload: unknown, status: number): Response {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  })
+}
+
+function redirectOrJson(
+  isForm: boolean,
+  request: Request,
+  formPath: string,
+  jsonPayload: unknown,
+  jsonStatus: number
+): Response {
+  if (isForm) {
+    return Response.redirect(new URL(formPath, request.url).toString(), 303)
+  }
+  return jsonResponse(jsonPayload, jsonStatus)
+}
+
+async function readPayload(
+  request: Request,
+  isJson: boolean
+): Promise<SubscribePayload | { error: 'parse' }> {
+  try {
+    const raw = await request.text()
+    if (isJson) {
+      return JSON.parse(raw) as SubscribePayload
+    }
+    const parsed = parseFormData(raw)
+    return {
+      email: parsed.email || '',
+      website: parsed.website || '',
+    }
+  } catch {
+    return { error: 'parse' }
+  }
+}
+
+async function subscribeToButtondown(
+  apiKey: string,
+  email: string
+): Promise<{ ok: true } | { ok: false; alreadySubscribed: boolean }> {
+  const res = await fetch('https://api.buttondown.email/v1/subscribers', {
+    method: 'POST',
+    headers: {
+      Authorization: `Token ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email_address: email,
+      type: 'regular',
+    }),
+  })
+
+  if (res.ok) return { ok: true }
+
+  if (res.status === 409) {
+    return { ok: false, alreadySubscribed: true }
+  }
+
+  const body = await res.text()
+  console.error('Buttondown API error:', res.status, body)
+  throw new Error(`Buttondown API returned ${res.status}`)
+}
+
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const { request, env } = context
 
-  // Origin check
   const origin = request.headers.get('Origin')
   if (origin && !ALLOWED_ORIGINS.includes(origin)) {
-    return new Response(JSON.stringify({ error: 'Forbidden' }), {
-      status: 403,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return jsonResponse({ error: 'Forbidden' }, 403)
   }
 
   const contentType = request.headers.get('Content-Type') || ''
@@ -48,108 +110,61 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   const isForm = contentType.includes('application/x-www-form-urlencoded')
 
   if (!isJson && !isForm) {
-    return new Response(JSON.stringify({ error: 'Unsupported content type' }), {
-      status: 415,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return jsonResponse({ error: 'Unsupported content type' }, 415)
   }
 
-  let data: SubscribePayload
-  try {
-    const raw = await request.text()
-    if (isJson) {
-      data = JSON.parse(raw) as SubscribePayload
-    } else {
-      const parsed = parseFormData(raw)
-      data = {
-        email: parsed.email || '',
-        website: parsed.website || '',
-      }
-    }
-  } catch {
-    return isForm
-      ? Response.redirect(new URL('/contact/?error=validation', request.url).toString(), 303)
-      : new Response(JSON.stringify({ error: 'Invalid request body' }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        })
+  const parsed = await readPayload(request, isJson)
+  if ('error' in parsed) {
+    return redirectOrJson(
+      isForm,
+      request,
+      '/contact/?error=validation',
+      { error: 'Invalid request body' },
+      400
+    )
   }
 
   // Honeypot - silently succeed if bot filled the hidden field
-  if (data.website) {
-    return isForm
-      ? Response.redirect(new URL('/contact/?subscribed=1', request.url).toString(), 303)
-      : new Response(JSON.stringify({ ok: true }), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-        })
+  if (parsed.website) {
+    return redirectOrJson(isForm, request, '/contact/?subscribed=1', { ok: true }, 200)
   }
 
-  // Validation
-  const email = (data.email || '').trim()
+  const email = (parsed.email || '').trim()
 
   if (!email) {
-    return isForm
-      ? Response.redirect(new URL('/contact/?error=validation', request.url).toString(), 303)
-      : new Response(JSON.stringify({ error: 'Email is required' }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        })
+    return redirectOrJson(
+      isForm,
+      request,
+      '/contact/?error=validation',
+      { error: 'Email is required' },
+      400
+    )
   }
 
   if (CONTROL_CHAR_RE.test(email) || !isValidEmail(email)) {
-    return isForm
-      ? Response.redirect(new URL('/contact/?error=validation', request.url).toString(), 303)
-      : new Response(JSON.stringify({ error: 'Please enter a valid email address' }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        })
+    return redirectOrJson(
+      isForm,
+      request,
+      '/contact/?error=validation',
+      { error: 'Please enter a valid email address' },
+      400
+    )
   }
 
-  // Subscribe via Buttondown API
   try {
-    const res = await fetch('https://api.buttondown.email/v1/subscribers', {
-      method: 'POST',
-      headers: {
-        Authorization: `Token ${env.BUTTONDOWN_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email_address: email,
-        type: 'regular',
-      }),
-    })
-
-    if (!res.ok) {
-      const body = await res.text()
-      // 409 = already subscribed - treat as success
-      if (res.status === 409) {
-        return isForm
-          ? Response.redirect(new URL('/contact/?subscribed=1', request.url).toString(), 303)
-          : new Response(JSON.stringify({ ok: true }), {
-              status: 200,
-              headers: { 'Content-Type': 'application/json' },
-            })
-      }
-      console.error('Buttondown API error:', res.status, body)
-      throw new Error(`Buttondown API returned ${res.status}`)
-    }
+    await subscribeToButtondown(env.BUTTONDOWN_API_KEY, email)
   } catch (err) {
     console.error('Failed to subscribe:', err)
-    return isForm
-      ? Response.redirect(new URL('/contact/?error=server', request.url).toString(), 303)
-      : new Response(JSON.stringify({ error: 'Something went wrong. Please try again.' }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' },
-        })
+    return redirectOrJson(
+      isForm,
+      request,
+      '/contact/?error=server',
+      { error: 'Something went wrong. Please try again.' },
+      500
+    )
   }
 
-  return isForm
-    ? Response.redirect(new URL('/contact/?subscribed=1', request.url).toString(), 303)
-    : new Response(JSON.stringify({ ok: true }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      })
+  return redirectOrJson(isForm, request, '/contact/?subscribed=1', { ok: true }, 200)
 }
 
 // Reject non-POST

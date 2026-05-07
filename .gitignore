@@ -24,6 +24,9 @@ Thumbs.db
 # Cloudflare
 .wrangler/
 
+# Claude Code worktrees (parallel-session sandboxes)
+.claude/worktrees/
+
 # Test
 coverage/
 .lighthouseci/
