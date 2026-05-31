@@ -1,7 +1,7 @@
 ---
 title: 'The Harness Is the Product: What You Own When the AI Brain Is Rented'
 date: 2026-05-30
-description: 'The frontier model rotates roughly monthly. The durable asset is the harness it plugs into. Define the harness by function, not by today tool.'
+description: "The frontier model rotates roughly monthly. The durable asset is the harness it plugs into. Define the harness by function, not by today's tool."
 author: 'Venture Crane'
 tags: ['ai-agents', 'architecture', 'strategy']
 draft: false
@@ -13,7 +13,7 @@ So does almost everything else in the stack. The memory derivation tech rotates.
 
 The durable, compounding asset is not the brain. It is the harness the brain plugs into.
 
-We have been building an AI employee product, and the discipline that has held up best across every model and vendor swap is this one: when you hit any current tool in your system, ask what function it is serving. The function belongs to the harness, which is stable and owned. The tool belongs to the swappable substrate underneath. Teams chronically under-scope the harness because they anchor on today's implementation - they see Honcho or Composio or a specific model and conclude that the integration is the thing they are building. It is not. The integration is a tenant in a building you own.
+We have been building an AI employee product, and the discipline that holds up across model and vendor swaps is this one: when you hit any current tool in your system, ask what function it is serving. The function belongs to the harness, which is stable and owned. The tool belongs to the swappable substrate underneath. Teams chronically under-scope the harness because they anchor on today's implementation - they see Honcho or Composio or a specific model and conclude that the integration is the thing they are building. It is not. The integration is a tenant in a building you own.
 
 ---
 
@@ -39,7 +39,7 @@ None of those functions name a vendor. That is the point. Every one of them will
 
 ## Exposure is config, not an invariant
 
-Here is a correction that took us a while to see, and it is worth featuring because it is a trap a lot of agent products fall into.
+Here is a correction worth featuring, because it is a trap a lot of agent products fall into.
 
 It is tempting to write a rule like "a human approves before anything goes out externally" and treat it as a product absolute - a safety invariant baked into the system. It is not an invariant. It is one value on a configurable axis. Some customers will want a human in the loop on every external send. Others will want the agent to email, text, or call autonomously the moment it is confident. Both are legitimate. The moment you hardcode one of them, you have shipped a policy as if it were physics.
 
