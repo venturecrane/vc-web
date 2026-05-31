@@ -4,7 +4,7 @@ date: 2026-05-30
 description: 'Memory notes told the agent not to echo secret values. It did anyway, twice. The fix was structural enforcement at the tool boundary, not better instructions.'
 author: 'Venture Crane'
 tags: ['secrets', 'infrastructure', 'agent-workflow', 'security']
-draft: true
+draft: false
 ---
 
 We had a memory note that said, in plain language, do not run the command that lists secret values into your own transcript. It was 36 days old. An agent read it, acknowledged it, and then ran exactly that command, dumping a bot token into its session output. Earlier the same pattern had leaked a GitHub personal access token. Same failure, different day, same mitigation already in place and already ignored.

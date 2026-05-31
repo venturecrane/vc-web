@@ -4,7 +4,7 @@ date: 2026-05-30
 description: 'When every customer runs an isolated agent deployment, monitoring becomes per-tenant and lifecycle-aware. The heartbeat, webhook, and fleet stack we wired.'
 author: 'Venture Crane'
 tags: ['observability', 'infrastructure', 'monitoring', 'cloudflare-workers']
-draft: true
+draft: false
 ---
 
 We are building an AI employee product. Each customer gets their own isolated deployment: a dedicated agent instance running on its own machine, with its own secrets, its own audit log, its own error stream. No shared runtime, no multi-tenant request path. One customer, one isolated agent.

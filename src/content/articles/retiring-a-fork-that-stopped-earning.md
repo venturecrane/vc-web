@@ -4,7 +4,7 @@ date: 2026-05-30
 description: 'A dependency you control "for safety" can quietly become pure cost. We audited a fork from first principles and found the safe move was to delete it.'
 author: 'Venture Crane'
 tags: ['architecture', 'infrastructure', 'dependencies', 'process']
-draft: true
+draft: false
 ---
 
 We deleted the reason for a repository to exist. The repository is still there for now, but as of this week nothing in our build path consumes it, and the plan that retires it for good is written down. The interesting part is not the deletion. It is what the audit found on the way there: a dependency we had been keeping "for safety" was not making us safer. It was costing us a second point of failure and a recurring ritual, and every justification for keeping it had been written after the fact.

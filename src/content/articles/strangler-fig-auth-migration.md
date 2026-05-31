@@ -4,7 +4,7 @@ date: 2026-05-30
 description: 'A session shim that rebuilds the old session shape from a new identity provider lets you swap auth under dozens of call sites without a big-bang rewrite.'
 author: 'Venture Crane'
 tags: ['auth', 'architecture', 'migration', 'clerk']
-draft: true
+draft: false
 ---
 
 We were running two authentication systems in one application. One product, two ways to prove who you are.

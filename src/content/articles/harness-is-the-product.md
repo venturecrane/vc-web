@@ -4,7 +4,7 @@ date: 2026-05-30
 description: 'The frontier model rotates roughly monthly. The durable asset is the harness it plugs into. Define the harness by function, not by today tool.'
 author: 'Venture Crane'
 tags: ['ai-agents', 'architecture', 'strategy']
-draft: true
+draft: false
 ---
 
 Opus 4.8 shipped on May 28. The model we were building on two days earlier is now the previous model. This happens roughly once a month, and it is going to keep happening: a new frontier model lands, it is better than the last one, and every product built on the prior one inherits the upgrade for free. The brain you ship on is rented. It rotates.
