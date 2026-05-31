@@ -1,6 +1,6 @@
 ---
 title: 'Hardening an AI employee into a config-governed, safety-gated system'
-date: 2026-05-30
+date: 2026-05-29
 tags: ['ai-employee', 'architecture', 'safety', 'config']
 draft: false
 ---

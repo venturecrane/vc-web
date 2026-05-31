@@ -1,6 +1,6 @@
 ---
 title: 'Moving secret-leak prevention outside the agent'
-date: 2026-05-30
+date: 2026-05-28
 tags: ['security', 'infrastructure', 'agents']
 draft: false
 ---

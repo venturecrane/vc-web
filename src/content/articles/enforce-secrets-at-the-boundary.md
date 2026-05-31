@@ -1,6 +1,6 @@
 ---
 title: 'You Cannot Instruct an Agent Not to Leak'
-date: 2026-05-30
+date: 2026-05-27
 description: 'Memory notes told the agent not to echo secret values. It did anyway, twice. The fix was structural enforcement at the tool boundary, not better instructions.'
 author: 'Venture Crane'
 tags: ['secrets', 'infrastructure', 'agent-workflow', 'security']

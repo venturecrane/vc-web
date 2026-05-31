@@ -1,6 +1,6 @@
 ---
 title: 'Collapsing Two Auth Systems Into One Without Rewriting 73 Call Sites'
-date: 2026-05-30
+date: 2026-05-21
 description: 'A session shim that rebuilds the old session shape from a new identity provider lets you swap auth under dozens of call sites without a big-bang rewrite.'
 author: 'Venture Crane'
 tags: ['auth', 'architecture', 'migration', 'clerk']
