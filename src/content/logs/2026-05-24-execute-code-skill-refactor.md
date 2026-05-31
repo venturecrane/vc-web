@@ -1,6 +1,6 @@
 ---
 title: 'Moving agent fetch loops into a code-execution primitive'
-date: 2026-05-30
+date: 2026-05-24
 tags: ['ai-employee', 'agents', 'tokens', 'reliability']
 draft: false
 ---

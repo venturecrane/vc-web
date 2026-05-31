@@ -1,6 +1,6 @@
 ---
 title: 'Observability That Is Born and Dies With the Tenant'
-date: 2026-05-30
+date: 2026-05-25
 description: 'When every customer runs an isolated agent deployment, monitoring becomes per-tenant and lifecycle-aware. The heartbeat, webhook, and fleet stack we wired.'
 author: 'Venture Crane'
 tags: ['observability', 'infrastructure', 'monitoring', 'cloudflare-workers']

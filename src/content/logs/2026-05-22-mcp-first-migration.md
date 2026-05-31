@@ -1,6 +1,6 @@
 ---
 title: 'Going vendor-direct MCP first and retiring an aggregator default'
-date: 2026-05-30
+date: 2026-05-22
 tags: ['ai-employee', 'mcp', 'integrations', 'architecture']
 draft: false
 ---

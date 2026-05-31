@@ -1,6 +1,6 @@
 ---
 title: 'Writing down every token before one of them broke'
-date: 2026-05-30
+date: 2026-05-20
 tags: ['security', 'infrastructure', 'documentation']
 draft: false
 ---

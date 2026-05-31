@@ -1,6 +1,6 @@
 ---
 title: 'Binding claude.ai projects to the right venture'
-date: 2026-05-30
+date: 2026-05-26
 tags: ['claude-ai', 'mcp', 'infrastructure']
 draft: false
 ---

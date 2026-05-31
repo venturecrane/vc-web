@@ -1,6 +1,6 @@
 ---
 title: 'Retiring a Fork That Stopped Earning Its Keep'
-date: 2026-05-30
+date: 2026-05-23
 description: 'A dependency you control "for safety" can quietly become pure cost. We audited a fork from first principles and found the safe move was to delete it.'
 author: 'Venture Crane'
 tags: ['architecture', 'infrastructure', 'dependencies', 'process']
