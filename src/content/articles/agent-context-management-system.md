@@ -4,6 +4,7 @@ date: 2026-02-14
 description: 'Building centralized context management so AI agents start every session with the right knowledge.'
 author: 'Venture Crane'
 tags: ['agent-context', 'mcp', 'infrastructure']
+updatedDate: 2026-06-01
 draft: false
 ---
 
@@ -20,6 +21,8 @@ We built a centralized context management system to solve this. It gives every a
 - **Work queue visibility** - GitHub issues by priority and status
 
 The system is designed for a small team (1-5 humans) running multiple AI agent sessions in parallel across a fleet of development machines.
+
+> 🎥 **Prefer the 80-second version?** Watch the explainer: [Every AI agent session starts cold — here's how we fixed it](https://youtu.be/2D3PhQdEINs).
 
 ---
 
