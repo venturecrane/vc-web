@@ -1,7 +1,7 @@
 ---
 title: '"Merged" Is Not "Wired"'
 date: 2026-06-13
-description: 'A grounded audit of live output paths - not PR titles - is the only reliable way to discover that safety-critical features have been built, tested, and merged but are not in the path that real output actually travels.'
+description: 'Live output path audit - not PR titles - reveals merged safety-critical features that never reached the path real output actually travels.'
 author: 'Venture Crane'
 tags: ['agent-operations', 'architecture', 'reliability', 'safety']
 draft: false

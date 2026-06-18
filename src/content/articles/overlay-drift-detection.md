@@ -1,7 +1,7 @@
 ---
 title: 'Overlay Drift: The Fleet Observability Gap That Looks Like a Deployment'
 date: 2026-06-17
-description: 'Deploying a new agent overlay version does not mean all running instances have it - persistent fleet processes require active drift detection, not deployment confirmation.'
+description: 'Deploying a new overlay version does not mean all instances have it - persistent processes require active drift detection, not deployment confirmation.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'agent-operations', 'observability', 'fleet-management']
 draft: false

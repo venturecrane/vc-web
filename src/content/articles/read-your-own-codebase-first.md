@@ -1,7 +1,7 @@
 ---
 title: 'Read Your Own Codebase First'
 date: 2026-06-15
-description: 'Before opening vendor documentation for a known-library integration, check whether another part of your codebase has already solved it - prior implementations encode hard-won constraints that vendor docs omit.'
+description: 'Prior implementations encode constraints vendor docs omit - check your codebase before any setup guide for a library you have integrated before.'
 author: 'Venture Crane'
 tags: ['infrastructure', 'auth', 'process', 'engineering-practice']
 draft: false

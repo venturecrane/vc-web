@@ -1,7 +1,7 @@
 ---
 title: 'Model Selection Is an Operational Variable, Not a Code Constant'
 date: 2026-06-15
-description: 'Routing between a main model and an escalation model via config rather than code gives you per-customer cost control, live tier changes without redeploy, and a verification path for actual API spend.'
+description: 'Config-driven model selection gives per-customer cost control, live tier changes without redeploy, and a verification path for actual API spend.'
 author: 'Venture Crane'
 tags: ['ai-agents', 'architecture', 'agent-operations', 'configuration']
 draft: false
