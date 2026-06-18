@@ -1,7 +1,7 @@
 ---
 title: 'claude.ai as a Routing Surface, Not a Content Generator'
 date: 2026-06-17
-description: 'MCP turns a conversation interface into a capable operator by exposing production tools directly - the LLM stops being a content generator and becomes the routing layer.'
+description: 'MCP turns a conversation interface into a capable operator by exposing production tools directly - the LLM becomes the routing layer, not a content generator.'
 author: 'Venture Crane'
 tags: ['architecture', 'mcp', 'agent-operations', 'agents']
 draft: false
