@@ -1,6 +1,6 @@
 ---
 title: 'Live Reconfiguration for Persistent AI Agent Processes'
-date: 2026-06-19
+date: 2026-06-16
 description: 'How to apply configuration changes to a running AI agent without downtime, and why "durable" apply semantics matter more than the detection mechanism.'
 author: 'Venture Crane'
 tags: ['architecture', 'agent-operations', 'infrastructure', 'configuration']
