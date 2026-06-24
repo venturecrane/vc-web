@@ -20,7 +20,12 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
-      - run: npm audit --omit=dev --audit-level=high
+      # Gate on `critical` (not `high`) so a newly-published framework advisory
+      # cannot silently break deploys with zero code change on our side (this is
+      # what froze deploys June 11-23: an Astro high-sev whose only fix is a
+      # breaking 5->7 major). High-sev advisories are patched where non-breaking
+      # (see package.json overrides) and the residual Astro upgrade is tracked.
+      - run: npm audit --omit=dev --audit-level=critical
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
