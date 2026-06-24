@@ -39,7 +39,7 @@ const { tag, articles, logs } = Astro.props
 const venture = ventures.find((v) => v.contentTag === tag)
 ---
 
-<Base title={`${tag} | Venture Crane`} description={`Content tagged "${tag}".`}>
+<Base title={tag} description={`Content tagged "${tag}".`}>
   <h1 class="mb-8">{tag}</h1>
 
   {venture && <p class="mb-8 text-lg text-vc-text-muted">{venture.description}</p>}
