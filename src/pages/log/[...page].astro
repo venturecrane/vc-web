@@ -18,10 +18,7 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>
 const { page } = Astro.props as Props
 ---
 
-<Base
-  title="Ship Log | Venture Crane"
-  description="Ship log from the Venture Crane development lab."
->
+<Base title="Ship Log" description="Ship log from the Venture Crane development lab.">
   <h1 class="mb-8">Ship Log</h1>
   {
     page.data.length > 0 ? (
