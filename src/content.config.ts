@@ -1,4 +1,5 @@
-import { defineCollection, z } from 'astro:content'
+import { defineCollection } from 'astro:content'
+import { z } from 'astro/zod'
 import { glob } from 'astro/loaders'
 
 // Reject article/log `date:` values stamped beyond today in the project's
@@ -25,7 +26,7 @@ const articles = defineCollection({
     author: z.string().default('Venture Crane'),
     tags: z.array(z.string()).default([]),
     updatedDate: z.coerce.date().optional(),
-    repo: z.string().url().optional(),
+    repo: z.url().optional(),
     draft: z.boolean().default(false),
     ogImage: z.string().optional(),
   }),
