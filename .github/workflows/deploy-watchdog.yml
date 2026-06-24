@@ -1,0 +1,86 @@
+name: Deploy Watchdog
+
+# Catches the failure mode that silently froze the site June 11-23: a push to
+# main completes CI but the `deploy` job does not succeed (it is skipped when an
+# upstream job fails), so merged content never publishes and nothing flags it.
+# This fires after every CI run on main; if deploy did not succeed it opens (and
+# dedupes) a loud issue, and auto-closes it once a deploy succeeds again.
+
+on:
+  workflow_run:
+    workflows: ['CI']
+    types: [completed]
+
+permissions:
+  issues: write
+  actions: read
+
+jobs:
+  check-deploy:
+    if: github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify the deploy job ran
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const run = context.payload.workflow_run;
+            const { owner, repo } = context.repo;
+            const LABEL = 'deploy-watchdog';
+
+            // Ensure the dedup label exists (idempotent).
+            try {
+              await github.rest.issues.getLabel({ owner, repo, name: LABEL });
+            } catch {
+              await github.rest.issues
+                .createLabel({ owner, repo, name: LABEL, color: 'b60205',
+                  description: 'Live site is behind main (deploy did not run)' })
+                .catch(() => {});
+            }
+
+            // Did the deploy job of this CI run succeed?
+            const jobs = await github.paginate(
+              github.rest.actions.listJobsForWorkflowRun, { owner, repo, run_id: run.id });
+            const deploy = jobs.find(j => /deploy/i.test(j.name));
+            const deployed = deploy && deploy.conclusion === 'success';
+
+            // Existing open watchdog issue, if any.
+            const openIssues = await github.paginate(
+              github.rest.issues.listForRepo, { owner, repo, state: 'open', labels: LABEL });
+            const existing = openIssues[0];
+            const sha = (run.head_sha || '').slice(0, 7);
+
+            if (deployed) {
+              if (existing) {
+                await github.rest.issues.createComment({ owner, repo, issue_number: existing.number,
+                  body: `✅ Deploy recovered — \`${sha}\` deployed successfully. Closing.` });
+                await github.rest.issues.update({ owner, repo, issue_number: existing.number, state: 'closed' });
+              }
+              return;
+            }
+
+            // Deploy did NOT succeed on main → the live site is behind main.
+            const body = [
+              '**The live site is behind `main`.** A push to `main` completed CI but the `deploy` ' +
+              'job did not succeed, so the merged content did NOT publish.',
+              '',
+              `- Commit: \`${sha}\``,
+              `- CI run: ${run.html_url}`,
+              `- Deploy job conclusion: ${deploy ? deploy.conclusion : 'not present / skipped'}`,
+              '',
+              'Fix the failing upstream CI step (build / lint / typecheck / audit), then re-run or ' +
+              'push again. This issue auto-closes when a deploy succeeds.',
+              '',
+              '<!-- deploy-watchdog-marker -->',
+            ].join('\n');
+
+            if (existing) {
+              await github.rest.issues.createComment({ owner, repo, issue_number: existing.number,
+                body: `🚨 Still not deploying — \`${sha}\` (${run.html_url})` });
+            } else {
+              await github.rest.issues.create({ owner, repo,
+                title: '🚨 vc-web deploy did not run — live site is behind main',
+                body, labels: [LABEL] });
+            }
+
+            core.setFailed('Deploy did not run on main; the live site is behind main.');
