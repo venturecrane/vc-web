@@ -1,58 +1,54 @@
 ---
-title: 'Long-Running Agent Work Needs a Substrate, Not a Longer Prompt'
+title: 'An Agent Should Write the Script, Not Be the Loop'
 date: 2026-06-21
-description: 'An agent task that exceeds a single turn budget needs durable, resumable, cancellable execution: a job ledger and a segmented worker, not more context.'
+description: 'When an agent task burns money, the reflex is to make the run survivable. Often the real fix is upstream: the agent should write the script, not be the loop.'
 author: 'Venture Crane'
-tags: ['architecture', 'agent-operations', 'costs', 'agents']
+tags: ['agent-operations', 'costs', 'architecture', 'agents']
 draft: false
 ---
 
-A single conversation turn has a budget. It has a wall-clock reply deadline, a context window that fills, and a token bill that climbs with every tool result appended to the history. Most agent work fits comfortably inside that budget. Some does not. The failure mode when an unbounded task meets a bounded turn is specific and expensive, and the fix is not a longer prompt or a higher timeout. It is a durable execution substrate underneath the agent.
+We asked an agent to do something trivial: read about forty inbox items and add up the amounts. It cost around fifty dollars and produced nothing. The useful part of that story is not how we made it survivable. It is that we killed it - late, and a little lucky.
 
-We hit this directly. A multi-tenant agent platform was asked to do something mundane: read roughly forty inbox items and total the amounts. That is not a hard reasoning problem. But the agent ran it as one synchronous turn, against a hard 55-second reply budget. The turn could not finish forty reads, summaries, and a running total inside the window. It timed out, and on the next attempt it restarted from zero - no memory of the reads it had already done. That task burned around fifty dollars and delivered nothing. The cost did not come from the difficulty of the work. It came from doing the same expensive front-half of the work over and over, never crossing the finish line.
+That framing matters, because the obvious lesson is the wrong one. The obvious lesson is "long agent runs need durable execution, so build a substrate that checkpoints and resumes." We almost learned that lesson. It would have been a mistake, because it answers a question we should never have been asking.
 
-## Why a Long Task Cannot Be One Turn
+## What actually happened
 
-The instinct is to treat this as a tuning problem: raise the timeout, trim the prompt, batch the reads. Those help at the margin and miss the structure. A synchronous turn is the wrong container for any task whose natural runtime exceeds the turn budget, for three independent reasons.
+The agent ran the task as a single conversation turn. Forty sequential reads, each appended to the context, a running total carried in the history, against a hard reply budget measured in tens of seconds. The turn could not finish forty reads and a sum inside the window, so it timed out. The next attempt started clean - no memory of the reads it had already done - and redid the expensive front half. Then it timed out again. Several attempts in, there was still no total, and the meter was running the whole time.
 
-First, the deadline. A reply budget exists because something upstream is waiting on the response - a webhook, a mailbox, a request handler. You cannot extend it indefinitely without breaking the thing that called the agent.
+Read that and the engineer's instinct fires immediately: the run needs to survive. Checkpoint the progress, persist the state, let a worker resume where the last attempt died. Reach for durable execution. The instinct is real and the machinery is buildable, and it is exactly the trap.
 
-Second, the context window. A task that processes forty items accumulates forty items' worth of intermediate state in the conversation history. Even if the deadline were infinite, the window is not. The history grows until the model is reasoning over a transcript that is mostly bookkeeping.
+## The wrong question, answered well
 
-Third, and most damaging, the absence of resume. When a turn dies, a fresh attempt starts with no record of what the previous one accomplished. There is no checkpoint to resume from, so the only behavior available is to redo everything. That is what turns a forty-dollar timeout into an open-ended bill: not the cost of the work, but the cost of repeating the work's beginning indefinitely.
+Durable execution answers "how do we make this long agent run finish?" That is a good answer to a question we had no business asking. Summing forty numbers is not a reasoning task. It is arithmetic over a list. Using autoregressive inference as the runtime for deterministic bulk work is the most expensive way to do it that exists.
 
-The lesson generalizes past inbox-totaling. Anything that exceeds a turn's natural budget - a multi-document review, a long batch of enrichment calls, an unattended job that must run to completion while no one watches - has the same shape. It needs durable, resumable, cancellable execution. The agent's reasoning is fine. The container is wrong.
+An agent reading forty items one at a time, holding the running total in its context window, paying token cost on every step and re-deriving its place after every interruption, is the wrong machine pointed at the job. A five-line script does the same work for free: deterministically, instantly, and without a budget to blow. Making the agent's version survivable would have made a fundamentally wasteful process reliable. That is worse than the timeout, not better, because a reliable waste does not announce itself - it just quietly costs fifty dollars a run forever.
 
-## What the Substrate Actually Is
+## The principle: write the script, do not be the loop
 
-The substrate is designed around four parts, and none of them is a new persistence engine. The principle was to lean on primitives that already existed rather than build a general durable-execution framework. The control plane - the ledger and its safety invariants - is built; the in-process worker loop that drives it is the remaining integration work, and the design below is what that loop is being built against.
+An agent's value is judgment. Deciding what to do, reading ambiguous input, noticing the one item that breaks the pattern, choosing the next step when the path is not obvious. That is work the model is uniquely good at and a script cannot do.
 
-A **job ledger** is the control plane. It is a single mutable row per job in a broker-owned store, recording exactly the facts the agent's conversation history cannot hold: status, the rotating session tip to resume from, a lease for crash recovery, accumulated cost, the delivery target, and a reference to the result. The conversation itself lives where it already lives - in the agent's append-only session store. The ledger holds only the control facts that store cannot. A second table records idempotency keys, so a step that has a side effect can be marked before it runs and skipped on resume rather than fired twice.
+The moment the work becomes "do the same mechanical thing N times and accumulate the result," the agent has left the part it is good at. The right move is for it to emit code that does the iteration and read back the answer - not to perform the loop itself, token by token, inside its own context. The agent decides _what_ to compute and _how_ to handle the weird cases; generated code does the computing. Be the thing that writes and dispatches the loop, not the thing that runs as the loop.
 
-An **in-process worker thread** advances jobs in segments. This is the part that matters most, the easiest to get wrong, and the piece still being wired in. By design it is not a new replicated process and not an async task on the request-handling event loop. It is a background thread inside the gateway that already runs scheduled work, reusing the same agent-construction path the cron scheduler uses. The loop is deliberately simple: claim a job, resume the conversation from the recorded tip, run one segment of work, record what it spent and where it left off, and repeat. The job advances across many segments and many turns, so no single segment has to fit the whole task inside one reply budget.
+This is not a niche optimization. It is the difference between an agent that costs pennies and one that costs real money to add up a column, and the two are indistinguishable until the bill arrives.
 
-A **result store** holds the output. The artifact is written to per-customer object storage (Cloudflare R2) before delivery is attempted, so a host reschedule mid-delivery cannot orphan a completed result.
+## A filter you can apply before you build anything
 
-**Status and cancel verbs** make the job observable and stoppable. A `start_background_job` verb returns a ticket inside the reply budget without waiting for the work. A `job_status` verb reports state and the result reference. A `job_cancel` verb sets a flag the worker checks at every iteration boundary, so a runaway job can be stopped without killing the process.
+The failure is seductive because the symptom - a long run that keeps dying - looks identical whether the task is legitimately long or fundamentally misshapen. From the outside, "needs durable execution" and "should have been a script" present the same way. So before you build infrastructure to make an expensive agent run reliable, put the task through one question: is the agent the right runtime for this work, or should it be writing code that runs somewhere cheaper?
 
-## The Properties That Make It Safe
+Three signs the answer is "write code, do not run the loop":
 
-Durability is not just "save the state." A few invariants do the real work, and they are worth stating because they are the parts a naive version omits. Some already live in the control plane; others are properties the worker loop is being built to guarantee.
+- The work is **deterministic** - same input, same output, no judgment per item.
+- The work is **bulk or repetitive** - the cost is in the count, not the difficulty.
+- The per-item cost is **trivial in code and nontrivial in tokens** - you are paying inference prices for arithmetic.
 
-Cost is enforced pre-spend, by design, from real provider-reported usage, at the per-tool-iteration boundary. After each tool result is appended, the worker recomputes the projected cost of the next request and hard-stops if the job would exceed its budget. This is the direct antidote to the fifty-dollar failure: a job carries a budget in cents, and the budget is checked before the next expensive call, not discovered after the bill arrives. It also produces the first real per-job cost measurement, which is its own kind of valuable.
+When all three hold, durability is the wrong lever. You are not trying to make a long job survive. You are trying to stop doing the job the slow way.
 
-Lease fencing prevents double execution. Each claim mints a monotonically increasing epoch, and every privileged write to the ledger carries it. A worker that was presumed dead and respawned-but-not-actually-dead finds its writes rejected as stale. Two workers cannot both advance the same job, and they cannot both deliver the same result.
+## When durable execution is the right tool
 
-Side effects are journaled before they happen. The idempotency key for a step is recorded before the step runs, not after. If the process crashes between recording and acting, the resume sees an in-progress key it cannot resolve and parks the job for review rather than guessing. Fail-closed beats double-send.
+This is not an argument against durable execution. There is genuinely long, unattended work an agent must drive itself - a multi-document review where each step needs a judgment call, a job that legitimately runs for an hour because the reasoning cannot be compiled into a script. That work needs a durable substrate: a record of progress, a worker that resumes across interruptions, the ability to cancel. Building it is correct, and we are.
 
-## When You Need This, and When You Do Not
+The receipts task was not that work, and the tell was that every step was mechanical. The discipline is not "never build durable execution." It is refusing to reach for the heavyweight tool on reflex, because the symptom looks the same as the case that genuinely needs it.
 
-This is not a pattern to reach for by default. Most agent tasks finish in a turn, and wrapping them in a job ledger adds machinery that buys nothing. The substrate earns its complexity only when a task genuinely exceeds the turn budget and must complete unattended.
+## The durable takeaway
 
-The clean signals are: the work is long enough to time out a synchronous reply; it must survive a crash or a host restart without redoing completed work; the cost is high enough that repeating the front half is a real bill; and the result needs to be retrievable later rather than returned inline. A multi-document review fits all four. Inbox-totaling, it turned out, fits them too - not because it is hard, but because forty sequential reads exceed the budget and a restart that loses progress is ruinously wasteful.
-
-The pattern is overkill when the task fits in a turn, when there is no unattended requirement (a human is watching and can retry), or when the work is high-volume and better served by a purpose-built batch pipeline than by a long agent run.
-
-## The Durable Takeaway
-
-When an agent task runs over budget, the reflex is to make the turn bigger - more time, more context, a tighter prompt. That treats the symptom. The turn is a container with a fixed budget, and some work does not fit. The right move is to put a substrate underneath the agent: a durable record of each job's state, a worker that advances it in resumable segments, a result store, and the verbs to check and cancel it. The reasoning stays in the agent. The duration, the survival, and the delivery move below it. A task that cannot finish in one breath should not be asked to hold its breath - it should be allowed to take many.
+We caught the fifty-dollar version late, after it had already burned the money, and stopping it was more luck than process. The discipline we want is to catch it at design time - to ask, before the agent starts, whether it should be doing this work or writing the thing that does it. The most expensive agent failures do not look like bugs. They look like reasonable tasks pointed at the wrong machine, running well enough to bill you and badly enough to never finish.
