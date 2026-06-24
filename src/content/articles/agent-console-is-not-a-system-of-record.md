@@ -4,16 +4,16 @@ date: 2026-06-20
 description: "Build a console over an agent that works in a customer's systems, render their data back, and you become a shadow system of record you never meant to own."
 author: 'Venture Crane'
 tags: ['architecture', 'security', 'agent-operations', 'agents']
-draft: true
+draft: false
 ---
 
 When you build an operator console over an AI agent that works inside a customer's systems, there is a gravitational pull toward rendering the customer's own data back to them. The agent reads their records, drafts against their cases, touches their documents. A detail view that shows what it worked on feels like the obvious next screen. It is the wrong screen. The moment the console displays the customer's business data, it becomes a shadow system of record you never intended to own, and that ownership is a security, compliance, and scope liability you now carry for every customer and every vertical you serve.
 
-The discipline is a single boundary: the console **manages and observes the agent** - its configuration, its authority, its actions, its health - and it never re-hosts the customer's data. We learned to draw that line the hard way, and the cleanest way to explain it is to walk through where it broke and how the boundary was reset.
+The discipline is a single boundary: the console **manages and observes the agent** - its configuration, its authority, its actions, its health - and it never re-hosts the customer's data. We drew that line the hard way, and the cleanest way to explain it is to walk through where it broke and how the boundary was reset.
 
-## How the data surface creeps in
+## How the data surface expands
 
-We built a customer-facing console over an AI employee product - a multi-tenant agent that acts inside a customer's own tools as a credentialed user. A page-by-page review of the console found something nobody designed on purpose: a per-engagement detail view that rendered a statement of facts, a document-and-communication timeline, and a set of deadlines. Read back the description and the problem is obvious - that is a window into the customer's system of record. It mirrors the very data store our own security posture told partners we do not build.
+We built a customer-facing console over a customer-installed AI agent product - a multi-tenant agent that acts inside a customer's own tools as a credentialed user. A page-by-page review of the console found something nobody designed on purpose: a per-engagement detail view that rendered the customer's own records, a document timeline, and a set of pending tasks. Read back the description and the problem is obvious - that is a window into the customer's system of record. It mirrors the very data store our own security posture told partners we do not build.
 
 Nobody set out to build a shadow database. The surface accreted. Each screen answered a reasonable question - "what is the agent working on, show me the context" - and each answer pulled a little more of the customer's content into our product. Alongside it, the review found the same drift in the type system: a typed, vertical-shaped reference field on the audit records, a hardcoded lifecycle enum baked into product structure, and a console-side "approve and send" button that held a draft and transmitted it. Every one of those was a symptom of the same missing boundary. The detail view was just the most visible.
 
@@ -48,7 +48,7 @@ This is the part that makes the discipline pay for itself in engineering cost, n
 
 ## No action surface that touches the work
 
-The same boundary kills the "approve and send" button. If external sends require a human, that is an _entitlement_ configured under Direct - the agent simply does not hold send authority. The approval then happens where the work lives: the agent leaves a draft in the native tool and a person reviews and sends it there, or, for a channel with no native draft state, the agent asks over the same conversational pipe it talks on and the human answers there. Supervision in the console is a read-only lens on the audit record: "the agent is drafting, not sending; here is what is pending a human." The only buttons in the entire console change the _employment_ - grant a role, flip an entitlement, connect a system. Everything about the actual work is read-only.
+The same boundary rules out the "approve and send" button the review flagged for removal. If external sends require a human, that is an _entitlement_ configured under Direct - the agent simply does not hold send authority. The approval then happens where the work lives: the agent leaves a draft in the native tool and a person reviews and sends it there, or, for a channel with no native draft state, the agent asks over the same conversational pipe it talks on and the human answers there. Supervision in the console is a read-only lens on the audit record: "the agent is drafting, not sending; here is what is pending a human." The only buttons in the entire console change the _employment_ - grant a role, flip an entitlement, connect a system. Everything about the actual work is read-only.
 
 There is exactly one carved exception, and naming it as an exception is what keeps it from becoming a loophole: a compliance reviewer who needs a frozen evidence packet can have content materialized transiently, on explicit human request, delivered, and not retained. It is an exception by name precisely so it cannot be cited to justify any standing store.
 

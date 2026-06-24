@@ -4,7 +4,7 @@ date: 2026-06-22
 description: 'When the workforce is AI agents, the operations manual stops being shelfware and becomes the executable spec the venture runs on.'
 author: 'Venture Crane'
 tags: ['methodology', 'agent-operations', 'strategy', 'documentation']
-draft: true
+draft: false
 ---
 
 The E-Myth Revisited makes one argument that survives every retelling: build the business so it runs without depending on any one operator. Document the system the way a franchise documents it - the manual a stranger could pick up and use to run, build, and grow the location - and then work ON that system rather than buried IN the day-to-day. Most teams nod at this and keep the manual as a slide deck nobody opens, because the people doing the work already hold the system in their heads. The manual is redundant with the staff.
@@ -13,7 +13,7 @@ That redundancy disappears when the staff is a fleet of AI agents. We run ventur
 
 ## The manual that is also a running surface
 
-For one venture, a services business delivered at AI-native speed, the operations manual is a handbook of roughly thirty pages covering the business model, the operating model, the platform build process, the security and trust controls, the data model, the deployment paths, and the per-engagement playbook. None of that is unusual on its own; plenty of companies have a wiki.
+For one venture - a professional services operation run at AI-native speed - the operations manual is a handbook covering the business model, the operating model, the platform build process, the security and trust controls, the data model, the deployment paths, and the per-engagement playbook. None of that is unusual on its own; plenty of companies have a wiki.
 
 What makes it a product surface rather than a wiki is that the same content is rendered inside the running application as an authenticated admin route, the pages cross-link by path the way a codebase imports modules, and each page declares its sources in frontmatter that point at the decision records and config files it was derived from. A page on the build process does not paraphrase the workflow from memory. It cites the CI workflow file, the npm scripts in `package.json`, and the enterprise coding standards, and it stays accurate because drift between the page and its cited source is a defect you can detect.
 

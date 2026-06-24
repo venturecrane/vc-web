@@ -2,8 +2,8 @@
 title: 'Done Means Wired - Shipping the Verify Gate'
 date: 2026-06-21
 tags: ['agents', 'process', 'infrastructure', 'architecture']
-draft: true
-shipped: 'Relevance+aliveness verify gate enforced at EOS and PR time - "done" now requires a live observation proving the seam carried data'
+draft: false
+shipped: 'Relevance+aliveness verify gate enforced at session end and PR time - "done" now requires a live observation proving the seam carried data'
 ---
 
 A PR that passes CI is not evidence that anything works. It is evidence that the code compiled and the tests ran. Those are not the same thing.
@@ -14,7 +14,7 @@ We shipped a gate that enforces a stricter definition of done: every change to a
 
 The gate runs at two checkpoints.
 
-At EOS, the MCP server evaluates the session's changed files against a surface manifest. Five surface classes require proof: MCP tool source, boot configuration, fleet lifecycle scripts, canonical config files, and a class called `app-data-seam` - read paths (worker endpoints, Astro pages, route loaders) whose failure mode is rendering honest-empty because the upstream producer is dead. That last class was added specifically to make "wasn't wired" mechanically in scope, not just a process aspiration.
+At session end, the MCP server evaluates the session's changed files against a surface manifest. Five surface classes require proof: MCP tool source, boot configuration, fleet lifecycle scripts, canonical config files, and a class called `app-data-seam` - read paths (worker endpoints, Astro pages, route loaders) whose failure mode is rendering honest-empty because the upstream producer is dead. That last class was added specifically to make "wasn't wired" mechanically in scope, not just a process aspiration.
 
 At PR time, a CI check reads `vfy_` IDs from the PR body, looks them up in the verification ledger, and applies the same relevance+aliveness filter. A 5-minute grace window covers freshly-opened PRs where the verification block hasn't been added yet. Past that window, missing or non-qualifying IDs fail the check.
 

@@ -4,7 +4,7 @@ date: 2026-06-23
 description: 'The agent failure to fix is not guessing - it is confident, unmarked inference dressed as fact. The cure separates disclosure from verification.'
 author: 'Venture Crane'
 tags: ['agent-operations', 'process', 'methodology', 'agents']
-draft: true
+draft: false
 ---
 
 An agent explained how one of our systems worked. It produced a clean answer: a table of components, a description of the data flow, the request states each layer handled. No hedging. Under a few questions the explanation collapsed - the components were plausible inventions, the flow was a guess, and the files that would have settled it had been on disk the whole time. The agent had not lied in the sense of knowing the truth and stating otherwise. It had generated a hypothesis from priors and presented it in the costume of established fact.
