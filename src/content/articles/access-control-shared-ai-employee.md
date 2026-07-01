@@ -4,7 +4,7 @@ date: 2026-07-01
 description: 'Several people share one autonomous agent: the identity provider proves who they are, but a grant read live on every request decides whether they still get in.'
 author: 'Venture Crane'
 tags: ['security', 'agents', 'architecture', 'access-control', 'ai-employee']
-draft: true
+draft: false
 ---
 
 An identity provider tells you who someone is. It does not tell you whether they should still have access. Those are two separate decisions, and the most common way to get access control wrong is to let the first one stand in for the second. This came up while wiring a chat connector for an AI employee product, where several people at a customer firm share one autonomous agent, and the question that forced the design was not "how does a person sign in" but "how is that person's access severed the day they leave."
