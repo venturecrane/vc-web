@@ -1,10 +1,10 @@
 ---
 title: 'What an Agent May Do Is Not How It May Start'
-date: 2026-07-01
+date: 2026-06-30
 description: 'One authorization setting was answering two unrelated questions. Splitting exposure from initiation is what made the entitlement model enforceable.'
 author: 'Venture Crane'
 tags: ['security', 'agents', 'architecture', 'configuration', 'ai-employee']
-draft: true
+draft: false
 ---
 
 A single setting in our AI employee product had been answering two questions that have nothing to do with each other. One question is what class of action the agent is allowed to send into the world, and how far. The other is how a given piece of work is allowed to begin. For a while both of those lived inside one scalar knob per skill, plus a scatter of per-action, per-scope, and per-mailbox overrides. It looked like one authorization model. It was two, badly interleaved, and the interleaving is what kept it from being enforceable.

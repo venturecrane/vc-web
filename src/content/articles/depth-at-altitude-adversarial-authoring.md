@@ -1,10 +1,10 @@
 ---
 title: 'Template Gives You Consistency, Not Credibility'
-date: 2026-07-01
+date: 2026-06-28
 description: 'Per-vertical content a practitioner respects cannot be stamped from one template. Depth at altitude takes serial authoring through an adversarial critique loop.'
 author: 'Venture Crane'
 tags: ['content', 'methodology', 'agent-operations']
-draft: true
+draft: false
 ---
 
 A dozen vertical marketing pages for a productized AI service started as one template stamped a dozen times. Each page had the same sections, the same rhythm, the same reassuring verbs, and a different industry's nouns dropped into the slots. They were consistent. They were also generic, and generic is the one thing a domain practitioner detects on sight. So they were rebuilt, one industry at a time, each rewritten from template copy to the actual operational lifecycle of that industry, through an adversarial loop: draft, critique the draft as a skeptical practitioner from that field, rewrite against the critique. This is the account of why that work could not be batch-generated, and why doing it serially beat doing it fast.

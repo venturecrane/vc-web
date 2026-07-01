@@ -1,10 +1,10 @@
 ---
 title: 'Bake Every Author-Built Connector In, Keep It Inert Until Bound'
-date: 2026-07-01
+date: 2026-06-29
 description: 'When a vendor has no MCP server you author your own. The real decision is where that connector code lives: baked into one shared image, inert until bound.'
 author: 'Venture Crane'
 tags: ['architecture', 'mcp', 'agents', 'ai-employee']
-draft: true
+draft: false
 ---
 
 We build an AI employee: an autonomous agent that does the connective front-desk work of a small business, and to do that job it has to bind to whatever systems of record its industry runs on. Most of those systems now expose a Model Context Protocol server, first-party or from a vetted community. You bind it as config, the agent's tools light up, and no code of yours ships to make that happen. Then you hit a vendor with no MCP server at all. The capability is real, the agent has to call it, and nobody has written the wrapper, so you write it yourself. That surfaces a question the connector strategy did not answer: where does the connector code you author physically live, and how does it reach only the machines that need it?
