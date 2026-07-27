@@ -2,6 +2,7 @@
 
 interface Env {
   RESEND_API_KEY: string
+  TURNSTILE_SECRET_KEY: string
 }
 
 interface ContactPayload {
@@ -9,9 +10,48 @@ interface ContactPayload {
   email: string
   message: string
   website?: string
+  turnstileToken?: string
 }
 
 const ALLOWED_ORIGINS = ['https://venturecrane.com', 'https://www.venturecrane.com']
+
+// Origin must be present and either same-origin (keeps *.pages.dev aliases and
+// preview deploys working) or on the allowlist. Defense-in-depth only —
+// trivially spoofable; Turnstile is the actual bot gate.
+function isAllowedOrigin(origin: string | null, requestUrl: string): boolean {
+  if (!origin) return false
+  if (ALLOWED_ORIGINS.includes(origin)) return true
+  return origin === new URL(requestUrl).origin
+}
+
+async function verifyTurnstile(secret: string, token: string, remoteIp?: string): Promise<boolean> {
+  if (!secret) {
+    // Distinct marker: misconfiguration, not a bot rejection. Visible in
+    // `wrangler pages deployment tail`.
+    console.error('TURNSTILE_MISCONFIG: TURNSTILE_SECRET_KEY is empty or unbound')
+    return false
+  }
+  const form = new FormData()
+  form.append('secret', secret)
+  form.append('response', token)
+  if (remoteIp) form.append('remoteip', remoteIp)
+
+  try {
+    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      body: form,
+    })
+    const data = (await res.json()) as { success?: boolean; 'error-codes'?: string[] }
+    if (!data.success) {
+      // `timeout-or-duplicate` here = expired or reused token, not necessarily a bot
+      console.error('Turnstile siteverify rejected:', JSON.stringify(data['error-codes'] ?? []))
+    }
+    return Boolean(data.success)
+  } catch (err) {
+    console.error('Turnstile siteverify unreachable:', err)
+    return false
+  }
+}
 const TO_EMAIL = 'smdurgan@venturecrane.com'
 const FROM_EMAIL = 'Venture Crane <contact@venturecrane.com>'
 const CONTROL_CHAR_RE = /[\r\n\0]/
@@ -70,6 +110,8 @@ async function readPayload(
       email: parsed.email || '',
       message: parsed.message || '',
       website: parsed.website || '',
+      // Field name Turnstile injects into native form posts
+      turnstileToken: parsed['cf-turnstile-response'] || '',
     }
   } catch {
     return { error: 'parse' }
@@ -150,17 +192,23 @@ function redirectOrJson(
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const { request, env } = context
 
-  const origin = request.headers.get('Origin')
-  if (origin && !ALLOWED_ORIGINS.includes(origin)) {
-    return jsonResponse({ error: 'Forbidden' }, 403)
-  }
-
   const contentType = request.headers.get('Content-Type') || ''
   const isJson = contentType.includes('application/json')
   const isForm = contentType.includes('application/x-www-form-urlencoded')
 
   if (!isJson && !isForm) {
     return jsonResponse({ error: 'Unsupported content type' }, 415)
+  }
+
+  const origin = request.headers.get('Origin')
+  if (!isAllowedOrigin(origin, request.url)) {
+    return redirectOrJson(
+      isForm,
+      request,
+      '/contact/?error=validation',
+      { error: 'Forbidden' },
+      403
+    )
   }
 
   const parsed = await readPayload(request, isJson)
@@ -186,6 +234,19 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       request,
       '/contact/?error=validation',
       { error: 'Validation failed', fields: errors },
+      400
+    )
+  }
+
+  // Turnstile is the bot gate. Fail closed: no token or failed verification → 400.
+  const token = (parsed.turnstileToken || '').trim()
+  const remoteIp = request.headers.get('CF-Connecting-IP') ?? undefined
+  if (!token || !(await verifyTurnstile(env.TURNSTILE_SECRET_KEY, token, remoteIp))) {
+    return redirectOrJson(
+      isForm,
+      request,
+      '/contact/?error=verification',
+      { error: 'verification' },
       400
     )
   }

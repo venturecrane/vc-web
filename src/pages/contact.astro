@@ -96,6 +96,19 @@ const error = Astro.url.searchParams.get('error')
             <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
           </div>
 
+          {/* Turnstile renders here via explicit render in contact.js */}
+          <div id="turnstile-slot" class="min-h-[65px]" />
+
+          <noscript>
+            <p class="text-sm text-vc-text-muted">
+              JavaScript is required to send this form. You can email{' '}
+              <a href="mailto:smdurgan@venturecrane.com" class="underline">
+                smdurgan@venturecrane.com
+              </a>{' '}
+              directly instead.
+            </p>
+          </noscript>
+
           <button
             type="submit"
             class="rounded border border-accent bg-accent/10 px-5 py-2.5 text-sm font-medium text-accent hover:bg-accent/20"
@@ -108,4 +121,9 @@ const error = Astro.url.searchParams.get('error')
   </div>
 
   <script is:inline src="/js/contact.js"></script>
+  <script
+    is:inline
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad"
+    async
+    defer></script>
 </Base>
