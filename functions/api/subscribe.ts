@@ -10,6 +10,14 @@ interface SubscribePayload {
 }
 
 const ALLOWED_ORIGINS = ['https://venturecrane.com', 'https://www.venturecrane.com']
+
+// Origin must be present and either same-origin (keeps *.pages.dev aliases and
+// preview deploys working) or on the allowlist. Defense-in-depth only.
+function isAllowedOrigin(origin: string | null, requestUrl: string): boolean {
+  if (!origin) return false
+  if (ALLOWED_ORIGINS.includes(origin)) return true
+  return origin === new URL(requestUrl).origin
+}
 const CONTROL_CHAR_RE = /[\r\n\0]/
 
 function isValidEmail(email: string): boolean {
@@ -100,17 +108,23 @@ async function subscribeToButtondown(
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const { request, env } = context
 
-  const origin = request.headers.get('Origin')
-  if (origin && !ALLOWED_ORIGINS.includes(origin)) {
-    return jsonResponse({ error: 'Forbidden' }, 403)
-  }
-
   const contentType = request.headers.get('Content-Type') || ''
   const isJson = contentType.includes('application/json')
   const isForm = contentType.includes('application/x-www-form-urlencoded')
 
   if (!isJson && !isForm) {
     return jsonResponse({ error: 'Unsupported content type' }, 415)
+  }
+
+  const origin = request.headers.get('Origin')
+  if (!isAllowedOrigin(origin, request.url)) {
+    return redirectOrJson(
+      isForm,
+      request,
+      '/contact/?error=validation',
+      { error: 'Forbidden' },
+      403
+    )
   }
 
   const parsed = await readPayload(request, isJson)
