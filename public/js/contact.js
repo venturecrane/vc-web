@@ -63,7 +63,7 @@ async function submitContact(e, form) {
 
     if (res.ok) {
       status.innerHTML =
-        '<div class="mb-6 rounded border border-accent/30 bg-accent/10 px-4 py-3 text-sm text-accent">Message sent. I\'ll get back to you soon.</div>'
+        '<div class="mb-6 rounded border border-accent/30 bg-accent/10 px-4 py-3 text-sm text-accent">Message sent. We\'ll get back to you soon.</div>'
       form.reset()
       form.style.display = 'none'
     } else {
