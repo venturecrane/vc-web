@@ -1,6 +1,6 @@
 ---
 title: 'The Private Repo That Was Not'
-date: 2026-10-12
+date: 2026-08-02
 description: 'Flipping a repository to private did not close it. Pull-request refs kept serving customer material, and only an unauthenticated probe could show it.'
 author: 'Venture Crane'
 tags: ['security', 'infrastructure', 'process', 'agent-operations']

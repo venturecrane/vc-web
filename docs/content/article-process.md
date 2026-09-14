@@ -40,7 +40,7 @@ Content with a future `date` is built but not emitted: it is absent from listing
 - **Label cleanup**: When closing an issue as published, remove all `status:*` labels.
 - **File naming**: `src/content/articles/{slug}.md` with descriptive hyphenated slugs.
 - **Word count**: 800-2,000 words. Shorter is better if the point is made.
-- **Cadence**: Batches follow the work. Published volume ran 8 to 19 articles a month through the first half of 2026; a catch-up batch is scheduled forward one piece per weekday rather than published all at once.
+- **Cadence**: Batches follow the work. Published volume ran 8 to 19 articles a month through the first half of 2026. A catch-up batch is dated to when the work it describes concluded and published at once; the site is the record, not a drip feed.
 - **Style**: Follow `docs/content/terminology.md` for canonical names and voice.
 
 ## What's NOT an Article

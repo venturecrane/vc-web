@@ -49,10 +49,10 @@ At the end of a notable work session. "Notable" means the work shipped something
 
 ## Retroactive Logs
 
-When writing a log after the fact (not at end of session), add a one-line disclaimer at the top of the body that names the period the log covers and the date it was published:
+When writing a log after the fact (not at end of session), add a one-line disclaimer at the top of the body that names the period the log covers and the date it was written:
 
 ```
-*Retroactive log covering July 1-15, 2026, published September 17. Reconstructed from merged pull requests, incident records, and session notes.*
+*Retroactive log covering July 1-15, 2026, written September 14, 2026. Reconstructed from merged pull requests, incident records, and session notes.*
 ```
 
-The file name and `date` carry the publish date, never the date the work happened. Put the work period in the title (for example, "July in review: ...") so a reader never mistakes a September-dated log about July work for a dating error. Be honest about what they are.
+The file name and `date` carry the last day of the period the log covers, so the site reads as a record of when things happened. The disclaimer is what keeps that honest: it says the log was reconstructed later. Put the work period in the title (for example, "July in review: ...") as well. Never date a retroactive log to when it was written.

@@ -1,6 +1,6 @@
 ---
 title: 'Five Words and the Edit Nobody Authorized'
-date: 2026-10-13
+date: 2026-07-29
 description: 'A request to review one section of a customer reply came back as an unbriefed critique and an unauthorized edit. The fix was an output contract, not a reminder.'
 author: 'Venture Crane'
 tags: ['agent-operations', 'process', 'agents', 'methodology']

@@ -1,6 +1,6 @@
 ---
 title: 'The Agent Cited Itself'
-date: 2026-09-28
+date: 2026-08-16
 description: 'A provenance gate asked whether the agent read an identifier or composed it, and counted the agent reading its own instructions as reading it.'
 author: 'Venture Crane'
 tags: ['security', 'agents', 'agent-operations', 'architecture']

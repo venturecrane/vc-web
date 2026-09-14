@@ -1,6 +1,6 @@
 ---
 title: 'One Machine per Customer: Two Planes, Two Writers'
-date: 2026-10-08
+date: 2026-08-04
 description: 'Isolation lives in the deployment topology, and config authority is a separate question: two writers reach the same bucket and neither holds the other key.'
 author: 'Venture Crane'
 tags: ['architecture', 'infrastructure', 'security', 'agents']

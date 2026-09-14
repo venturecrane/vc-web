@@ -1,6 +1,6 @@
 ---
 title: 'Sixty Notes Nobody Could Read'
-date: 2026-10-14
+date: 2026-09-10
 description: 'An audit found 60 saved agent memories reachable from no index at all. The notes were fine. The delivery tier they were wired into was the defect.'
 author: 'Venture Crane'
 tags: ['agent-context', 'agent-operations', 'testing', 'observability']

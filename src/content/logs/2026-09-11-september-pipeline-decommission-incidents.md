@@ -1,12 +1,12 @@
 ---
 title: 'September in review: new pipeline, decommission, two more incidents'
-date: 2026-09-29
+date: 2026-09-11
 tags: ['architecture', 'agent-operations', 'infrastructure', 'process']
 draft: false
 shipped: 'A document-drafting pipeline built as a driver over a frozen legacy implementation, metered and capped per paid call; the decommission pipeline given five real backends; a drifted safety control enrolled as a tracked cross-repo pair; two overlay reverts; two incidents recorded'
 ---
 
-_Retroactive log covering August 27 to September 11, 2026, published September 29, 2026. Reconstructed from merged pull requests, incident records, and session notes._
+_Retroactive log covering August 27 to September 11, 2026, written September 14, 2026. Reconstructed from merged pull requests, incident records, and session notes._
 
 A document-drafting workload a person used to run by hand became a pipeline this window, and nothing about the working implementation was rewritten.
 

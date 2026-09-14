@@ -1,12 +1,12 @@
 ---
 title: 'September in review: the remediation wave'
-date: 2026-10-01
+date: 2026-09-12
 tags: ['process', 'ci-cd', 'security', 'testing']
 draft: false
 shipped: 'A full scored codebase review; roughly twenty same-day scoped fix, quality, structure, and security pull requests following it; the Python safety-substrate suite made a required check on the default branch'
 ---
 
-_Retroactive log covering September 9-11, 2026, published October 1, 2026. Reconstructed from merged pull requests, incident records, and session notes._
+_Retroactive log covering September 9-11, 2026, written September 14, 2026. Reconstructed from merged pull requests, incident records, and session notes._
 
 Two full codebase reviews ran a day apart, and the second one's job was to check whether the first one's findings had actually been closed.
 

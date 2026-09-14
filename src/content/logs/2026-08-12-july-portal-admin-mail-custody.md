@@ -1,12 +1,12 @@
 ---
 title: 'July in review: portal, admin, and mail custody'
-date: 2026-09-21
+date: 2026-08-12
 tags: ['architecture', 'agent-operations', 'infrastructure', 'process']
 draft: false
 shipped: 'The admin console rebuilt on a five-destination spine with the lead-gen-era analytics surface retired; a portal form-kit sweep closing the last reachable unmigrated surfaces; a mail-custody channel for one major corporate mail platform built parallel to the incumbent path; two incidents recorded, one delivery and one commitment'
 ---
 
-_Retroactive log covering July 3 to August 12, 2026, published September 21, 2026. Reconstructed from merged pull requests, incident records, and session notes._
+_Retroactive log covering July 3 to August 12, 2026, written September 14, 2026. Reconstructed from merged pull requests, incident records, and session notes._
 
 The admin console had grown by accretion. Every feature that shipped got a word bolted onto the top nav, and by mid-July the nav was nine words, three of which were the corpse of the retired lead-generation machine.
 

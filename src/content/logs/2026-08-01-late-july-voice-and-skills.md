@@ -1,12 +1,12 @@
 ---
 title: 'Late July in review: voice and skills'
-date: 2026-09-23
+date: 2026-08-01
 tags: ['architecture', 'agents', 'agent-operations', 'methodology']
 draft: false
 shipped: 'An authorship model in which every output class declares its voice, format, gates, and delivery; the post-hoc sample-transform mechanism retired; a read-in-place document bridge kept and repointed; four manual-initiation drafting skills behind ten mechanical gates'
 ---
 
-_Retroactive log covering July 30 to August 1, 2026, published September 23, 2026. Reconstructed from merged pull requests, incident records, and session notes._
+_Retroactive log covering July 30 to August 1, 2026, written September 14, 2026. Reconstructed from merged pull requests, incident records, and session notes._
 
 The word voice named two unrelated mechanisms in one codebase, and the confusion between them cost a working session and produced a build that fed the weaker one.
 

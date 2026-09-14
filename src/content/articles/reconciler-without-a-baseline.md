@@ -1,6 +1,6 @@
 ---
 title: 'The Alert That Cried Wolf Daily'
-date: 2026-09-30
+date: 2026-08-23
 description: 'A reconciler that scans all history with no memory of what it already reported files the same finding every morning until nobody reads it.'
 author: 'Venture Crane'
 tags: ['agent-operations', 'observability', 'ci-cd', 'process']

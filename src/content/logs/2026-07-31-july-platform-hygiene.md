@@ -1,12 +1,12 @@
 ---
 title: 'July in review: platform hygiene'
-date: 2026-10-05
+date: 2026-07-31
 tags: ['infrastructure', 'process', 'mcp', 'agent-operations']
 draft: false
 shipped: 'Schema-parity guard for MCP tools; hosted cloud MCP surfaces retired; orphan-worktree lock parsing fixed; session-close dispatcher brought current and all 37 skill dispatchers to parity; memory approval gate un-inverted; memory capture restored to session close'
 ---
 
-_Retroactive log covering July 1-31, 2026, published October 5, 2026. Reconstructed from merged pull requests, incident records, and session notes._
+_Retroactive log covering July 1-31, 2026, written September 14, 2026. Reconstructed from merged pull requests, incident records, and session notes._
 
 Almost everything that shipped in July was a repair to a seam where two copies of the same fact had drifted apart. None of it was new capability.
 

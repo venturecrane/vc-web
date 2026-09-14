@@ -1,12 +1,12 @@
 ---
 title: 'The site: spam gate and scheduled publishing'
-date: 2026-10-09
+date: 2026-09-14
 tags: ['website', 'security', 'ci-cd', 'process']
 draft: false
 shipped: 'Contact-form sender rerouted and reverted the same day; Cloudflare Turnstile added to the contact form; success-message voice corrected; scheduled publishing for future-dated content; dependency audit moved off the deploy critical path'
 ---
 
-_Retroactive log covering July 21-27 and September 14, 2026, published October 9, 2026. Reconstructed from merged pull requests, incident records, and session notes._
+_Retroactive log covering July 21-27 and September 14, 2026, written September 14, 2026. Reconstructed from merged pull requests, incident records, and session notes._
 
 Two jobs on this site: stop a bot that had been posting to the contact form every day for a week, and build the publishing mechanism that puts this log in front of you on a date later than the one it was written on.
 
@@ -32,7 +32,7 @@ A copy fix followed the same day: the contact form's success message said "I'll 
 
 ## Scheduled publishing
 
-This log, and the pieces around it, are the reason the site needed scheduled publishing at all. Content written now describes work from July and August, and publishing it in one batch would be a wall.
+Scheduled publishing was built during the same catch-up session that produced this log and the twenty pieces around it. The first plan for that batch was to stagger the pieces forward over four weeks, which is what the feature was built for. The Captain rejected that: the site's job is to be the record, so the batch was dated to the periods it covers and published at once, with each log stating when it was written. The feature stays, because a piece that is ready before its moment now has somewhere to wait.
 
 The design is small. Content carries a publish date that may be in the future. It merges to the main branch like anything else, and goes live on its date via a daily rebuild. The build-time rejection of future dates, which existed to catch typos, was replaced with a cap: a date more than one hundred and eighty days out is still a typo and still fails the build, and anything inside that window is a schedule.
 

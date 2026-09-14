@@ -1,6 +1,6 @@
 ---
 title: 'The Gate That Measures Nothing'
-date: 2026-09-16
+date: 2026-08-13
 description: 'Five monitors ran green their whole lives while unable to observe the layer they claimed to check. A green check is evidence only if the check can see.'
 author: 'Venture Crane'
 tags: ['observability', 'testing', 'ci-cd', 'process']
