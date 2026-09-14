@@ -2,13 +2,11 @@
 import Base from '../../layouts/Base.astro'
 import LogEntry from '../../components/LogEntry.astro'
 import Pagination from '../../components/Pagination.astro'
-import { getCollection } from 'astro:content'
+import { getPublishedSorted } from '../../lib/content'
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro'
 
 export const getStaticPaths = (async ({ paginate }) => {
-  const logs = (await getCollection('logs'))
-    .filter((l) => !l.data.draft)
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  const logs = await getPublishedSorted('logs')
 
   return paginate(logs, { pageSize: 20 })
 }) satisfies GetStaticPaths

@@ -1,11 +1,10 @@
 ---
 import Article from '../../layouts/Article.astro'
-import { getCollection, render } from 'astro:content'
+import { render } from 'astro:content'
+import { getPublishedSorted } from '../../lib/content'
 
 export async function getStaticPaths() {
-  const allArticles = (await getCollection('articles'))
-    .filter((a) => !a.data.draft)
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  const allArticles = await getPublishedSorted('articles')
 
   return allArticles.map((article, i) => ({
     params: { slug: article.id },

@@ -82,8 +82,8 @@ Save as draft? (y/n)
 If yes:
 
 1. Generate a slug from the title (lowercase, hyphens, no special chars)
-2. Write to `~/dev/vc-web/src/content/logs/YYYY-MM-DD-slug.md` with today's date
-3. Frontmatter: `title`, `date` (today), `tags` (infer 1-3 from content; if the log is about a specific public venture, include the venture-name tag, e.g., `kid-expenses`), `draft: true`
+2. Write to `~/dev/vc-web/src/content/logs/YYYY-MM-DD-slug.md` using the intended publish date (today by default; a future date schedules it)
+3. Frontmatter: `title`, `date` (the publish date), `tags` (infer 1-3 from content; if the log is about a specific public venture, include the venture-name tag, e.g., `kid-expenses`), `draft: true`
 4. Report: "Saved draft to {path}. Run `/edit-log {path}` before publishing."
 
 ---
