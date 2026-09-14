@@ -1,6 +1,6 @@
 ---
 title: 'Handing a Decision to a Human Needs a Real Acknowledgment'
-date: 2026-10-02
+date: 2026-09-03
 description: 'An escalation ending in "reply with this code" is empty unless the code names a stable item and the reply names a verified person.'
 author: 'Venture Crane'
 tags: ['agents', 'agent-operations', 'architecture', 'process']

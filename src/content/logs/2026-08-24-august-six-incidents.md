@@ -1,12 +1,12 @@
 ---
 title: 'August in review: six incidents'
-date: 2026-09-25
+date: 2026-08-24
 tags: ['agent-operations', 'observability', 'security', 'infrastructure']
 draft: false
 shipped: 'A send-reconciler and an out-of-process send broker; a dispatch-shape guard on every registered tool handler; a refusal pager and a provenance seam for pre-run reads; a root-side gateway liveness supervisor with heartbeat fields and five alert conditions'
 ---
 
-_Retroactive log covering August 11-24, 2026, published September 25, 2026. Reconstructed from merged pull requests, incident records, and session notes._
+_Retroactive log covering August 11-24, 2026, written September 14, 2026. Reconstructed from merged pull requests, incident records, and session notes._
 
 Six incidents in fourteen days on the customer-installed agent product. Five of the six were found by a human, not an instrument, and that is the through-line.
 

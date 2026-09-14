@@ -1,6 +1,6 @@
 ---
 title: 'Our Grades Fell While the Code Got Better'
-date: 2026-09-18
+date: 2026-09-13
 description: 'Five scored code reviews trended downward while each one triggered a real remediation wave. The score was measuring the reviewer, not the code.'
 author: 'Venture Crane'
 tags: ['process', 'methodology', 'agents', 'agent-workflow']

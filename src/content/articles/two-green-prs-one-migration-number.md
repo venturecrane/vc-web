@@ -1,6 +1,6 @@
 ---
 title: 'Two Green PRs, One Migration Number'
-date: 2026-10-06
+date: 2026-08-22
 description: 'Both branches were green and neither could have been anything else, because the number a migration claims is a property of the merged tree.'
 author: 'Venture Crane'
 tags: ['ci-cd', 'testing', 'process', 'infrastructure']

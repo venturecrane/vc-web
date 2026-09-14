@@ -1,12 +1,12 @@
 ---
 title: 'July in review: killing the lead machine'
-date: 2026-09-17
+date: 2026-07-15
 tags: ['agent-operations', 'architecture', 'process', 'observability']
 draft: false
 shipped: 'The automated lead-generation machine retired root and branch; first-touch ad attribution, conversion events, and consent hygiene shipped in one day; six go-live blockers closed on the pilot customer deployment; a retired persona name removed from every layer that still held it'
 ---
 
-_Retroactive log covering July 1-15, 2026, published September 17, 2026. Reconstructed from merged pull requests, incident records, and session notes._
+_Retroactive log covering July 1-15, 2026, written September 14, 2026. Reconstructed from merged pull requests, incident records, and session notes._
 
 The first half of July was mostly deletion. One venture spent months building an automated lead-generation machine, and the decision that opened the month was to take all of it out.
 

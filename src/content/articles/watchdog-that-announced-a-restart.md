@@ -1,6 +1,6 @@
 ---
 title: 'The Watchdog That Announced a Restart It Never Performed'
-date: 2026-09-24
+date: 2026-09-02
 description: 'A supervision mechanism that logs its intent and then fails to act is worse than no supervision, because the log reads like recovery in progress.'
 author: 'Venture Crane'
 tags: ['agent-operations', 'observability', 'infrastructure', 'agents']

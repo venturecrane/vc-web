@@ -1,6 +1,6 @@
 ---
 title: 'The Safety Gate That Made Things Less Safe'
-date: 2026-09-22
+date: 2026-08-21
 description: 'A blanket permission rule on two production CLIs forced 157 approval prompts in a single day, 117 of them on one subcommand. Click fatigue is not safety.'
 author: 'Venture Crane'
 tags: ['security', 'process', 'agent-operations', 'agent-workflow']

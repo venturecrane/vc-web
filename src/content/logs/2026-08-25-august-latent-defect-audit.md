@@ -1,12 +1,12 @@
 ---
 title: 'August in review: the latent-defect audit'
-date: 2026-10-07
+date: 2026-08-25
 tags: ['observability', 'ci-cd', 'testing', 'security', 'agent-operations']
 draft: false
 shipped: 'Latent-defect audit and a debugging skill; nightly backup fixed; per-workflow CI health check; security audit widened to every npm project in the repository; shell suites wired into verify and CI; fleet permission policy distributed then verb-scoped; nine stale cadence items retired; reachability contract wired into the plan-and-execute skill; acceptance-criteria matcher tested and fixed; code-review skill rewritten'
 ---
 
-_Retroactive log covering August 12-25, 2026, published October 7, 2026. Reconstructed from merged pull requests, incident records, and session notes._
+_Retroactive log covering August 12-25, 2026, written September 14, 2026. Reconstructed from merged pull requests, incident records, and session notes._
 
 August opened with the Captain asking why bugs keep escaping build, test and review. The audit that answered it found a class, and most of the month went to closing instances of that class.
 
