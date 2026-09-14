@@ -39,7 +39,7 @@ We have written before about built-but-unwired features: code that merged, passe
 
 This is the layer above that. Here the feature under inspection is the instrument, and the instrument is the thing you would normally use to answer the question. When a safety filter is unwired, a working test suite can still catch it. When the test suite is the unwired thing, the ordinary method of finding out has already failed. The two classes compound: an unwired feature guarded by a blind check is invisible twice.
 
-The practical consequence is an ordering rule. When a check says the code is fine and the system says otherwise, the check is a suspect, not a witness. That sentence is now the third rule in a debugging skill we wrote off the back of the audit, sitting alongside Agans' nine rules and the reproduce-before-theorising discipline from Zeller's *Why Programs Fail*. It is there rather than in a document of advice because the alternative ordering, which is to trust the check and go hunting in the code, is what kept eleven instruments alive.
+The practical consequence is an ordering rule. When a check says the code is fine and the system says otherwise, the check is a suspect, not a witness. That sentence is now the third rule in a debugging skill we wrote off the back of the audit, sitting alongside Agans' nine rules and the reproduce-before-theorising discipline from Zeller's _Why Programs Fail_. It is there rather than in a document of advice because the alternative ordering, which is to trust the check and go hunting in the code, is what kept eleven instruments alive.
 
 ## An instrument has to be proven able to fail
 

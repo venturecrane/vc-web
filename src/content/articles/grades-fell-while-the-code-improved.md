@@ -31,7 +31,7 @@ On 2026-08-23 a review produced output that could not be trusted at all, and the
 
 The skill's own text specified a single agent working through all seven dimensions in sequence. That run improvised eight parallel agents. Three of them never delivered. Two dimensions were graded on a sweep the orchestrator did not know was incomplete, and the report stated that there were zero exploitable findings while two high-severity findings sat in a transcript that never came back. One of them was a live authentication token being written into a database table.
 
-So the report was wrong in both directions at once. It asserted an absence it had not established, and it discarded the two findings that mattered most, and it wrapped the result in a letter grade that implied comparability with four previous letter grades produced under different conditions. The Captain's response, quoted in the pull request that rewrote the skill: *"i don't trust anything agents say right now... are we just playing whack-a-mole guessing game theatre here?"*
+So the report was wrong in both directions at once. It asserted an absence it had not established, and it discarded the two findings that mattered most, and it wrapped the result in a letter grade that implied comparability with four previous letter grades produced under different conditions. The Captain's response, quoted in the pull request that rewrote the skill: _"i don't trust anything agents say right now... are we just playing whack-a-mole guessing game theatre here?"_
 
 The second cause is the more important one, because it constrains the fix. The skill was not followed. A longer instruction set does not repair an instruction set that was ignored. Anything that could become a check had to become a check.
 

@@ -29,10 +29,10 @@ The same instinct closed two false positives found against the real store. A mem
 
 The index has two limits, and conflating them caused three separate wrong conclusions in a single day, twice by one agent and once by a critique agent auditing that agent.
 
-| Threshold | Value | On crossing |
-| --- | --- | --- |
-| Hard read limit | 24,985 bytes | fail |
-| Recommended target | 17,510 bytes | warn |
+| Threshold          | Value        | On crossing |
+| ------------------ | ------------ | ----------- |
+| Hard read limit    | 24,985 bytes | fail        |
+| Recommended target | 17,510 bytes | warn        |
 
 All three measurements had used a flat 25,000 taken from a changelog line. One of them reported 5,131 bytes free when the real headroom against the operating target was 179.
 
