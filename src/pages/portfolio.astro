@@ -2,10 +2,10 @@
 import Base from '../layouts/Base.astro'
 import PortfolioCard from '../components/PortfolioCard.astro'
 import { sortedVentures, lastReviewed } from '../data/ventures'
-import { getCollection } from 'astro:content'
+import { getPublished } from '../lib/content'
 
-const articles = (await getCollection('articles')).filter((a) => !a.data.draft)
-const logs = (await getCollection('logs')).filter((l) => !l.data.draft)
+const articles = await getPublished('articles')
+const logs = await getPublished('logs')
 
 const contentCountByTag = new Map<string, number>()
 for (const venture of sortedVentures) {

@@ -2,12 +2,12 @@
 import Base from '../../layouts/Base.astro'
 import ArticleCard from '../../components/ArticleCard.astro'
 import LogEntry from '../../components/LogEntry.astro'
-import { getCollection } from 'astro:content'
+import { getPublished } from '../../lib/content'
 import { ventures } from '../../data/ventures'
 
 export async function getStaticPaths() {
-  const articles = (await getCollection('articles')).filter((a) => !a.data.draft)
-  const logs = (await getCollection('logs')).filter((l) => !l.data.draft)
+  const articles = await getPublished('articles')
+  const logs = await getPublished('logs')
 
   const allTags = new Set<string>()
   for (const article of articles) {

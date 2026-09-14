@@ -1,6 +1,6 @@
 import rss from '@astrojs/rss'
 import type { APIContext } from 'astro'
-import { getCollection } from 'astro:content'
+import { getPublished } from '../lib/content'
 import MarkdownIt from 'markdown-it'
 import sanitizeHtml from 'sanitize-html'
 
@@ -24,8 +24,8 @@ function renderContent(body: string | undefined): string {
 }
 
 export async function GET(context: APIContext) {
-  const articles = await getCollection('articles', ({ data }) => !data.draft)
-  const logs = await getCollection('logs', ({ data }) => !data.draft)
+  const articles = await getPublished('articles')
+  const logs = await getPublished('logs')
 
   const tagCategories = (tags: string[]) => tags.map((t) => `<category>${t}</category>`).join('')
 

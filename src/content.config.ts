@@ -1,27 +1,23 @@
 import { defineCollection } from 'astro:content'
 import { z } from 'astro/zod'
 import { glob } from 'astro/loaders'
+import { MAX_FUTURE_DAYS, withinFutureCap } from './lib/publish'
 
-// Reject article/log `date:` values stamped beyond today in the project's
-// canonical timezone (America/Phoenix). Pinning to a fixed TZ keeps validation
-// deterministic regardless of where `npm run build` runs (CI is UTC; agents
-// draft from a mix of Pacific, Arizona, and UTC machines). Catches the UTC
-// date-stamp bug class observed on 2026-04-22 where six articles drafted at
-// 20:13 PDT (03:13 UTC next day) were stamped with tomorrow's date.
-const notInFuturePhoenix = (d: Date) => {
-  const todayPhx = new Date().toLocaleDateString('en-CA', {
-    timeZone: 'America/Phoenix',
-  })
-  const dStr = d.toISOString().split('T')[0]
-  return dStr <= todayPhx
-}
-const futureDateMessage = 'date must not be in the future (America/Phoenix)'
+// `date` is the publish date. Future dates are valid: the entry is built but
+// hidden by src/lib/content.ts until its date arrives in America/Phoenix, and
+// the daily CI rebuild reveals it. The only guard is a far-future cap that
+// catches a fat-fingered year. (The old rule rejected any future date to catch
+// a one-day UTC stamp slip; under date-gated publishing that slip publishes a
+// day late instead of breaking the build.)
+const publishDate = z.coerce.date().refine((d) => withinFutureCap(d), {
+  message: `date is more than ${MAX_FUTURE_DAYS} days in the future (America/Phoenix); typo?`,
+})
 
 const articles = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/articles' }),
   schema: z.object({
     title: z.string(),
-    date: z.coerce.date().refine(notInFuturePhoenix, { message: futureDateMessage }),
+    date: publishDate,
     description: z.string().max(160),
     author: z.string().default('Venture Crane'),
     tags: z.array(z.string()).default([]),
@@ -36,7 +32,7 @@ const logs = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/logs' }),
   schema: z.object({
     title: z.string(),
-    date: z.coerce.date().refine(notInFuturePhoenix, { message: futureDateMessage }),
+    date: publishDate,
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
     shipped: z.string().optional(),
